@@ -123,7 +123,7 @@ export default function HomePage() {
     <main className="min-h-dvh bg-background">
       {/* TopBar minimale */}
       <header className="sticky top-0 z-50 border-b border-border bg-card">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 sm:px-6 md:px-8">
+        <div className="mx-auto flex w-full max-w-screen-2xl items-center justify-between px-5 py-4 sm:px-6 md:px-8">
           <Link href="/" className="flex items-center gap-3 no-underline">
             <span className="inline-flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground font-extrabold text-base">
               D
@@ -149,7 +149,7 @@ export default function HomePage() {
       </header>
 
       {/* Hero */}
-      <section className="mx-auto w-full max-w-7xl px-6 pt-16 pb-16 sm:px-6 md:px-8 md:pt-28 md:pb-24">
+      <section className="mx-auto w-full max-w-screen-2xl px-5 pt-16 pb-16 sm:px-6 md:px-8 md:pt-28 md:pb-24">
         <div className="flex flex-col gap-8">
           <Eyebrow>Desko · Sede Milano</Eyebrow>
           <h1 className="font-sans text-[44px] font-extrabold leading-[0.95] tracking-[-2px] text-foreground sm:text-[56px] md:text-[80px] md:max-w-[14ch]">
@@ -193,7 +193,7 @@ export default function HomePage() {
 
       {/* Features grid */}
       <section className="border-t border-border">
-        <div className="mx-auto w-full max-w-7xl px-6 py-16 sm:px-6 md:px-8 md:py-24">
+        <div className="mx-auto w-full max-w-screen-2xl px-5 py-16 sm:px-6 md:px-8 md:py-24">
           <div className="flex flex-col gap-12">
             <div className="flex max-w-[60ch] flex-col gap-3">
               <Eyebrow>Cosa fa Desko</Eyebrow>
@@ -215,7 +215,7 @@ export default function HomePage() {
 
       {/* How it works */}
       <section className="border-t border-border bg-muted">
-        <div className="mx-auto w-full max-w-7xl px-6 py-16 sm:px-6 md:px-8 md:py-24">
+        <div className="mx-auto w-full max-w-screen-2xl px-5 py-16 sm:px-6 md:px-8 md:py-24">
           <div className="grid items-start gap-12 md:grid-cols-[1fr_1.5fr] md:gap-20">
             <div className="flex flex-col gap-3">
               <Eyebrow>Come funziona</Eyebrow>
@@ -230,7 +230,7 @@ export default function HomePage() {
             <div className="flex flex-col">
               {HOW_STEPS.map((s, idx) => (
                 <div key={s.step}>
-                  {idx > 0 ? <div className="h-px bg-border my-8" /> : null}
+                  {idx > 0 ? <div className="h-px bg-border my-5" /> : null}
                   <HowItWorksStep {...s} />
                 </div>
               ))}
@@ -241,7 +241,7 @@ export default function HomePage() {
 
       {/* Privacy + tech band */}
       <section className="border-t border-border">
-        <div className="mx-auto w-full max-w-7xl px-6 py-16 sm:px-6 md:px-8 md:py-24">
+        <div className="mx-auto w-full max-w-screen-2xl px-5 py-16 sm:px-6 md:px-8 md:py-24">
           <div className="grid gap-6 md:grid-cols-3">
             <Card className="p-6">
               <div className="flex flex-col gap-3">
@@ -291,7 +291,7 @@ export default function HomePage() {
             'linear-gradient(135deg, rgba(232,185,49,0.18) 0%, rgba(232,185,49,0.05) 100%)',
         }}
       >
-        <div className="mx-auto w-full max-w-3xl px-6 py-16 text-center sm:px-6 md:px-8 md:py-24">
+        <div className="mx-auto w-full max-w-[900px] px-5 py-16 text-center sm:px-6 md:px-8 md:py-24">
           <div className="flex flex-col items-center gap-6">
             <Eyebrow>Inizia adesso</Eyebrow>
             <h2 className="font-sans text-[32px] font-extrabold leading-none tracking-[-1.4px] md:text-[56px]">
@@ -322,7 +322,7 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="border-t border-border bg-card">
-        <div className="mx-auto w-full max-w-7xl px-6 py-6 sm:px-6 md:px-8">
+        <div className="mx-auto w-full max-w-screen-2xl px-5 py-8 sm:px-6 md:px-8">
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div className="flex items-center gap-3">
               <span className="inline-flex size-6 items-center justify-center rounded bg-primary text-primary-foreground font-extrabold text-xs">
