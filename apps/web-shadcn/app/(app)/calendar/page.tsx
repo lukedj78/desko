@@ -256,11 +256,13 @@ function CalendarMonthGrid({
                     >
                       {cell.day}
                     </span>
-                    {/* Pallino evento (mobile + desktop) */}
+                    {/* Pallino evento — colore matchato con "Prossimi eventi"
+                        della sidebar. Hover desktop: title nativo mostra il nome.
+                        (port 1:1 da MUI: solo dot, niente badge label nel cell) */}
                     {eventStyle && cell.eventLabel ? (
                       <span
                         title={cell.eventLabel}
-                        className="sm:hidden inline-flex size-2 rounded-full shrink-0"
+                        className="inline-flex size-2 md:size-2.5 rounded-full shrink-0"
                         style={{ backgroundColor: eventStyle.dot }}
                       />
                     ) : null}
@@ -269,17 +271,6 @@ function CalendarMonthGrid({
                     <span className="size-1.5 rounded-full bg-primary" />
                   ) : null}
                 </div>
-
-                {/* Badge evento desktop */}
-                {eventStyle && cell.eventLabel ? (
-                  <span
-                    title={cell.eventLabel}
-                    className="hidden sm:block rounded-sm px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.04em] truncate"
-                    style={{ backgroundColor: eventStyle.bg, color: eventStyle.color }}
-                  >
-                    {cell.eventLabel}
-                  </span>
-                ) : null}
 
                 {/* Avatar group */}
                 {attendees.length > 0 ? (
@@ -395,7 +386,7 @@ function TeamOverlapCard({
           className="no-underline w-full"
         >
           <Button variant="outline" size="sm" className="w-full">
-            Vedi dettagli giornata
+            Vedi dettagli team
           </Button>
         </Link>
       </div>
