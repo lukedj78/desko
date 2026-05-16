@@ -2,268 +2,557 @@
 
 import {
   Bell,
-  Building2,
   Eye,
-  EyeOff,
-  Layers,
   Lock,
-  Trash2,
-  User as UserIcon,
+  MapPin,
+  User,
+  CalendarCheck,
 } from 'lucide-react';
-import { useState } from 'react';
+import * as React from 'react';
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Eyebrow } from '@/components/ui/eyebrow';
 import { Field } from '@/components/ui/field';
-import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { FLOOR_META, type Floor } from '@desko/domain';
 import { cn } from '@/lib/utils';
 
 type Day = 'M' | 'T' | 'W' | 'TH' | 'F';
-const DAYS: Array<{ key: Day; label: string }> = [
-  { key: 'M', label: 'Lun' },
-  { key: 'T', label: 'Mar' },
-  { key: 'W', label: 'Mer' },
-  { key: 'TH', label: 'Gio' },
-  { key: 'F', label: 'Ven' },
+const DAYS: Array<{ key: Day; label: string; short: string }> = [
+  { key: 'M', label: 'Lun', short: 'M' },
+  { key: 'T', label: 'Mar', short: 'T' },
+  { key: 'W', label: 'Mer', short: 'W' },
+  { key: 'TH', label: 'Gio', short: 'G' },
+  { key: 'F', label: 'Ven', short: 'F' },
 ];
 
-type PresenceMode = 'office' | 'remote' | 'unspecified';
-type Visibility = 'company' | 'team' | 'followers' | 'hidden';
+// ─────────────────────────────────────────────────────────────────────────────
+// MilanoSkylineHero — SVG inline (port 1:1 da MUI)
+// ─────────────────────────────────────────────────────────────────────────────
+function MilanoSkylineHero() {
+  return (
+    <div className="relative w-full min-h-[200px] md:min-h-[260px] overflow-hidden rounded-t-lg">
+      <svg
+        viewBox="0 0 800 280"
+        preserveAspectRatio="xMidYMax slice"
+        className="absolute inset-0 size-full"
+        aria-hidden
+      >
+        <defs>
+          <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#FBEFD0" />
+            <stop offset="50%" stopColor="#F4C84A" />
+            <stop offset="100%" stopColor="#E8B931" />
+          </linearGradient>
+          <linearGradient id="bgBuildings" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#7A5A12" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#5A4500" stopOpacity="0.85" />
+          </linearGradient>
+          <linearGradient id="fgBuildings" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#3D2A00" />
+            <stop offset="100%" stopColor="#2B1F00" />
+          </linearGradient>
+        </defs>
 
-const VISIBILITY_OPTIONS: Array<{ value: Visibility; label: string; description: string; icon: React.ReactNode }> = [
-  { value: 'company', label: 'Tutti i colleghi', description: 'Visibile a tutti dentro l\'azienda.', icon: <Building2 className="size-5" /> },
-  { value: 'team', label: 'Solo il mio team', description: 'Visibile solo a chi ha il mio stesso team.', icon: <UserIcon className="size-5" /> },
-  { value: 'followers', label: 'Solo chi mi segue', description: 'Visibile solo ai follower che hai accettato.', icon: <Eye className="size-5" /> },
-  { value: 'hidden', label: 'Nascosta (incognito)', description: 'Nessuno vede le tue presenze.', icon: <EyeOff className="size-5" /> },
-];
+        <rect width="800" height="280" fill="url(#sky)" />
 
+        {/* Sun */}
+        <circle cx="640" cy="80" r="38" fill="#FFFFFF" opacity="0.45" />
+        <circle cx="640" cy="80" r="22" fill="#FFFFFF" opacity="0.7" />
+
+        {/* Background buildings */}
+        <g fill="url(#bgBuildings)">
+          <rect x="0" y="180" width="60" height="100" />
+          <rect x="60" y="160" width="50" height="120" />
+          <rect x="110" y="170" width="70" height="110" />
+          <rect x="180" y="150" width="55" height="130" />
+          <rect x="235" y="165" width="45" height="115" />
+          <rect x="280" y="175" width="60" height="105" />
+          <rect x="340" y="155" width="50" height="125" />
+          <rect x="390" y="170" width="70" height="110" />
+          <rect x="460" y="160" width="55" height="120" />
+          <rect x="515" y="175" width="60" height="105" />
+          <rect x="575" y="165" width="50" height="115" />
+          <rect x="625" y="180" width="55" height="100" />
+          <rect x="680" y="170" width="60" height="110" />
+          <rect x="740" y="175" width="60" height="105" />
+        </g>
+
+        {/* Foreground skyline */}
+        <g fill="url(#fgBuildings)">
+          {/* Duomo */}
+          <path d="M 60 280 L 60 220 L 70 220 L 70 200 L 80 200 L 80 180 L 90 180 L 90 160 L 95 145 L 100 160 L 100 180 L 110 180 L 110 200 L 120 200 L 120 220 L 130 220 L 130 280 Z" />
+
+          {/* Galleria */}
+          <rect x="150" y="200" width="80" height="80" />
+          <path d="M 160 200 L 160 175 L 220 175 L 220 200 Z" />
+          <circle cx="190" cy="180" r="12" fill="url(#sky)" opacity="0.4" />
+
+          {/* Pirellone */}
+          <rect x="270" y="120" width="40" height="160" />
+          <rect x="278" y="125" width="3" height="150" fill="url(#sky)" opacity="0.3" />
+          <rect x="290" y="125" width="3" height="150" fill="url(#sky)" opacity="0.3" />
+          <rect x="302" y="125" width="3" height="150" fill="url(#sky)" opacity="0.3" />
+
+          {/* Torre Velasca */}
+          <rect x="350" y="180" width="40" height="100" />
+          <path d="M 340 180 L 400 180 L 400 165 L 340 165 Z" />
+          <rect x="360" y="135" width="20" height="30" />
+
+          {/* Generic mid-rise */}
+          <rect x="420" y="195" width="35" height="85" />
+          <rect x="455" y="180" width="30" height="100" />
+
+          {/* Bosco Verticale */}
+          <rect x="510" y="100" width="36" height="180" />
+          <rect x="558" y="130" width="36" height="150" />
+          {[
+            [515, 130], [528, 145], [540, 160], [515, 175], [528, 190], [540, 205], [515, 220], [528, 235], [540, 250],
+            [563, 145], [576, 160], [588, 175], [563, 190], [576, 205], [588, 220], [563, 235], [576, 250],
+          ].map(([x, y]) => (
+            <circle key={`${x}-${y}`} cx={x} cy={y} r="4" fill="#2D7A3F" opacity="0.65" />
+          ))}
+
+          {/* UniCredit Tower */}
+          <rect x="620" y="80" width="32" height="200" />
+          <path d="M 636 80 L 636 50 L 640 50 L 640 80 Z" />
+
+          {/* Last cluster */}
+          <rect x="680" y="190" width="40" height="90" />
+          <rect x="720" y="200" width="35" height="80" />
+          <rect x="755" y="185" width="40" height="95" />
+        </g>
+      </svg>
+
+      {/* Tag overlay top-right */}
+      <span
+        className="absolute top-4 right-4 inline-flex items-center gap-1 rounded-full px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-foreground"
+        style={{ backgroundColor: 'rgba(255, 255, 255, 0.92)', backdropFilter: 'blur(4px)' }}
+      >
+        HQ · Milano
+      </span>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BentoCard helper
+// ─────────────────────────────────────────────────────────────────────────────
+function BentoCard({
+  title,
+  icon,
+  description,
+  action,
+  spanMd = 1,
+  children,
+  noPadding,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  description?: string;
+  action?: React.ReactNode;
+  spanMd?: 1 | 2;
+  children?: React.ReactNode;
+  noPadding?: boolean;
+}) {
+  return (
+    <Card
+      className={cn(
+        'flex flex-col overflow-hidden',
+        spanMd === 2 ? 'md:col-span-2' : '',
+      )}
+    >
+      <div className={cn('px-5 pt-5 md:px-6 md:pt-6', noPadding ? 'pb-0' : '')}>
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="inline-flex size-9 shrink-0 items-center justify-center rounded-md border border-border bg-background text-muted-foreground">
+              {icon}
+            </div>
+            <div className="flex min-w-0 flex-col gap-0.5">
+              <h4 className="text-[17px] font-bold leading-tight">{title}</h4>
+              {description ? (
+                <span className="text-xs text-muted-foreground">{description}</span>
+              ) : null}
+            </div>
+          </div>
+          {action}
+        </div>
+      </div>
+      {children ? (
+        <div
+          className={cn(
+            'flex flex-1 flex-col',
+            noPadding ? 'p-0' : 'p-5 pt-5 md:p-6 md:pt-6',
+          )}
+        >
+          {children}
+        </div>
+      ) : null}
+    </Card>
+  );
+}
+
+function RecurringDayToggle({
+  active,
+  onToggle,
+  label,
+  short,
+}: {
+  active: boolean;
+  onToggle: () => void;
+  label: string;
+  short: string;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-1.5">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-pressed={active}
+        aria-label={`${label} ${active ? 'attivo' : 'inattivo'}`}
+        className={cn(
+          'inline-flex size-11 items-center justify-center rounded-md md:size-12',
+          'border font-sans text-sm font-bold transition-all',
+          'hover:scale-[1.02] active:scale-[0.98]',
+          active
+            ? 'border-primary bg-primary text-primary-foreground'
+            : 'border-border bg-card text-foreground hover:border-foreground/40',
+        )}
+      >
+        {short}
+      </button>
+      <span className="text-[11px] text-muted-foreground">{label}</span>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Page
+// ─────────────────────────────────────────────────────────────────────────────
 export default function ImpostazioniPage() {
-  const [pattern, setPattern] = useState<Record<Day, PresenceMode>>({
-    M: 'office',
-    T: 'office',
-    W: 'office',
-    TH: 'remote',
-    F: 'remote',
-  });
-  const [defaultFloor, setDefaultFloor] = useState<Floor>('seventh_floor');
-  const [visibility, setVisibility] = useState<Visibility>('company');
-  const [notifications, setNotifications] = useState({
+  const [activeDays, setActiveDays] = React.useState<Set<Day>>(new Set(['T', 'TH']));
+  const [defaultFloor, setDefaultFloor] = React.useState<Floor | 'none'>('seventh_floor');
+  const [visibility, setVisibility] = React.useState('company');
+  const [notifications, setNotifications] = React.useState({
     teamInOffice: true,
-    lunchInvites: true,
-    weeklyDigest: false,
+    floorUpdates: false,
+    weeklyReminder: true,
   });
 
-  const cyclePresence = (day: Day) => {
-    setPattern((prev) => {
-      const next = { ...prev };
-      next[day] = prev[day] === 'office' ? 'remote' : prev[day] === 'remote' ? 'unspecified' : 'office';
+  const toggleDay = (k: Day) => {
+    setActiveDays((prev) => {
+      const next = new Set(prev);
+      if (next.has(k)) next.delete(k);
+      else next.add(k);
       return next;
     });
   };
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-6 py-6 md:px-8 md:py-10">
-      <div className="flex flex-col gap-8">
+    <div className="mx-auto w-full max-w-screen-2xl px-5 py-8 sm:px-6 md:px-8 md:py-12">
+      <div className="flex flex-col gap-10">
         {/* Header */}
-        <div className="flex flex-col gap-1.5">
-          <Eyebrow>Impostazioni</Eyebrow>
-          <h1 className="font-sans text-3xl md:text-4xl font-bold leading-tight tracking-[-0.4px]">
-            Profilo, presenze, privacy.
+        <div className="flex flex-col gap-2">
+          <Eyebrow>Profilo · Privacy · Notifiche</Eyebrow>
+          <h1 className="font-sans text-[28px] font-bold leading-[1.1] tracking-[-0.4px] md:text-[36px]">
+            Profilo e Impostazioni.
           </h1>
           <p className="text-base text-muted-foreground">
-            Tutto quello che serve per coordinare il tuo modo di lavorare.
+            Gestisci le tue informazioni personali e le preferenze di ufficio.
           </p>
         </div>
 
-        {/* Profile */}
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                <UserIcon className="size-5 text-muted-foreground" />
-                <Eyebrow>Profilo</Eyebrow>
+        {/* Bento grid */}
+        <div className="grid gap-6 md:grid-cols-3">
+          {/* ROW 1 — Informazioni personali (span 2) + Sicurezza (span 1) */}
+          <BentoCard
+            title="Informazioni personali"
+            icon={<User className="size-4" />}
+            description="Sincronizzate da Entra ID, alcune sono modificabili."
+            spanMd={2}
+          >
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Field
+                id="settings-name"
+                label="Nome completo"
+                defaultValue="Marco Bianchi"
+                hint="da Entra ID"
+                disabled
+              />
+              <Field
+                id="settings-email"
+                label="Email aziendale"
+                defaultValue="marco.bianchi@azienda.it"
+                hint="readonly"
+                disabled
+              />
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="settings-team" className="text-sm font-medium">
+                  Dipartimento
+                </label>
+                <Select defaultValue="Engineering">
+                  <SelectTrigger id="settings-team">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Engineering">Engineering</SelectItem>
+                    <SelectItem value="Product">Product</SelectItem>
+                    <SelectItem value="Marketing">Marketing</SelectItem>
+                    <SelectItem value="Sales">Sales</SelectItem>
+                    <SelectItem value="HR">HR</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="size-16 ring-2 ring-primary">
-                  <AvatarFallback className="bg-primary text-primary-foreground text-lg font-bold">SA</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <p className="font-bold text-lg">Super Admin</p>
-                  <p className="text-sm text-muted-foreground font-mono">admin@desko.local</p>
-                </div>
-                <Button variant="outline" size="sm">Cambia foto</Button>
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field id="profile-name" label="Nome completo" defaultValue="Super Admin" />
-                <Field id="profile-team" label="Team" defaultValue="Operations" />
-              </div>
+              <Field
+                id="settings-role"
+                label="Ruolo"
+                defaultValue="Senior Software Engineer"
+                optional
+              />
             </div>
-          </CardContent>
-        </Card>
+          </BentoCard>
 
-        {/* Weekly pattern */}
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <Layers className="size-5 text-muted-foreground" />
-                  <Eyebrow>Pattern settimanale</Eyebrow>
+          <BentoCard
+            title="Sicurezza"
+            icon={<Lock className="size-4" />}
+            description="Sessioni e accesso."
+            action={
+              <Button variant="outline" size="sm">
+                Esci da tutti
+              </Button>
+            }
+          >
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-3 rounded-md border border-border bg-muted p-3">
+                <span className="inline-flex size-7 shrink-0 items-center justify-center rounded bg-success text-sm font-bold text-success-foreground">
+                  ✓
+                </span>
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <span className="text-[13px] font-semibold">Authenticator attivo</span>
+                  <span className="text-xs text-muted-foreground">MFA via Entra ID</span>
                 </div>
-                <Button variant="ghost" size="sm">Disattiva</Button>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Imposta i giorni in cui sarai in ufficio in modo ricorrente. Override singoli giorni dal calendar.
-              </p>
-              <div className="grid grid-cols-5 gap-2">
-                {DAYS.map((d) => {
-                  const mode = pattern[d.key];
-                  return (
-                    <button
-                      key={d.key}
-                      onClick={() => cyclePresence(d.key)}
-                      className={cn(
-                        'flex flex-col items-center gap-1 rounded-lg border p-3 transition-colors',
-                        mode === 'office' && 'bg-primary/15 border-primary text-foreground',
-                        mode === 'remote' && 'bg-info/10 border-info/30 text-info',
-                        mode === 'unspecified' && 'bg-muted border-border text-muted-foreground',
-                      )}
-                    >
-                      <span className="text-xs font-bold">{d.label}</span>
-                      <span className="text-[10px] uppercase tracking-wide">
-                        {mode === 'office' ? 'In ufficio' : mode === 'remote' ? 'Remoto' : '—'}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label>Piano di default quando sei in ufficio</Label>
-                <div className="flex gap-2">
-                  {(['seventh_floor', 'second_floor'] as Floor[]).map((f) => (
-                    <button
-                      key={f}
-                      onClick={() => setDefaultFloor(f)}
-                      className={cn(
-                        'flex-1 rounded-lg border px-4 py-2.5 text-sm font-semibold transition-colors',
-                        defaultFloor === f
-                          ? 'bg-primary text-primary-foreground border-primary'
-                          : 'border-border hover:bg-muted',
-                      )}
-                    >
-                      {FLOOR_META[f].label}
-                    </button>
-                  ))}
+              <div className="flex items-center gap-3 rounded-md border border-border bg-muted p-3">
+                <span className="inline-flex size-7 shrink-0 items-center justify-center rounded border border-border bg-card text-foreground">
+                  <Lock className="size-4" />
+                </span>
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <span className="text-[13px] font-semibold">Ultimo accesso</span>
+                  <span className="text-xs text-muted-foreground">08:42 da Milano · macOS</span>
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </BentoCard>
 
-        {/* Privacy / Visibility */}
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                <Lock className="size-5 text-muted-foreground" />
-                <Eyebrow>Privacy presenze</Eyebrow>
+          {/* ROW 2 — Giorni ricorrenti (span 1) + Sede HQ HERO (span 2) */}
+          <BentoCard
+            title="Giorni ricorrenti in ufficio"
+            icon={<CalendarCheck className="size-4" />}
+            description="Pattern settimanale automatico."
+          >
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-wrap gap-2">
+                {DAYS.map((d) => (
+                  <RecurringDayToggle
+                    key={d.key}
+                    active={activeDays.has(d.key)}
+                    onToggle={() => toggleDay(d.key)}
+                    label={d.label}
+                    short={d.short}
+                  />
+                ))}
               </div>
-              <p className="text-sm text-muted-foreground">
-                Decidi chi può vedere quando sei in ufficio. Vale sia per la dashboard sia per il calendar.
-              </p>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {VISIBILITY_OPTIONS.map((opt) => (
-                  <button
-                    key={opt.value}
-                    onClick={() => setVisibility(opt.value)}
-                    className={cn(
-                      'flex items-start gap-3 rounded-lg border p-4 text-left transition-colors',
-                      visibility === opt.value
-                        ? 'border-primary bg-primary/8 ring-2 ring-primary/30'
-                        : 'border-border hover:bg-muted/50',
-                    )}
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="default-floor" className="text-sm font-medium">
+                  Piano preferito
+                </label>
+                <Select
+                  value={defaultFloor}
+                  onValueChange={(v) => setDefaultFloor(v as Floor | 'none')}
+                >
+                  <SelectTrigger id="default-floor">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="seventh_floor">
+                      {FLOOR_META.seventh_floor.label} · stanza
+                    </SelectItem>
+                    <SelectItem value="second_floor">
+                      {FLOOR_META.second_floor.label} · co-working
+                    </SelectItem>
+                    <SelectItem value="none">Nessuno (decido ogni volta)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <span className="text-xs text-muted-foreground">
+                  Pre-selezionato quando dichiari presenza.
+                </span>
+              </div>
+            </div>
+          </BentoCard>
+
+          {/* Sede HQ HERO con skyline Milano */}
+          <Card className="flex flex-col overflow-hidden p-0 md:col-span-2">
+            <MilanoSkylineHero />
+            <div className="flex flex-col gap-5 p-5 md:p-6">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex min-w-0 flex-col gap-1">
+                  <Eyebrow>Sede di riferimento</Eyebrow>
+                  <h3 className="font-sans text-2xl font-bold leading-tight md:text-[28px]">
+                    Milano HQ
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Via Tortona, 30 — 20144 Milano · Lombardia, IT
+                  </p>
+                </div>
+                <MapPin className="size-5 text-muted-foreground" />
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <div
+                  className="inline-flex items-center gap-2 rounded-md border px-3 py-2"
+                  style={{
+                    backgroundColor: 'hsl(42 88% 64%)',
+                    color: 'hsl(var(--primary-foreground))',
+                    borderColor: 'hsl(var(--primary))',
+                  }}
+                >
+                  <span className="text-xs font-bold">7° Piano</span>
+                  <span className="text-xs opacity-85">stanza tradizionale</span>
+                </div>
+                <div className="inline-flex items-center gap-2 rounded-md border border-border bg-muted px-3 py-2">
+                  <span className="text-xs font-bold">2° Piano</span>
+                  <span className="text-xs text-muted-foreground">co-working + bar</span>
+                </div>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {[
+                  { label: 'Posti totali', value: '70' },
+                  { label: 'Sale meeting', value: '4' },
+                  { label: 'Bar interno', value: '2°' },
+                ].map((kpi) => (
+                  <div
+                    key={kpi.label}
+                    className="rounded-md border border-border bg-muted p-3"
                   >
-                    <span
-                      className={cn(
-                        'inline-flex size-9 items-center justify-center rounded-lg shrink-0',
-                        visibility === opt.value
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-muted text-muted-foreground',
-                      )}
-                    >
-                      {opt.icon}
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+                      {kpi.label}
                     </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-sm">{opt.label}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{opt.description}</p>
-                    </div>
-                  </button>
+                    <p className="font-sans text-xl font-bold leading-none mt-1">{kpi.value}</p>
+                  </div>
                 ))}
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </Card>
 
-        {/* Notifications */}
-        <Card>
-          <CardContent className="p-6">
+          {/* ROW 3 — Visibilità (span 1) + Notifiche (span 2) */}
+          <BentoCard
+            title="Visibilità presenze"
+            icon={<Eye className="size-4" />}
+            description="Chi vede i tuoi giorni in ufficio."
+          >
             <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                <Bell className="size-5 text-muted-foreground" />
-                <Eyebrow>Notifiche</Eyebrow>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="visibility" className="text-sm font-medium">
+                  Chi può vedere
+                </label>
+                <Select value={visibility} onValueChange={setVisibility}>
+                  <SelectTrigger id="visibility">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="company">Tutti i colleghi</SelectItem>
+                    <SelectItem value="team">Solo il mio team</SelectItem>
+                    <SelectItem value="followers">Solo chi mi segue</SelectItem>
+                    <SelectItem value="hidden">Modalità incognito</SelectItem>
+                  </SelectContent>
+                </Select>
+                <span className="text-xs text-muted-foreground">
+                  Si applica anche allo storico.
+                </span>
               </div>
-              <div className="flex flex-col gap-2">
-                {(
-                  [
-                    { key: 'teamInOffice', label: 'Il mio team è in ufficio', desc: 'Avviso quando ≥3 colleghi del team dichiarano presenza per oggi.' },
-                    { key: 'lunchInvites', label: 'Inviti a pranzo', desc: 'Quando un collega ti invita a una proposta privata.' },
-                    { key: 'weeklyDigest', label: 'Digest settimanale', desc: 'Riepilogo del lunedì mattina con chi sarà in ufficio nella settimana.' },
-                  ] as const
-                ).map((n) => (
-                  <label
-                    key={n.key}
-                    className="flex items-start gap-3 rounded-lg border border-border p-3 cursor-pointer hover:bg-muted/30"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={notifications[n.key]}
-                      onChange={(e) => setNotifications((prev) => ({ ...prev, [n.key]: e.target.checked }))}
-                      className="mt-1 size-4 accent-primary"
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold">{n.label}</p>
-                      <p className="text-xs text-muted-foreground">{n.desc}</p>
-                    </div>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Danger zone */}
-        <Card className="border-destructive/30 bg-destructive/5">
-          <CardContent className="p-6">
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                <Trash2 className="size-5 text-destructive" />
-                <Eyebrow className="text-destructive">Diritto all&apos;oblio</Eyebrow>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Cancella permanentemente lo storico delle tue presenze. L&apos;account resta attivo
-                ma il passato viene rimosso (GDPR right-to-be-forgotten).
-              </p>
-              <div>
-                <Button variant="outline" className="border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground">
-                  <Trash2 className="size-4" />
-                  Cancella storico presenze
+              <div className="flex items-center gap-3 rounded-md border border-dashed border-destructive bg-muted p-3">
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <span className="text-[13px] font-semibold">Cancella storico</span>
+                  <span className="text-xs text-muted-foreground">
+                    Diritto all&apos;oblio (GDPR)
+                  </span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
+                >
+                  Cancella
                 </Button>
               </div>
             </div>
-          </CardContent>
+          </BentoCard>
+
+          <BentoCard
+            title="Notifiche"
+            icon={<Bell className="size-4" />}
+            description="Cosa ricevi via Teams o email."
+            spanMd={2}
+          >
+            <div className="flex flex-col gap-2">
+              {[
+                {
+                  key: 'teamInOffice' as const,
+                  title: 'Quando il mio team è in ufficio',
+                  desc: 'Avviso quando 3+ membri del team confermano la stessa giornata.',
+                },
+                {
+                  key: 'floorUpdates' as const,
+                  title: 'Cambi di piano dei colleghi seguiti',
+                  desc: 'Avviso quando una persona che segui si sposta tra 7° e 2°.',
+                },
+                {
+                  key: 'weeklyReminder' as const,
+                  title: 'Reminder settimanale',
+                  desc: 'Domenica sera ti invitiamo a confermare la settimana entrante.',
+                },
+              ].map((n) => (
+                <div
+                  key={n.key}
+                  className="flex items-center gap-3 rounded-md border border-border bg-muted p-4"
+                >
+                  <div className="flex min-w-0 flex-1 flex-col">
+                    <span className="text-sm font-semibold">{n.title}</span>
+                    <span className="text-xs text-muted-foreground">{n.desc}</span>
+                  </div>
+                  <Switch
+                    checked={notifications[n.key]}
+                    onChange={() =>
+                      setNotifications((prev) => ({ ...prev, [n.key]: !prev[n.key] }))
+                    }
+                  />
+                </div>
+              ))}
+            </div>
+          </BentoCard>
+        </div>
+
+        {/* Save bar */}
+        <Card className="p-5">
+          <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+            <div className="flex flex-col gap-0.5">
+              <span className="text-sm font-semibold">Modifiche non salvate</span>
+              <span className="text-xs text-muted-foreground">
+                Pattern, visibilità e notifiche richiedono salvataggio esplicito.
+              </span>
+            </div>
+            <div className="flex gap-3">
+              <Button variant="ghost">Annulla</Button>
+              <Button>Salva tutte le modifiche</Button>
+            </div>
+          </div>
         </Card>
       </div>
     </div>
