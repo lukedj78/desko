@@ -4,18 +4,18 @@ import { Clock, Globe, Loader2, Lock, Star } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
-import { Alert } from '@/components/ui/alert';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Alert } from '@desko/ui/components/alert';
+import { Avatar, AvatarFallback } from '@desko/ui/components/avatar';
+import { Badge } from '@desko/ui/components/badge';
+import { Button } from '@desko/ui/components/button';
+import { Card } from '@desko/ui/components/card';
 import type { ProposalSummary } from '@desko/queries/lunch';
 import {
   cancelLunchProposal,
   joinLunchProposal,
   leaveLunchProposal,
 } from '@desko/server-actions/lunch';
-import { cn } from '@/lib/utils';
+import { cn } from '@desko/ui/lib/utils';
 
 type Props = {
   proposals: ProposalSummary[];

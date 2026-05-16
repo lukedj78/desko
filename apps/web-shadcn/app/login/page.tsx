@@ -5,11 +5,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
-import { Alert } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Eyebrow } from '@/components/ui/eyebrow';
-import { Field } from '@/components/ui/field';
+import { Alert } from '@desko/ui/components/alert';
+import { Button } from '@desko/ui/components/button';
+import { Card, CardContent } from '@desko/ui/components/card';
+import { Eyebrow } from '@desko/ui/components/eyebrow';
+import { Field } from '@desko/ui/components/field';
 import { MicrosoftIcon } from '@/components/site/microsoft-icon';
 import { PasswordField } from '@/components/site/password-field';
 import { signIn } from '@/lib/auth-client';

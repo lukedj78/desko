@@ -4,25 +4,25 @@ import { Globe, Loader2, Lock, Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
-import { Alert } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+import { Alert } from '@desko/ui/components/alert';
+import { Button } from '@desko/ui/components/button';
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Field } from '@/components/ui/field';
-import { Label } from '@/components/ui/label';
+} from '@desko/ui/components/dialog';
+import { Field } from '@desko/ui/components/field';
+import { Label } from '@desko/ui/components/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+} from '@desko/ui/components/select';
+import { ToggleGroup, ToggleGroupItem } from '@desko/ui/components/toggle-group';
 import type { RestaurantWithRating } from '@desko/queries/lunch';
 import { createLunchProposal } from '@desko/server-actions/lunch';
 

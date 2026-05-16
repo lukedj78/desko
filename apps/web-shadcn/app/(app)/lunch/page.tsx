@@ -1,6 +1,6 @@
 import { Utensils } from 'lucide-react';
 
-import { Eyebrow } from '@/components/ui/eyebrow';
+import { Eyebrow } from '@desko/ui/components/eyebrow';
 import { getCurrentUser } from '@desko/auth/server';
 import { getLunchProposalsForDate, getRestaurants } from '@desko/queries/lunch';
 import { searchUsers } from '@desko/queries/presence';

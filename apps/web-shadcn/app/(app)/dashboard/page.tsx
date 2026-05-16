@@ -1,10 +1,10 @@
 import { ArrowUpRight, CheckCircle2, Layers, LogOut, ArrowLeftRight } from 'lucide-react';
 import Link from 'next/link';
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Eyebrow } from '@/components/ui/eyebrow';
+import { Avatar, AvatarFallback } from '@desko/ui/components/avatar';
+import { Button } from '@desko/ui/components/button';
+import { Card } from '@desko/ui/components/card';
+import { Eyebrow } from '@desko/ui/components/eyebrow';
 import { EmployeeHoverCard } from '@/components/site/employee-hover-card';
 import { getCurrentUser } from '@desko/auth/server';
 import {
@@ -15,7 +15,7 @@ import {
   type PresenceEntry,
 } from '@desko/queries/presence';
 import { FLOOR_META, type Floor } from '@desko/domain';
-import { cn } from '@/lib/utils';
+import { cn } from '@desko/ui/lib/utils';
 
 export const metadata = { title: 'Dashboard' };
 export const dynamic = 'force-dynamic';

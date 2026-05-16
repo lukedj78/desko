@@ -1,6 +1,6 @@
 import { FLOOR_META, type Floor } from '@desko/domain';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@desko/ui/lib/utils';
 
 /**
  * Chip che mostra il piano di lavoro (US-7). Due valori: 7° / 2°.

@@ -11,7 +11,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@desko/ui/components/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +19,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@desko/ui/components/dropdown-menu';
 import type { Floor } from '@desko/domain';
 import type { PresenceEntry } from '@desko/queries/presence';
 import { declarePresence, leaveOffice, updateFloor } from '@desko/server-actions/presence';

@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useState, useTransition } from 'react';
 
-import { Alert } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Eyebrow } from '@/components/ui/eyebrow';
+import { Alert } from '@desko/ui/components/alert';
+import { Button } from '@desko/ui/components/button';
+import { Card, CardContent } from '@desko/ui/components/card';
+import { Eyebrow } from '@desko/ui/components/eyebrow';
 import { PasswordField } from '@/components/site/password-field';
 import {
   PasswordStrengthMeter,

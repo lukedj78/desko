@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Tailwind v4 content scanning: include il package @desko/ui */
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
+
 @custom-variant dark (&:is(.dark *));
 
 /* ─── Tokens DESIGN.md mappati su shadcn (in HSL per coerenza con il pattern) ── */

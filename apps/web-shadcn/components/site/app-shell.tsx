@@ -20,8 +20,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
+} from '@desko/ui/components/tooltip';
+import { cn } from '@desko/ui/lib/utils';
 
 import { UserDropdown } from './user-dropdown';
 

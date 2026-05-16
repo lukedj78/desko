@@ -3,8 +3,8 @@
 import { Eye, EyeOff } from 'lucide-react';
 import * as React from 'react';
 
-import { cn } from '@/lib/utils';
-import { Label } from '@/components/ui/label';
+import { cn } from '@desko/ui/lib/utils';
+import { Label } from '@desko/ui/components/label';
 
 type PasswordFieldProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> & {
   label: string;

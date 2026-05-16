@@ -3,14 +3,14 @@
 import { Mail, UserPlus } from 'lucide-react';
 import * as React from 'react';
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback } from '@desko/ui/components/avatar';
+import { Button } from '@desko/ui/components/button';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from '@desko/ui/components/tooltip';
 import type { PresenceEntry } from '@desko/queries/presence';
 
 import { FloorBadge } from './floor-badge';

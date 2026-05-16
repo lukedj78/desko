@@ -9,9 +9,9 @@ import {
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Eyebrow } from '@/components/ui/eyebrow';
+import { Button } from '@desko/ui/components/button';
+import { Card, CardContent } from '@desko/ui/components/card';
+import { Eyebrow } from '@desko/ui/components/eyebrow';
 
 export const metadata = {
   title: 'Desko · Sai chi sarà in ufficio quando ci sarai tu',

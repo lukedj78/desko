@@ -4,11 +4,11 @@ import { Star } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
+import { Badge } from '@desko/ui/components/badge';
+import { Card } from '@desko/ui/components/card';
 import type { RestaurantWithRating } from '@desko/queries/lunch';
 import { rateRestaurant } from '@desko/server-actions/lunch';
-import { cn } from '@/lib/utils';
+import { cn } from '@desko/ui/lib/utils';
 
 const CUISINE_LABEL: Record<string, string> = {
   italian: 'Italiana', pizza: 'Pizza', sushi: 'Sushi', asian: 'Asiatica',

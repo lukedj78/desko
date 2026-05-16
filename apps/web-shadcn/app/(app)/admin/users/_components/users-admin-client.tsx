@@ -14,11 +14,11 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-import { Alert } from '@/components/ui/alert';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Alert } from '@desko/ui/components/alert';
+import { Avatar, AvatarFallback } from '@desko/ui/components/avatar';
+import { Badge } from '@desko/ui/components/badge';
+import { Button } from '@desko/ui/components/button';
+import { Card } from '@desko/ui/components/card';
 import {
   Dialog,
   DialogContent,
@@ -26,26 +26,26 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from '@desko/ui/components/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Eyebrow } from '@/components/ui/eyebrow';
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+} from '@desko/ui/components/dropdown-menu';
+import { Eyebrow } from '@desko/ui/components/eyebrow';
+import { Field } from '@desko/ui/components/field';
+import { Input } from '@desko/ui/components/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@desko/ui/components/select';
 import { admin } from '@/lib/auth-client';
-import { cn } from '@/lib/utils';
+import { cn } from '@desko/ui/lib/utils';
 
 type Role = 'user' | 'admin' | 'hr_analytics';
 

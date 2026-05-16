@@ -1,10 +1,10 @@
 import { Armchair, CheckCircle2, Coffee, SplitSquareVertical, Users, ArrowLeftRight } from 'lucide-react';
 import type { ReactNode } from 'react';
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Eyebrow } from '@/components/ui/eyebrow';
+import { Avatar, AvatarFallback } from '@desko/ui/components/avatar';
+import { Button } from '@desko/ui/components/button';
+import { Card } from '@desko/ui/components/card';
+import { Eyebrow } from '@desko/ui/components/eyebrow';
 import { EmployeeHoverCard } from '@/components/site/employee-hover-card';
 import { FLOOR_META, type Floor } from '@desko/domain';
 import {
@@ -13,7 +13,7 @@ import {
   getPresencesForDate,
   type PresenceEntry,
 } from '@desko/queries/presence';
-import { cn } from '@/lib/utils';
+import { cn } from '@desko/ui/lib/utils';
 
 export const metadata = { title: 'Piani' };
 export const dynamic = 'force-dynamic';

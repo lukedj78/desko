@@ -13,10 +13,10 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { eq } from 'drizzle-orm';
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Eyebrow } from '@/components/ui/eyebrow';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@desko/ui/components/button';
+import { Card } from '@desko/ui/components/card';
+import { Eyebrow } from '@desko/ui/components/eyebrow';
+import { Avatar, AvatarFallback } from '@desko/ui/components/avatar';
 import { EmployeeHoverCard } from '@/components/site/employee-hover-card';
 import { getCurrentUser } from '@desko/auth/server';
 import { db, schema } from '@desko/db';
@@ -30,7 +30,7 @@ import {
   type MonthDayPresence,
   type PresenceEntry,
 } from '@desko/queries/presence';
-import { cn } from '@/lib/utils';
+import { cn } from '@desko/ui/lib/utils';
 
 import { MyPresenceItem } from './_components/my-presence-item';
 

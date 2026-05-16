@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@desko/ui/components/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,9 +19,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@desko/ui/components/dropdown-menu';
 import { signOut } from '@/lib/auth-client';
-import { cn } from '@/lib/utils';
+import { cn } from '@desko/ui/lib/utils';
 
 type UserDropdownProps = {
   user: { name: string; email: string; image?: string | null; role?: string };

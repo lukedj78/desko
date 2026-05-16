@@ -1,11 +1,11 @@
 import { redirect } from 'next/navigation';
 
-import { Alert } from '@/components/ui/alert';
-import { Card } from '@/components/ui/card';
-import { Eyebrow } from '@/components/ui/eyebrow';
+import { Alert } from '@desko/ui/components/alert';
+import { Card } from '@desko/ui/components/card';
+import { Eyebrow } from '@desko/ui/components/eyebrow';
 import { getSession } from '@desko/auth/server';
 import { getHrAnalyticsSummary } from '@desko/queries/hr-analytics';
-import { cn } from '@/lib/utils';
+import { cn } from '@desko/ui/lib/utils';
 
 export const metadata = { title: 'HR analytics' };
 export const dynamic = 'force-dynamic';

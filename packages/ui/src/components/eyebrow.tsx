@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '../lib/utils';
 
 /**
  * Eyebrow — sopra-titolo monospace usato in tutta l'app (port da MUI Eyebrow).

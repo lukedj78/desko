@@ -4,7 +4,7 @@ import { Eye, Loader2, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@desko/ui/components/button';
 import { admin } from '@/lib/auth-client';
 
 type Props = {

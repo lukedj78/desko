@@ -10,20 +10,20 @@ import {
 } from 'lucide-react';
 import * as React from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Eyebrow } from '@/components/ui/eyebrow';
-import { Field } from '@/components/ui/field';
+import { Button } from '@desko/ui/components/button';
+import { Card } from '@desko/ui/components/card';
+import { Eyebrow } from '@desko/ui/components/eyebrow';
+import { Field } from '@desko/ui/components/field';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
+} from '@desko/ui/components/select';
+import { Switch } from '@desko/ui/components/switch';
 import { FLOOR_META, type Floor } from '@desko/domain';
-import { cn } from '@/lib/utils';
+import { cn } from '@desko/ui/lib/utils';
 
 type Day = 'M' | 'T' | 'W' | 'TH' | 'F';
 const DAYS: Array<{ key: Day; label: string; short: string }> = [

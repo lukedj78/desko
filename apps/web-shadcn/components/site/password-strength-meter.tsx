@@ -2,7 +2,7 @@
 
 import { Check, Circle } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@desko/ui/lib/utils';
 
 type Requirement = {
   key: string;

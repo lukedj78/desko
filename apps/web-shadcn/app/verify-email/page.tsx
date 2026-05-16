@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Eyebrow } from '@/components/ui/eyebrow';
+import { Button } from '@desko/ui/components/button';
+import { Card, CardContent } from '@desko/ui/components/card';
+import { Eyebrow } from '@desko/ui/components/eyebrow';
 import { authClient } from '@/lib/auth-client';
 
 type Status = 'pending' | 'no-token' | 'verifying' | 'success' | 'error';
