@@ -43,7 +43,7 @@ export default async function LunchPage() {
   ]);
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-6 py-6 md:px-8 md:py-10">
+    <div className="mx-auto w-full max-w-screen-2xl px-5 py-8 sm:px-6 md:px-8 md:py-12">
       <div className="flex flex-col gap-10">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
