@@ -12,23 +12,23 @@ Entrambe le app:
 - **stesso schema Drizzle** + **stesso better-auth setup**
 - **stesso DESIGN.md tokens** (palette ocra Desko, font Inter + JetBrains)
 
-Le pagine portate 1:1:
+Le pagine portate 1:1 (porting pixel-perfect su branch `feat/shadcn-port-pixel-perfect`):
 
 | Pagina | MUI | shadcn |
 |---|---|---|
-| `/` landing | ✅ | ✅ |
-| `/login` | ✅ | ✅ |
-| `/signup` | ✅ | ✅ |
-| `/forgot-password` | ✅ | ✅ |
-| `/reset-password` | ✅ | ✅ |
-| `/verify-email` | ✅ | ✅ |
-| `/dashboard` | ✅ | ✅ skeleton |
-| `/calendar` (mese + giorno + MyPresenceItem) | ✅ | ✅ |
-| `/piani` | ✅ | ✅ |
-| `/impostazioni` | ✅ | ✅ skeleton |
-| `/admin/users` | ✅ | ✅ |
-| `/admin/analytics` | ✅ | ✅ |
-| `/lunch` | ✅ | ✅ |
+| `/` landing | ✅ | ✅ pixel-perfect |
+| `/login` | ✅ | ✅ pixel-perfect |
+| `/signup` | ✅ | ✅ pixel-perfect |
+| `/forgot-password` | ✅ | ✅ pixel-perfect |
+| `/reset-password` | ✅ | ✅ pixel-perfect |
+| `/verify-email` | ✅ | ✅ pixel-perfect |
+| `/dashboard` | ✅ | ✅ pixel-perfect (CheckIn + Occupancy donut + Colleghi grid + banner ocra + KPI strip) |
+| `/calendar` (mese + giorno + MyPresenceItem) | ✅ | ✅ pixel-perfect |
+| `/piani` | ✅ | ✅ pixel-perfect (FloorCard con banner + chip "Sei qui" + "Disponibile" + bullets + team + avatar + Sposta button) |
+| `/impostazioni` | ✅ | ✅ pixel-perfect (Bento grid + MilanoSkylineHero SVG + Switch toggles + Field Select) |
+| `/admin/users` | ✅ | ✅ pixel-perfect |
+| `/admin/analytics` | ✅ | ✅ pixel-perfect |
+| `/lunch` | ✅ | ✅ pixel-perfect |
 
 ## Come testare
 
@@ -95,13 +95,42 @@ Per Desko entrambe le app sono valide. Considerazioni:
 
 Per il caso Desko (UI custom con palette ocra distintiva, GDPR-first single-tenant), **shadcn era leggermente più adatto** ma MUI è altrettanto valido — entrambe le app sono in production-ready state lato look.
 
-## Cosa manca al porting shadcn
+## Stato finale del porting
 
-Le pagine sono tutte presenti e funzionali, ma alcune semplificazioni rispetto al MUI:
-- **Dashboard shadcn**: skeleton con KPI + check-in card, mancano "Colleghi in ufficio" hover card grid + "Apri vista piani" banner
-- **Impostazioni shadcn**: skeleton con sections principali, manca il "MilanoSkylineHero" SVG decorativo e i mock dei preset multi-week
-- **Calendar shadcn**: vista mese e giorno OK, mancano dettagli minori (es. allineamento perfetto pixel-by-pixel)
-- **Lunch shadcn**: usa `Select` invece di `Autocomplete` per il ristorante (8 opzioni statiche, ok); usa checkbox list invece di multi-select autocomplete per inviti
-- **Admin users shadcn**: tabella HTML standard invece di MUI Table (semantica identica); manca dialog "Crea nuovo utente"
+Il branch `feat/shadcn-port-pixel-perfect` chiude il porting in modalità
+**screenshot-driven pixel-perfect**: per ogni pagina si è preso lo screenshot
+MUI a 1400×900 viewport, lo si è confrontato con la versione shadcn, si sono
+identificate le differenze (copy, spacing, colori, struttura) e si è
+iterato fino al visual match.
 
-Tutti questi punti sono **gap cosmetici**, non funzionali. Il porting è 1:1 a livello di feature, dati e flussi utente.
+I commit pixel-perfect per pagina:
+- `793790f` dashboard
+- `b3233fd` landing
+- `0260adc` auth × 5
+- `6d278cd` calendar mese
+- `617a166` calendar giorno
+- `0676ead` piani
+- `9144da7` impostazioni (con Milano skyline SVG + Switch)
+- admin/users + admin/analytics + lunch: già pixel-perfect, no diff
+
+Cosa ha richiesto rewrite significativo:
+- **Dashboard** — completamente rifatto (CheckInHeroCard, OccupancyHeroCard
+  con donut conic-gradient, ColleagueHorizontalCard, banner ocra, KPI strip)
+- **Piani** — rewrite della FloorCard con banner top + chip "Sei qui" /
+  "Disponibile" + tagline pinned + body con count/postazioni + progress
+  bar + team breakdown + avatar group + CTA contained ocra
+- **Impostazioni** — Bento grid 3-col completo + MilanoSkylineHero SVG
+  inline (Duomo + Galleria + Pirellone + Velasca + Bosco Verticale +
+  UniCredit Tower) + nuovo `Switch` primitive in `components/ui/`
+
+Cosa ha richiesto solo aggiustamenti minori:
+- **Landing** — container max-w-screen-2xl, final CTA max-w-[900px],
+  HowItWorks divider my-5, footer py-8
+- **Auth × 5** — max-w-md → max-w-[600px], footer mono uppercase → mixed case
+- **Calendar** — rimosso badge label "CHIUSURA/TEAM BUILDING" da cell
+  (MUI mostra solo dot), "Vedi dettagli giornata" → "Vedi dettagli team"
+
+Cosa era già pixel-perfect senza modifiche:
+- Admin users (tabella HTML semantica + Select Ruolo + Stato chip)
+- Admin analytics (KPI strip + weekday bars + weekly trend)
+- Lunch (header + Oggi empty state + Ristoranti grid 4-col)
