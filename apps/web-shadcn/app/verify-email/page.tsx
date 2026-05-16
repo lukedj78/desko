@@ -143,7 +143,7 @@ function VerifyEmailContent() {
 export default function VerifyEmailPage() {
   return (
     <main className="min-h-dvh flex flex-col items-center justify-center bg-muted px-6 py-10 md:py-16">
-      <div className="w-full max-w-md flex flex-col gap-8">
+      <div className="w-full max-w-[600px] flex flex-col gap-8">
         <div className="flex items-center justify-center gap-3">
           <span className="inline-flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-extrabold text-lg">
             D
