@@ -14,10 +14,10 @@ const buttonVariants = cva(
           'bg-primary text-primary-foreground shadow-sm hover:bg-primary/90',
         destructive:
           'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
+        // outline shadcn standard: border subtle, bg card, hover su accent (muted tint)
         outline:
-          'border border-foreground bg-transparent text-foreground hover:bg-foreground hover:text-background',
-        // outlined MUI = bordo divider, hover bg muted
-        ghost: 'hover:bg-muted hover:text-foreground',
+          'border border-input bg-card text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground',
+        ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {

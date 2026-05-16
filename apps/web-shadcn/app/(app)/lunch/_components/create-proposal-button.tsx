@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, ChevronsUpDown, Clock, Globe, Loader2, Lock, Plus, X } from 'lucide-react';
+import { Check, ChevronsUpDown, Globe, Loader2, Lock, Plus, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
 
@@ -25,7 +25,6 @@ import {
   DialogTitle,
 } from '@desko/ui/components/dialog';
 import { Field } from '@desko/ui/components/field';
-import { Input } from '@desko/ui/components/input';
 import { Label } from '@desko/ui/components/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@desko/ui/components/popover';
 import {
@@ -35,6 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@desko/ui/components/select';
+import { TimePicker } from '@desko/ui/components/time-picker';
 import { ToggleGroup, ToggleGroupItem } from '@desko/ui/components/toggle-group';
 import { cn } from '@desko/ui/lib/utils';
 import type { RestaurantWithRating } from '@desko/queries/lunch';
@@ -207,18 +207,14 @@ export function CreateProposalButton({ restaurants, invitableUsers }: Props) {
                 <Label htmlFor="proposal-time" className="flex items-baseline gap-1">
                   Orario <span className="text-destructive">*</span>
                 </Label>
-                <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-                  <Input
-                    id="proposal-time"
-                    type="time"
-                    required
-                    value={meetingTime}
-                    onChange={(e) => setMeetingTime(e.target.value)}
-                    step={300}
-                    className="h-12 pl-9 text-base"
-                  />
-                </div>
+                <TimePicker
+                  id="proposal-time"
+                  value={meetingTime}
+                  onChange={setMeetingTime}
+                  minuteStep={5}
+                  minHour={11}
+                  maxHour={15}
+                />
               </div>
             </div>
 
