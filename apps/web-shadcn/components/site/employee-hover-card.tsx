@@ -122,7 +122,16 @@ export function EmployeeHoverCard({
   return (
     <TooltipProvider delayDuration={150}>
       <Tooltip>
-        <TooltipTrigger asChild>{children}</TooltipTrigger>
+        <TooltipTrigger asChild>
+          {/*
+           * Wrappiamo in <span> per evitare un hydration mismatch:
+           * Radix TooltipTrigger asChild inietta attributi data-state e
+           * aria-describedby con id non deterministico, che differiscono
+           * tra SSR e client. Lo span fa da cuscinetto neutro, identico
+           * a quanto fa MUI con i suoi Tooltip wrappati.
+           */}
+          <span className="inline-flex">{children}</span>
+        </TooltipTrigger>
         <TooltipContent
           side="top"
           sideOffset={6}

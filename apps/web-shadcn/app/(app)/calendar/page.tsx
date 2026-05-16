@@ -279,24 +279,30 @@ function CalendarMonthGrid({
                       {attendees.slice(0, 2).reverse().map((a, i) => {
                         const isMe = a.userId === myUserId;
                         return (
-                          <Avatar
+                          <EmployeeHoverCard
                             key={`${a.userId}-${i}`}
-                            className={cn(
-                              'size-6 md:size-7 ring-2 ring-primary',
-                              i > 0 && '-mr-2',
-                            )}
+                            entry={attendeeToEntry(a, cell.date, isMe)}
+                            isMe={isMe}
                           >
-                            <AvatarFallback
+                            <Avatar
                               className={cn(
-                                'text-[9px] md:text-[10px] font-bold',
-                                isMe
-                                  ? 'bg-primary text-primary-foreground'
-                                  : 'bg-muted text-foreground',
+                                'size-6 md:size-7 ring-2 ring-primary',
+                                i > 0 && '-mr-2',
+                                isMe ? 'cursor-default' : 'cursor-pointer',
                               )}
                             >
-                              {a.initials}
-                            </AvatarFallback>
-                          </Avatar>
+                              <AvatarFallback
+                                className={cn(
+                                  'text-[9px] md:text-[10px] font-bold',
+                                  isMe
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'bg-muted text-foreground',
+                                )}
+                              >
+                                {a.initials}
+                              </AvatarFallback>
+                            </Avatar>
+                          </EmployeeHoverCard>
                         );
                       })}
                     </div>
@@ -328,7 +334,6 @@ function TeamOverlapCard({
   };
   myUserId: string;
 }) {
-  void myUserId;
   const visible = bestDay.attendees.slice(0, 4);
   const overflow = Math.max(0, bestDay.attendees.length - 4);
 
@@ -364,16 +369,35 @@ function TeamOverlapCard({
         {bestDay.attendees.length > 0 ? (
           <div className="flex items-center gap-2">
             <div className="flex flex-row-reverse items-center">
-              {[...visible].reverse().map((a, i) => (
-                <Avatar
-                  key={a.userId}
-                  className={cn('size-7 ring-2 ring-primary', i > 0 && '-mr-2.5')}
-                >
-                  <AvatarFallback className="bg-muted text-[10px] font-bold">
-                    {a.initials}
-                  </AvatarFallback>
-                </Avatar>
-              ))}
+              {[...visible].reverse().map((a, i) => {
+                const isMe = a.userId === myUserId;
+                return (
+                  <EmployeeHoverCard
+                    key={a.userId}
+                    entry={attendeeToEntry(a, bestDay.date, isMe)}
+                    isMe={isMe}
+                  >
+                    <Avatar
+                      className={cn(
+                        'size-7 ring-2 ring-primary',
+                        i > 0 && '-mr-2.5',
+                        isMe ? 'cursor-default' : 'cursor-pointer',
+                      )}
+                    >
+                      <AvatarFallback
+                        className={cn(
+                          'text-[10px] font-bold',
+                          isMe
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-muted text-foreground',
+                        )}
+                      >
+                        {a.initials}
+                      </AvatarFallback>
+                    </Avatar>
+                  </EmployeeHoverCard>
+                );
+              })}
             </div>
             {overflow > 0 ? (
               <span className="text-xs text-muted-foreground">+{overflow} altri</span>
