@@ -357,7 +357,7 @@ function TeamOverlapCard({
 
         <p className="text-sm text-muted-foreground">
           {bestDay.attendees.length === 0
-            ? 'Nessuna presenza dichiarata.'
+            ? 'Nessuna presenza dichiarata per questo giorno.'
             : `${bestDay.attendees.length} colleghi su ${bestDay.totalActive} saranno in ufficio.`}
         </p>
 
