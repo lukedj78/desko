@@ -20,8 +20,8 @@ import type { ReactNode } from 'react';
 import { ColleagueCard } from '@/components/site/colleague-card';
 import { EmployeeHoverCard } from '@/components/site/employee-hover-card';
 import { Eyebrow } from '@/components/site/eyebrow';
-import { getFloorOccupancy, getMyPresenceToday, getPresencesForDate } from '@/lib/queries/presence';
-import { FLOOR_META, type Floor } from '@/lib/presence-domain';
+import { getFloorOccupancy, getMyPresenceToday, getPresencesForDate } from '@desko/queries/presence';
+import { FLOOR_META, type Floor } from '@desko/domain';
 
 export const metadata = { title: 'Piani' };
 

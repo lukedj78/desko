@@ -27,8 +27,8 @@ const { drizzle } = await import('drizzle-orm/neon-serverless');
 const ws = (await import('ws')).default;
 const { randomUUID } = await import('node:crypto');
 
-const { auth } = await import('../lib/auth');
-const schema = await import('../lib/db/schema');
+const { auth } = await import('@desko/auth');
+const schema = await import('@desko/db/schema');
 
 neonConfig.webSocketConstructor = ws;
 

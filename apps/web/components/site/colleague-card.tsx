@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 
 import { EmployeeHoverCard } from './employee-hover-card';
 import { FloorBadge } from './floor-badge';
-import type { PresenceEntry } from '@/lib/queries/presence';
+import type { PresenceEntry } from '@desko/queries/presence';
 
 const TEAM_COLORS: Record<string, string> = {
   Engineering: '#3D87C9',

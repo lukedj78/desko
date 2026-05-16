@@ -5,9 +5,9 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { Eyebrow } from '@/components/site/eyebrow';
-import { getCurrentUser } from '@/lib/auth-server';
-import { getLunchProposalsForDate, getRestaurants } from '@/lib/queries/lunch';
-import { searchUsers } from '@/lib/queries/presence';
+import { getCurrentUser } from '@desko/auth/server';
+import { getLunchProposalsForDate, getRestaurants } from '@desko/queries/lunch';
+import { searchUsers } from '@desko/queries/presence';
 
 import { CreateProposalButton } from './_components/create-proposal-button';
 import { LunchProposalsList } from './_components/lunch-proposals-list';

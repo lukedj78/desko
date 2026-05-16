@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import type { HrTodaySummary } from '@/lib/queries/hr-analytics';
+import type { HrTodaySummary } from '@desko/queries/hr-analytics';
 
 type Props = { today: HrTodaySummary };
 

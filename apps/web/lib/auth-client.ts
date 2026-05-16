@@ -3,7 +3,7 @@
 import { createAuthClient } from 'better-auth/react';
 import { adminClient } from 'better-auth/client/plugins';
 
-import { ac, ROLES } from '@/lib/auth-permissions';
+import { ac, ROLES } from '@desko/auth/permissions';
 
 /**
  * Auth client lato browser.

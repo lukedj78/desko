@@ -24,8 +24,8 @@ import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
 import { Field } from '@/components/site/field';
-import { addRestaurant, createLunchProposal } from '@/lib/server/lunch';
-import type { RestaurantWithRating } from '@/lib/queries/lunch';
+import { addRestaurant, createLunchProposal } from '@desko/server-actions/lunch';
+import type { RestaurantWithRating } from '@desko/queries/lunch';
 
 type InvitableUser = {
   userId: string;

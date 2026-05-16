@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import { getSession } from '@/lib/auth-server';
+import { getSession } from '@desko/auth/server';
 
 import { UsersAdminClient } from './_components/users-admin-client';
 

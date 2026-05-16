@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "app/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@desko/ui/components",
+    "utils": "@desko/ui/lib/utils",
+    "ui": "@desko/ui/components",
+    "lib": "@desko/ui/lib",
+    "hooks": "@desko/ui/hooks"
+  },
+  "iconLibrary": "lucide"
+}

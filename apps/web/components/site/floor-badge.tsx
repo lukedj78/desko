@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
-import { type Floor, FLOOR_META } from '@/lib/presence-domain';
+import { type Floor, FLOOR_META } from '@desko/domain';
 
 /**
  * Chip che mostra il piano di lavoro (US-7). Due valori: 7° / 2°.

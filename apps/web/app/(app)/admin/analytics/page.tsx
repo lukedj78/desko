@@ -5,8 +5,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { Eyebrow } from '@/components/site/eyebrow';
-import { getSession } from '@/lib/auth-server';
-import { getHrAnalyticsSummary } from '@/lib/queries/hr-analytics';
+import { getSession } from '@desko/auth/server';
+import { getHrAnalyticsSummary } from '@desko/queries/hr-analytics';
 
 import { TodayKpis } from './_components/today-kpis';
 import { WeekdayBars } from './_components/weekday-bars';

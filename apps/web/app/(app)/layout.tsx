@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 import { AppShell } from '@/components/site/app-shell';
-import { getSession } from '@/lib/auth-server';
+import { getSession } from '@desko/auth/server';
 
 import { ImpersonationBanner } from './_components/impersonation-banner';
 

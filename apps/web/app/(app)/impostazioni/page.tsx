@@ -19,7 +19,7 @@ import { useState } from 'react';
 
 import { Eyebrow } from '@/components/site/eyebrow';
 import { Field } from '@/components/site/field';
-import { FLOOR_META, type Floor } from '@/lib/presence-domain';
+import { FLOOR_META, type Floor } from '@desko/domain';
 
 type Day = 'M' | 'T' | 'W' | 'TH' | 'F';
 const DAYS: Array<{ key: Day; label: string; short: string }> = [

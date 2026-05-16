@@ -17,14 +17,14 @@ import Link from 'next/link';
 
 import { EmployeeHoverCard } from '@/components/site/employee-hover-card';
 import { Eyebrow } from '@/components/site/eyebrow';
-import { getCurrentUser } from '@/lib/auth-server';
+import { getCurrentUser } from '@desko/auth/server';
 import {
   getFloorOccupancy,
   getMyPresenceToday,
   getPresencesForDate,
   getTodayCounts,
-} from '@/lib/queries/presence';
-import { FLOOR_META, type Floor } from '@/lib/presence-domain';
+} from '@desko/queries/presence';
+import { FLOOR_META, type Floor } from '@desko/domain';
 
 export const metadata = { title: 'Dashboard' };
 

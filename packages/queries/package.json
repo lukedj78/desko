@@ -1,0 +1,38 @@
+{
+  "name": "@desko/queries",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./presence": {
+      "types": "./src/presence.ts",
+      "default": "./src/presence.ts"
+    },
+    "./lunch": {
+      "types": "./src/lunch.ts",
+      "default": "./src/lunch.ts"
+    },
+    "./hr-analytics": {
+      "types": "./src/hr-analytics.ts",
+      "default": "./src/hr-analytics.ts"
+    }
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@desko/auth": "workspace:*",
+    "@desko/db": "workspace:*",
+    "@desko/domain": "workspace:*",
+    "drizzle-orm": "^0.45.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

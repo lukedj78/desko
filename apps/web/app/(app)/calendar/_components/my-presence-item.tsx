@@ -19,9 +19,9 @@ import Typography from '@mui/material/Typography';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
-import { declarePresence, leaveOffice, updateFloor } from '@/lib/server/presence';
-import type { Floor } from '@/lib/presence-domain';
-import type { PresenceEntry } from '@/lib/queries/presence';
+import { declarePresence, leaveOffice, updateFloor } from '@desko/server-actions/presence';
+import type { Floor } from '@desko/domain';
+import type { PresenceEntry } from '@desko/queries/presence';
 
 type Props = {
   entry: PresenceEntry;

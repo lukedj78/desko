@@ -24,11 +24,11 @@ import type { ReactNode } from 'react';
 
 import { EmployeeHoverCard } from '@/components/site/employee-hover-card';
 import { Eyebrow } from '@/components/site/eyebrow';
-import { getCurrentUser } from '@/lib/auth-server';
+import { getCurrentUser } from '@desko/auth/server';
 
 import { MyPresenceItem } from './_components/my-presence-item';
-import { db } from '@/lib/db';
-import { user as userTable } from '@/lib/db/schema';
+import { db } from '@desko/db';
+import { user as userTable } from '@desko/db/schema';
 import {
   getMyMonthCounts,
   getPresencesForDate,
@@ -37,8 +37,8 @@ import {
   type MonthAttendee,
   type MonthDayPresence,
   type PresenceEntry,
-} from '@/lib/queries/presence';
-import type { Floor } from '@/lib/presence-domain';
+} from '@desko/queries/presence';
+import type { Floor } from '@desko/domain';
 
 export const metadata = { title: 'Calendar' };
 export const dynamic = 'force-dynamic';
