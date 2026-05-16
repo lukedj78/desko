@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 
-import { getSession } from '@/lib/auth-server';
+import { getSession } from '@desko/auth/server';
 
 /**
  * Layout admin: gate per ruoli "elevati" (admin + hr_analytics).

@@ -1,0 +1,55 @@
+{
+  "name": "@desko/email",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./templates/reset-password": {
+      "types": "./templates/reset-password.tsx",
+      "default": "./templates/reset-password.tsx"
+    },
+    "./templates/verify-email": {
+      "types": "./templates/verify-email.tsx",
+      "default": "./templates/verify-email.tsx"
+    },
+    "./templates/welcome": {
+      "types": "./templates/welcome.tsx",
+      "default": "./templates/welcome.tsx"
+    },
+    "./templates/invite": {
+      "types": "./templates/invite.tsx",
+      "default": "./templates/invite.tsx"
+    },
+    "./templates/ban-notice": {
+      "types": "./templates/ban-notice.tsx",
+      "default": "./templates/ban-notice.tsx"
+    },
+    "./templates/password-changed": {
+      "types": "./templates/password-changed.tsx",
+      "default": "./templates/password-changed.tsx"
+    },
+    "./templates/login-alert": {
+      "types": "./templates/login-alert.tsx",
+      "default": "./templates/login-alert.tsx"
+    }
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@desko/env": "workspace:*",
+    "@react-email/components": "^1.0.12",
+    "react": "^19.2.6",
+    "resend": "^6.12.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "typescript": "^5.7.2"
+  }
+}

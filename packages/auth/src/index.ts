@@ -2,32 +2,20 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { admin } from 'better-auth/plugins';
 
-import { ac, ROLES } from '@/lib/auth-permissions';
-import { db } from '@/lib/db';
-import * as schema from '@/lib/db/schema';
-import { sendEmail } from '@/lib/email';
-import { env } from '@/lib/env';
-import { ResetPasswordEmail } from '@/emails/reset-password';
-import { VerifyEmail } from '@/emails/verify-email';
+import { db, schema } from '@desko/db';
+import { sendEmail } from '@desko/email';
+import { ResetPasswordEmail } from '@desko/email/templates/reset-password';
+import { VerifyEmail } from '@desko/email/templates/verify-email';
+import { env } from '@desko/env';
+
+import { ac, ROLES } from './permissions';
 
 /**
- * better-auth core config.
+ * better-auth core config (server-only).
  *
- * Provider abilitati:
- *  - **Email + password**: signup self-service (US-4 Metodo B). Email verification
- *    è opzionale ed è abilitata appena `module-add email` è wired.
- *  - **Microsoft Entra ID** (OIDC/OAuth2, US-4 Metodo A): per ora con placeholder
- *    credentials. Quando Azure App Registration sarà pronta, basta valorizzare
- *    le env vars `MICROSOFT_CLIENT_ID/SECRET/TENANT_ID`.
- *
- * Plugin abilitati:
- *  - **admin**: gestione ruoli (`user` / `admin` / `hr_analytics`), ban, impersonate,
- *    list users via API. Vedi US-8.
- *
- * Schema:
- *  - tabelle `user`, `session`, `account`, `verification` definite in `lib/db/schema.ts`.
- *  - I campi custom (role, team, banned, banReason, ecc.) sono già nello schema —
- *    better-auth li riconosce automaticamente.
+ * Provider: Email/password sempre on, Microsoft Entra ID condizionale.
+ * Plugin: admin per gestione ruoli/ban/impersonate.
+ * Schema: tabelle user/session/account/verification da @desko/db.
  */
 
 const isMicrosoftConfigured =
@@ -50,10 +38,6 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    // Per ora signup self-service è aperto (fase test).
-    // Quando Microsoft Entra sarà attivo in produzione, restringere via config:
-    //   - disableSignUp: true (signup solo via invito admin) oppure
-    //   - requireEmailVerification: true (signup aperto ma con verify obbligatorio)
     requireEmailVerification: false,
     autoSignIn: true,
     minPasswordLength: 8,
@@ -67,7 +51,7 @@ export const auth = betterAuth({
     },
   },
   emailVerification: {
-    sendOnSignUp: false, // attivare quando si vuole verify obbligatorio
+    sendOnSignUp: false,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
       await sendEmail({
@@ -111,9 +95,9 @@ export const auth = betterAuth({
     }),
   ],
   session: {
-    expiresIn: 60 * 60 * 24 * 7, // 7 giorni
-    updateAge: 60 * 60 * 24, // refresh sessione se ultimo update >24h
-    cookieCache: { enabled: true, maxAge: 60 * 5 }, // cache cookie 5 min
+    expiresIn: 60 * 60 * 24 * 7,
+    updateAge: 60 * 60 * 24,
+    cookieCache: { enabled: true, maxAge: 60 * 5 },
   },
   advanced: {
     cookiePrefix: 'desko',

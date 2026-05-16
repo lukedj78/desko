@@ -11,8 +11,8 @@ import Typography from '@mui/material/Typography';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
-import { rateRestaurant } from '@/lib/server/lunch';
-import type { RestaurantWithRating } from '@/lib/queries/lunch';
+import { rateRestaurant } from '@desko/server-actions/lunch';
+import type { RestaurantWithRating } from '@desko/queries/lunch';
 
 const CUISINE_LABEL: Record<string, string> = {
   italian: 'Italiana',

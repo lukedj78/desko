@@ -1,8 +1,8 @@
 import { headers } from 'next/headers';
 import { cache } from 'react';
 
-import { auth } from '@/lib/auth';
-import type { AppRole } from '@/lib/auth-permissions';
+import { auth } from './index';
+import type { AppRole } from './permissions';
 
 /**
  * Helper server-side per leggere/validare la sessione.

@@ -1,26 +1,18 @@
 /**
  * Apply Drizzle migrations to Neon Postgres via WebSocket driver.
  *
- * Workflow:
- *   1. Modifica `lib/db/schema.ts`
- *   2. `pnpm db:generate` — genera SQL files in `lib/db/migrations/` (offline, no DB)
- *   3. `pnpm db:migrate` — applica le migrations al DB (questo script)
+ *   pnpm --filter @desko/db migrate
  *
- * Driver: `@neondatabase/serverless` Pool con WebSocket. Funziona col `DATABASE_URL`
- * pooled (host con `-pooler`) — nessun bisogno di un URL "unpooled" separato.
- *
- * Doc Drizzle: il driver neon-serverless WebSocket è "drop-in replacement for pg",
- * supporta sia runtime sia migrations.
+ * Driver: `@neondatabase/serverless` Pool con WebSocket — drop-in per pg,
+ * funziona col `DATABASE_URL` pooled di Neon.
  */
 
 import { config } from 'dotenv';
 import { existsSync } from 'node:fs';
 
-// Carica .env.local PRIMA di .env (Next-style precedence)
 if (existsSync('.env.local')) config({ path: '.env.local' });
 config();
 
-// Dynamic imports DOPO config() — garantisce env caricato prima dei moduli
 const { neonConfig, Pool } = await import('@neondatabase/serverless');
 const { drizzle } = await import('drizzle-orm/neon-serverless');
 const { migrate } = await import('drizzle-orm/neon-serverless/migrator');
@@ -39,7 +31,7 @@ async function run() {
   const db = drizzle({ client: pool });
 
   console.log('🔄 Applico migrations…');
-  await migrate(db, { migrationsFolder: './lib/db/migrations' });
+  await migrate(db, { migrationsFolder: './migrations' });
   console.log('✅ Migrations applicate.');
 
   await pool.end();

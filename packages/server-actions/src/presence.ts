@@ -6,10 +6,10 @@ import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
-import { getCurrentUserId } from '@/lib/auth-server';
-import { db } from '@/lib/db';
-import { follows, presenceEntries, user as userTable, weeklyPatterns } from '@/lib/db/schema';
-import type { ActionResult, Floor, PresenceStatus } from '@/lib/presence-domain';
+import { getCurrentUserId } from '@desko/auth/server';
+import { db } from '@desko/db';
+import { follows, presenceEntries, user as userTable, weeklyPatterns } from '@desko/db/schema';
+import type { ActionResult, Floor, PresenceStatus } from '@desko/domain';
 
 /**
  * Server actions per il dominio "presence" — implementazione reale Drizzle.

@@ -6,8 +6,8 @@ import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
-import { getCurrentUserId } from '@/lib/auth-server';
-import { db } from '@/lib/db';
+import { getCurrentUserId } from '@desko/auth/server';
+import { db } from '@desko/db';
 import {
   lunchProposalInvites,
   lunchProposalParticipants,
@@ -15,8 +15,8 @@ import {
   restaurantRatings,
   restaurants,
   user as userTable,
-} from '@/lib/db/schema';
-import type { ActionResult } from '@/lib/presence-domain';
+} from '@desko/db/schema';
+import type { ActionResult } from '@desko/domain';
 
 /**
  * Server actions per il dominio "lunch" (pausa pranzo).

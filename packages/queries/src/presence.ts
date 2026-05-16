@@ -1,14 +1,14 @@
 import { and, desc, eq, gte, inArray, lte, sql } from 'drizzle-orm';
 
-import { getCurrentUserId } from '@/lib/auth-server';
-import { db } from '@/lib/db';
+import { getCurrentUserId } from '@desko/auth/server';
+import { db } from '@desko/db';
 import {
   follows,
   presenceEntries,
   user as userTable,
   weeklyPatterns,
-} from '@/lib/db/schema';
-import type { Floor, PresenceStatus } from '@/lib/presence-domain';
+} from '@desko/db/schema';
+import type { Floor, PresenceStatus } from '@desko/domain';
 
 /**
  * Read-side per il dominio "presence" — query Drizzle reali su Postgres.

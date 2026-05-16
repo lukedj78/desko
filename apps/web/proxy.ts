@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { auth } from '@/lib/auth';
+import { auth } from '@desko/auth';
 
 /**
  * Proxy Next.js 16 — gate di accesso con session validation reale.

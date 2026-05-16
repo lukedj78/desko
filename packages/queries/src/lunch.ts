@@ -1,7 +1,7 @@
 import { and, asc, desc, eq, inArray, sql } from 'drizzle-orm';
 
-import { getCurrentUserId } from '@/lib/auth-server';
-import { db } from '@/lib/db';
+import { getCurrentUserId } from '@desko/auth/server';
+import { db } from '@desko/db';
 import {
   lunchProposalInvites,
   lunchProposalParticipants,
@@ -9,7 +9,7 @@ import {
   restaurantRatings,
   restaurants,
   user as userTable,
-} from '@/lib/db/schema';
+} from '@desko/db/schema';
 
 /**
  * Read-side per il dominio "lunch" — query Drizzle reali su Postgres.

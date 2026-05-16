@@ -1,7 +1,7 @@
 import { and, eq, gte, sql } from 'drizzle-orm';
 
-import { db } from '@/lib/db';
-import { presenceEntries, user as userTable } from '@/lib/db/schema';
+import { db } from '@desko/db';
+import { presenceEntries, user as userTable } from '@desko/db/schema';
 
 /**
  * Read-side aggregato per /admin/analytics (US-6).

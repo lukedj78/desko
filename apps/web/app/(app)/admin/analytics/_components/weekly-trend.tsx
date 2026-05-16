@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import type { WeeklyTrendPoint } from '@/lib/queries/hr-analytics';
+import type { WeeklyTrendPoint } from '@desko/queries/hr-analytics';
 
 type Props = { weekly: WeeklyTrendPoint[] };
 

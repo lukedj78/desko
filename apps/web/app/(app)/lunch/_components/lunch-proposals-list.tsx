@@ -21,8 +21,8 @@ import {
   cancelLunchProposal,
   joinLunchProposal,
   leaveLunchProposal,
-} from '@/lib/server/lunch';
-import type { ProposalSummary } from '@/lib/queries/lunch';
+} from '@desko/server-actions/lunch';
+import type { ProposalSummary } from '@desko/queries/lunch';
 
 type Props = {
   proposals: ProposalSummary[];
