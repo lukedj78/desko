@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html class="light" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#a0c9ff",
+                    "on-secondary-container": "#007165",
+                    "on-error": "#ffffff",
+                    "secondary": "#006b5f",
+                    "on-background": "#191c1f",
+                    "inverse-surface": "#2e3034",
+                    "background": "#f9f9fe",
+                    "surface-container": "#ededf3",
+                    "outline": "#727780",
+                    "primary-fixed": "#d2e4ff",
+                    "surface-container-low": "#f3f3f8",
+                    "surface-container-high": "#e7e8ed",
+                    "secondary-fixed-dim": "#3cddc7",
+                    "on-primary-fixed": "#001c37",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#2d6197",
+                    "primary": "#00355f",
+                    "surface-dim": "#d9dadf",
+                    "outline-variant": "#c2c7d1",
+                    "on-primary-container": "#8ebdf9",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "surface": "#f9f9fe",
+                    "on-surface": "#191c1f",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#f0f0f5",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#e2e2e7",
+                    "on-secondary-fixed": "#00201c",
+                    "error": "#ba1a1a",
+                    "tertiary": "#243449",
+                    "inverse-primary": "#a0c9ff",
+                    "surface-variant": "#e2e2e7",
+                    "primary-container": "#0f4c81",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#42474f",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#f9f9fe",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "tertiary-container": "#3b4b60",
+                    "secondary-container": "#62fae3",
+                    "on-tertiary-container": "#aabbd4",
+                    "on-secondary-fixed-variant": "#005047",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "tertiary-fixed": "#d3e4fe",
+                    "secondary-fixed": "#62fae3",
+                    "on-primary-fixed-variant": "#07497d",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-gap": "0.75rem",
+                    "gutter-md": "1rem",
+                    "margin-mobile": "1.25rem",
+                    "section-padding": "1.5rem",
+                    "touch-target-min": "48px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim w-full sticky top-0 z-50 flex items-center justify-between px-margin-mobile h-14 w-full">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7W33YTfSi0V3WfTq70PDhHVu9zbfyPR2KKdxdLnokIIA39uzRsi2m3uUTVr_JnIu1XEJ_DzRfQj4irMsiG9g7llPnG31WkD3ix9u8AWj0La5Nw8I9ZB5VgZydMdH4hVE-3_nbxfDzOobthAUoMESaiQsfoxMArOpU1ZO1YlCkd5G53plcdr_wxCeegOzHfggY4AT_HauME9ayn4Ny6F_aMYE0R2EvXcqwsU8kJbU7qiFNf_wZyWAgAIBR32GgGmGirJOF6Jb7B8A"/>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary dark:text-primary-fixed-dim tracking-tight">Presence</h1>
+</div>
+<button class="text-primary dark:text-primary-fixed-dim hover:opacity-80 transition-opacity active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<main class="px-margin-mobile py-6">
+<!-- Section Header -->
+<div class="mb-8">
+<h2 class="font-headline-md text-headline-md text-on-surface">Seleziona Spazio</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Scegli dove lavorare oggi</p>
+</div>
+<!-- Floor Selection Cards -->
+<div class="flex flex-col gap-6">
+<!-- 7th Floor Card -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-on-surface">7° Piano</span>
+<div class="flex items-center gap-2 mt-1">
+<span class="w-2 h-2 rounded-full bg-[#166534]"></span>
+<span class="font-label-sm text-label-sm text-[#166534] bg-[#DCFCE7] px-2 py-0.5 rounded-full">Disponibile</span>
+</div>
+</div>
+<div class="text-right">
+<div class="font-label-lg text-label-lg text-primary">12/40</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Postazioni</div>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 30%;"></div>
+</div>
+<div class="flex gap-3 mt-2">
+<button class="flex-1 h-touch-target-min bg-primary text-on-primary rounded-xl font-label-lg text-label-lg hover:opacity-90 active:scale-95 transition-all">
+                        Entra
+                    </button>
+<button class="flex-1 h-touch-target-min border border-outline text-primary rounded-xl font-label-lg text-label-lg hover:bg-surface-container-low active:scale-95 transition-all">
+                        Scopri
+                    </button>
+</div>
+</div>
+<!-- 2nd Floor Card -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/30 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-on-surface">2° Piano</span>
+<div class="flex items-center gap-2 mt-1">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="font-label-sm text-label-sm text-error bg-error-container px-2 py-0.5 rounded-full">Quasi pieno</span>
+</div>
+</div>
+<div class="text-right">
+<div class="font-label-lg text-label-lg text-primary">58/65</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Postazioni</div>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-error h-full rounded-full" style="width: 89%;"></div>
+</div>
+<div class="flex gap-3 mt-2">
+<button class="flex-1 h-touch-target-min bg-primary text-on-primary rounded-xl font-label-lg text-label-lg hover:opacity-90 active:scale-95 transition-all">
+                        Entra
+                    </button>
+<button class="flex-1 h-touch-target-min border border-outline text-primary rounded-xl font-label-lg text-label-lg hover:bg-surface-container-low active:scale-95 transition-all">
+                        Scopri
+                    </button>
+</div>
+</div>
+</div>
+<!-- Featured View (Bento-style element) -->
+<div class="mt-10 bg-primary-container text-on-primary-container rounded-xl p-6 relative overflow-hidden">
+<div class="relative z-10">
+<h3 class="font-headline-md text-headline-md mb-2">Mappa Ufficio</h3>
+<p class="font-body-md text-body-md opacity-90 max-w-[200px]">Visualizza la disposizione dei posti in tempo reale.</p>
+<button class="mt-4 bg-surface-container-lowest text-primary px-4 py-2 rounded-lg font-label-lg text-label-lg">
+                    Apri Mappa
+                </button>
+</div>
+<div class="absolute -right-4 -bottom-4 w-32 h-32 bg-on-primary-container/10 rounded-full blur-2xl"></div>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-20">
+<span class="material-symbols-outlined text-6xl" data-icon="layers">layers</span>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-touch-target-min pb-safe bg-surface dark:bg-surface-container-lowest shadow-[0_-4px_12px_rgba(0,0,0,0.04)] z-50 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors active:scale-90 transition-transform flex-1 h-full" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors active:scale-90 transition-transform flex-1 h-full" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-label-sm text-label-sm">Calendar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-semibold hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors active:scale-90 transition-transform flex-1 h-full" href="#">
+<span class="material-symbols-outlined" data-icon="layers" style="font-variation-settings: 'FILL' 1;">layers</span>
+<span class="font-label-sm text-label-sm">Floors</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors active:scale-90 transition-transform flex-1 h-full" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+</body></html>

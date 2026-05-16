@@ -1,0 +1,39 @@
+@layer mui;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: var(--font-inter), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-feature-settings: 'calt', 'ss01';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: #fafaf7;
+  color: #0e0f0c;
+  min-height: 100dvh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Tabular numerals for calendar / table cells.
+   Add the `.tabular-nums` class on any container that renders numeric grids. */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'calt', 'tnum';
+}

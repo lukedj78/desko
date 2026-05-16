@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<html class="light" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Presence - Calendario Presenze</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#a0c9ff",
+                    "on-secondary-container": "#007165",
+                    "on-error": "#ffffff",
+                    "secondary": "#006b5f",
+                    "on-background": "#191c1f",
+                    "inverse-surface": "#2e3034",
+                    "background": "#f9f9fe",
+                    "surface-container": "#ededf3",
+                    "outline": "#727780",
+                    "primary-fixed": "#d2e4ff",
+                    "surface-container-low": "#f3f3f8",
+                    "surface-container-high": "#e7e8ed",
+                    "secondary-fixed-dim": "#3cddc7",
+                    "on-primary-fixed": "#001c37",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#2d6197",
+                    "primary": "#00355f",
+                    "surface-dim": "#d9dadf",
+                    "outline-variant": "#c2c7d1",
+                    "on-primary-container": "#8ebdf9",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "surface": "#f9f9fe",
+                    "on-surface": "#191c1f",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#f0f0f5",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#e2e2e7",
+                    "on-secondary-fixed": "#00201c",
+                    "error": "#ba1a1a",
+                    "tertiary": "#243449",
+                    "inverse-primary": "#a0c9ff",
+                    "surface-variant": "#e2e2e7",
+                    "primary-container": "#0f4c81",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#42474f",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#f9f9fe",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "tertiary-container": "#3b4b60",
+                    "secondary-container": "#62fae3",
+                    "on-tertiary-container": "#aabbd4",
+                    "on-secondary-fixed-variant": "#005047",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "tertiary-fixed": "#d3e4fe",
+                    "secondary-fixed": "#62fae3",
+                    "on-primary-fixed-variant": "#07497d",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-gap": "0.75rem",
+                    "gutter-md": "1rem",
+                    "margin-mobile": "1.25rem",
+                    "section-padding": "1.5rem",
+                    "touch-target-min": "48px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-outline-variant bg-surface flex flex-col p-4 gap-stack-gap z-50">
+<div class="mb-8 px-2">
+<h1 class="text-headline-md font-headline-lg text-primary">Presence</h1>
+<p class="text-label-sm text-on-surface-variant">Office Management</p>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-lg text-label-lg">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg transition-colors active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span class="font-label-lg text-label-lg">Calendar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="layers">layers</span>
+<span class="font-label-lg text-label-lg">Floors</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-lg text-label-lg">Profile</span>
+</a>
+</nav>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant shadow-sm z-40 flex justify-between items-center px-gutter-md">
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-body-md focus:ring-2 focus:ring-primary w-64 transition-all" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="User Profile" data-alt="A professional headshot of a middle-aged man with a friendly expression, wearing a clean white shirt. The background is a soft, blurred corporate office setting with natural light and cool blue tones. The photography is high-end, clean, and minimalist, matching a corporate light-mode design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuARbh7ntwESC5XI6TV7BTM1F0eqZ7fmzP56RI7SVKyj5x-Z9FDTZuDq1KeK3879NwD4h1U7i3UXx9YhJ5DLZY20LYcs73Rw4zC93s8QdRKpoqjrbAbZh2IBkbqDZjocSDSEl4el9xioy_11kIxvUJQy_ZI9Diewwp6vuoQVtCRY5p2oQQQGtYQGjYaaVlssO3ydXpoYHdwMvOQ8UTng_UTkoubOLOc_x11aNumpSciKTOz-agvsuyPjiFprkoRc13l762e3XEOBFsw"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen">
+<div class="p-section-padding flex flex-col gap-6">
+<!-- Header Section -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-headline-lg font-headline-lg text-primary">Calendario Presenze</h2>
+<p class="text-body-lg text-on-surface-variant">Gestione della disponibilità del team per Ottobre 2023</p>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-4 h-touch-target-min border border-outline rounded-xl font-label-lg text-label-lg hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                        Filtra
+                    </button>
+<button class="flex items-center gap-2 px-4 h-touch-target-min bg-primary text-on-primary rounded-xl font-label-lg text-label-lg hover:shadow-lg transition-all">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        Nuova Prenotazione
+                    </button>
+</div>
+</div>
+<!-- Bento Layout Content -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Left: Stats & Calendar -->
+<div class="col-span-12 lg:col-span-9 flex flex-col gap-6">
+<!-- Stats Grid -->
+<div class="grid grid-cols-3 gap-4">
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant shadow-[0px_4px_12px_rgba(0,0,0,0.04)] flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">event_available</span>
+</div>
+<div>
+<p class="text-label-sm text-on-surface-variant">Pianificati</p>
+<p class="text-headline-md font-headline-lg text-primary">12</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant shadow-[0px_4px_12px_rgba(0,0,0,0.04)] flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-error-container/20 flex items-center justify-center text-error">
+<span class="material-symbols-outlined">pending_actions</span>
+</div>
+<div>
+<p class="text-label-sm text-on-surface-variant">In Sospeso</p>
+<p class="text-headline-md font-headline-lg text-error">3</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant shadow-[0px_4px_12px_rgba(0,0,0,0.04)] flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container/30 flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined">house</span>
+</div>
+<div>
+<p class="text-label-sm text-on-surface-variant">Remoto</p>
+<p class="text-headline-md font-headline-lg text-on-secondary-container">7</p>
+</div>
+</div>
+</div>
+<!-- Calendar Grid Container -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.04)] overflow-hidden">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md">Ottobre 2023</h3>
+<div class="flex gap-1">
+<button class="p-2 hover:bg-surface-container-high rounded-full"><span class="material-symbols-outlined">chevron_left</span></button>
+<button class="p-2 hover:bg-surface-container-high rounded-full"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+<div class="p-4">
+<div class="calendar-grid border-b border-outline-variant mb-2">
+<div class="py-2 text-center text-label-sm text-on-surface-variant font-semibold">LUN</div>
+<div class="py-2 text-center text-label-sm text-on-surface-variant font-semibold">MAR</div>
+<div class="py-2 text-center text-label-sm text-on-surface-variant font-semibold">MER</div>
+<div class="py-2 text-center text-label-sm text-on-surface-variant font-semibold">GIO</div>
+<div class="py-2 text-center text-label-sm text-on-surface-variant font-semibold">VEN</div>
+<div class="py-2 text-center text-label-sm text-on-surface-variant font-semibold">SAB</div>
+<div class="py-2 text-center text-label-sm text-on-surface-variant font-semibold">DOM</div>
+</div>
+<div class="calendar-grid gap-px bg-outline-variant border border-outline-variant">
+<!-- Calendar Days (Dummy Data for Oct 2023) -->
+<!-- Starts on Sunday (1) -->
+<div class="bg-surface h-24 p-2 relative text-on-surface-variant/40"><span class="text-label-sm">25</span></div>
+<div class="bg-surface h-24 p-2 relative text-on-surface-variant/40"><span class="text-label-sm">26</span></div>
+<div class="bg-surface h-24 p-2 relative text-on-surface-variant/40"><span class="text-label-sm">27</span></div>
+<div class="bg-surface h-24 p-2 relative text-on-surface-variant/40"><span class="text-label-sm">28</span></div>
+<div class="bg-surface h-24 p-2 relative text-on-surface-variant/40"><span class="text-label-sm">29</span></div>
+<div class="bg-surface h-24 p-2 relative text-on-surface-variant/40"><span class="text-label-sm">30</span></div>
+<div class="bg-surface h-24 p-2 relative"><span class="text-label-sm">1</span></div>
+<div class="bg-surface h-24 p-2 relative">
+<span class="text-label-sm">2</span>
+<div class="mt-1 flex flex-col gap-1">
+<div class="bg-primary-container/20 text-on-primary-container px-2 py-0.5 rounded text-[10px] font-bold truncate">Ufficio: Milano</div>
+</div>
+</div>
+<div class="bg-surface h-24 p-2 relative"><span class="text-label-sm">3</span></div>
+<div class="bg-surface h-24 p-2 relative">
+<span class="text-label-sm">4</span>
+<div class="mt-1 flex flex-col gap-1">
+<div class="bg-error-container/30 text-error px-2 py-0.5 rounded text-[10px] font-bold truncate">Festa Aziendale</div>
+</div>
+</div>
+<div class="bg-surface h-24 p-2 relative"><span class="text-label-sm">5</span></div>
+<div class="bg-surface h-24 p-2 relative">
+<span class="text-label-sm">6</span>
+<div class="mt-1 flex flex-col gap-1">
+<div class="bg-primary-container/20 text-on-primary-container px-2 py-0.5 rounded text-[10px] font-bold truncate">Ufficio: Roma</div>
+</div>
+</div>
+<div class="bg-surface h-24 p-2 relative bg-surface-container-low"><span class="text-label-sm">7</span></div>
+<div class="bg-surface h-24 p-2 relative bg-surface-container-low"><span class="text-label-sm">8</span></div>
+<div class="bg-surface h-24 p-2 relative border-2 border-primary">
+<span class="text-label-sm font-bold text-primary">9</span>
+<div class="mt-1 flex flex-col gap-1">
+<div class="bg-primary px-2 py-0.5 rounded text-[10px] text-on-primary font-bold truncate">Oggi: In Sede</div>
+</div>
+</div>
+<div class="bg-surface h-24 p-2 relative"><span class="text-label-sm">10</span></div>
+<div class="bg-surface h-24 p-2 relative"><span class="text-label-sm">11</span></div>
+<div class="bg-surface h-24 p-2 relative">
+<span class="text-label-sm">12</span>
+<div class="mt-1 flex flex-col gap-1">
+<div class="bg-primary-container/20 text-on-primary-container px-2 py-0.5 rounded text-[10px] font-bold truncate">Ufficio: Milano</div>
+</div>
+</div>
+<div class="bg-surface h-24 p-2 relative"><span class="text-label-sm">13</span></div>
+<div class="bg-surface h-24 p-2 relative bg-surface-container-low"><span class="text-label-sm">14</span></div>
+<div class="bg-surface h-24 p-2 relative bg-surface-container-low"><span class="text-label-sm">15</span></div>
+<div class="bg-surface h-24 p-2 relative">
+<span class="text-label-sm">16</span>
+<div class="mt-1 flex flex-col gap-1">
+<div class="bg-error-container/30 text-error px-2 py-0.5 rounded text-[10px] font-bold truncate">Chiusura Sede</div>
+</div>
+</div>
+<div class="bg-surface h-24 p-2 relative"><span class="text-label-sm">17</span></div>
+<div class="bg-surface h-24 p-2 relative">
+<span class="text-label-sm">18</span>
+<div class="mt-1 flex flex-col gap-1">
+<div class="bg-primary-container/20 text-on-primary-container px-2 py-0.5 rounded text-[10px] font-bold truncate">Ufficio: Milano</div>
+</div>
+</div>
+<div class="bg-surface h-24 p-2 relative"><span class="text-label-sm">19</span></div>
+<div class="bg-surface h-24 p-2 relative"><span class="text-label-sm">20</span></div>
+<div class="bg-surface h-24 p-2 relative bg-surface-container-low"><span class="text-label-sm">21</span></div>
+<div class="bg-surface h-24 p-2 relative bg-surface-container-low"><span class="text-label-sm">22</span></div>
+<div class="bg-surface h-24 p-2 relative"><span class="text-label-sm">23</span></div>
+<div class="bg-surface h-24 p-2 relative"><span class="text-label-sm">24</span></div>
+<div class="bg-surface h-24 p-2 relative">
+<span class="text-label-sm">25</span>
+<div class="mt-1 flex flex-col gap-1">
+<div class="bg-primary-container/20 text-on-primary-container px-2 py-0.5 rounded text-[10px] font-bold truncate">Ufficio: Roma</div>
+</div>
+</div>
+<div class="bg-surface h-24 p-2 relative"><span class="text-label-sm">26</span></div>
+<div class="bg-surface h-24 p-2 relative"><span class="text-label-sm">27</span></div>
+<div class="bg-surface h-24 p-2 relative bg-surface-container-low"><span class="text-label-sm">28</span></div>
+<div class="bg-surface h-24 p-2 relative bg-surface-container-low"><span class="text-label-sm">29</span></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right: Team Overlap Sidebar -->
+<div class="col-span-12 lg:col-span-3 flex flex-col gap-6">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.04)] p-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline-md text-headline-md text-primary">Team Overlap</h3>
+<span class="material-symbols-outlined text-primary">groups</span>
+</div>
+<div class="relative w-32 h-32 mx-auto mb-6">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-high" cx="64" cy="64" fill="transparent" r="56" stroke="currentColor" stroke-width="12"></circle>
+<circle class="text-primary" cx="64" cy="64" fill="transparent" r="56" stroke="currentColor" stroke-dasharray="351.85" stroke-dashoffset="52.77" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-headline-lg font-headline-lg">85%</span>
+</div>
+</div>
+<p class="text-body-md text-on-surface-variant text-center mb-6">Ottima sinergia! 12 membri del team saranno presenti contemporaneamente martedì prossimo.</p>
+<div class="space-y-4 mb-8">
+<div class="flex items-center gap-3">
+<div class="flex -space-x-3 overflow-hidden">
+<img alt="Team 1" class="inline-block h-8 w-8 rounded-full ring-2 ring-white" data-alt="A close-up portrait of a professional woman with a warm smile, wearing a modern navy blazer. The lighting is soft and airy, shot in a minimalist creative studio with natural daylight and soft blue accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALtBEL3_SMd_UsZHtVa2ce7CJWzj9M43YW9Sz4h8duBCFevgUM31yAuAR4WgmZUTBYZqxAxeH1VkEDgpb7BzQr8QxcH2KY8Kuxmdm3tScVCiR6DwstHkN4kHc5Kpm43AOiEZILhRoAfuS9jhJghZlAChnokyMTBslaCU0dTfQ5SaZz0ZAw64UFI6I0b16xRA_uVZuDaUrYzTv1Tl1hbczy5gkBBN6cypc8ibwpNehxWUQaOwBDimLd44gsGWUpdz32by_g2yqXT5I"/>
+<img alt="Team 2" class="inline-block h-8 w-8 rounded-full ring-2 ring-white" data-alt="A portrait of a male tech professional with glasses, looking thoughtful and approachable. The scene is a modern, clean-tech office with a light-gray and primary-blue color scheme. High-key lighting emphasizes clarity and professionalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-83pA6bKT523VJIV20tLnlTB6_3CRIhZchK8LXPkoyVd5O6aT3LAcb4rrjG6AAa8N9Hc45_5dUEifW5gUih9GhOeVKNxg-vyyylfySPHhYRnfAD4QdErkxGJ2Qm1FQEpmL6MtuSqulWvqe8aGgeKFU_Y_9_xLbHO_dXHnUnDcArn8Me0621d3NclT_bddom0LVIquumHT5kfD-YL6nxAlxWf9ZIWm6IALD9kdVqnHo9w78YjpfHZZXZoqJc215m3sknsfCyd_-ls"/>
+<img alt="Team 3" class="inline-block h-8 w-8 rounded-full ring-2 ring-white" data-alt="A professional headshot of a woman in a minimalist workplace, featuring a soft-focus background of glass partitions and plants. The overall aesthetic is bright, corporate, and clean with a palette of soft whites and deep blues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaZUu9rSUtXPfbmN30oB8RPkoGl55uXpiwAxSBPLK_qP2OMeSWAN98fHkiMxgEUxZ-IZolldxywhYebwOd3sL3ig88WLByeVVgFcRsl_rG0AX5_xGYZz7Y2CPc3nzWA3J3HfCphaLb6aAuFKfbQz3qlO18QR-ah1zx-BpeS1odBg_FViHZKt2FkdZhzKviWl_QLPiP021TVeS7oAkseFLGeYtO6rOEN-7WCLqflPxkhv04ewtDdY7foQak5HfKphMK2aVb-KYKbOU"/>
+<div class="h-8 w-8 rounded-full ring-2 ring-white bg-surface-container-highest flex items-center justify-center text-[10px] font-bold">+9</div>
+</div>
+<span class="text-label-sm text-on-surface-variant">In sede oggi</span>
+</div>
+</div>
+<button class="w-full h-touch-target-min border border-primary text-primary hover:bg-primary/5 rounded-xl font-label-lg text-label-lg transition-colors">
+                            Vedi Dettagli Team
+                        </button>
+</div>
+<!-- Upcoming Section -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.04)] p-6">
+<h4 class="font-headline-md text-[16px] mb-4">Prossimi Eventi</h4>
+<div class="space-y-4">
+<div class="flex gap-4 items-start">
+<div class="w-10 h-10 shrink-0 bg-error-container/20 flex flex-col items-center justify-center rounded-lg text-error">
+<span class="text-[10px] font-bold leading-none">OTT</span>
+<span class="text-[14px] font-bold leading-none">16</span>
+</div>
+<div>
+<p class="text-label-lg leading-tight">Chiusura Straordinaria</p>
+<p class="text-body-md text-on-surface-variant">Sede di Milano</p>
+</div>
+</div>
+<div class="flex gap-4 items-start">
+<div class="w-10 h-10 shrink-0 bg-primary-container/20 flex flex-col items-center justify-center rounded-lg text-primary">
+<span class="text-[10px] font-bold leading-none">OTT</span>
+<span class="text-[14px] font-bold leading-none">19</span>
+</div>
+<div>
+<p class="text-label-lg leading-tight">Team Building</p>
+<p class="text-body-md text-on-surface-variant">Parco Sempione</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html class="light" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Presence Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#a0c9ff",
+                    "on-secondary-container": "#007165",
+                    "on-error": "#ffffff",
+                    "secondary": "#006b5f",
+                    "on-background": "#191c1f",
+                    "inverse-surface": "#2e3034",
+                    "background": "#f9f9fe",
+                    "surface-container": "#ededf3",
+                    "outline": "#727780",
+                    "primary-fixed": "#d2e4ff",
+                    "surface-container-low": "#f3f3f8",
+                    "surface-container-high": "#e7e8ed",
+                    "secondary-fixed-dim": "#3cddc7",
+                    "on-primary-fixed": "#001c37",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#2d6197",
+                    "primary": "#00355f",
+                    "surface-dim": "#d9dadf",
+                    "outline-variant": "#c2c7d1",
+                    "on-primary-container": "#8ebdf9",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "surface": "#f9f9fe",
+                    "on-surface": "#191c1f",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#f0f0f5",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#e2e2e7",
+                    "on-secondary-fixed": "#00201c",
+                    "error": "#ba1a1a",
+                    "tertiary": "#243449",
+                    "inverse-primary": "#a0c9ff",
+                    "surface-variant": "#e2e2e7",
+                    "primary-container": "#0f4c81",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#42474f",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#f9f9fe",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "tertiary-container": "#3b4b60",
+                    "secondary-container": "#62fae3",
+                    "on-tertiary-container": "#aabbd4",
+                    "on-secondary-fixed-variant": "#005047",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "tertiary-fixed": "#d3e4fe",
+                    "secondary-fixed": "#62fae3",
+                    "on-primary-fixed-variant": "#07497d",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-gap": "0.75rem",
+                    "gutter-md": "1rem",
+                    "margin-mobile": "1.25rem",
+                    "section-padding": "1.5rem",
+                    "touch-target-min": "48px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #f9f9fe; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .card-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+        .glass-header {
+            background: rgba(249, 249, 254, 0.8);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- Side Navigation Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-outline-variant bg-surface flex flex-col p-4 gap-stack-gap">
+<div class="mb-8 px-2">
+<h1 class="text-headline-md font-headline-lg text-primary">Presence</h1>
+<p class="text-label-sm text-on-surface-variant">Office Management</p>
+</div>
+<nav class="flex flex-col gap-2">
+<!-- Active Navigation: Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-lg text-label-lg">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-lg text-label-lg">Calendar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">layers</span>
+<span class="font-label-lg text-label-lg">Floors</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-lg text-label-lg">Profile</span>
+</a>
+</nav>
+<div class="mt-auto p-4 bg-surface-container-low rounded-xl border border-outline-variant">
+<div class="flex items-center gap-3">
+<img alt="User Profile" class="w-10 h-10 rounded-full object-cover" data-alt="A professional close-up portrait of a modern business executive with a friendly expression. The background is a blurred, high-end corporate office with soft, natural lighting. The visual style is clean and minimalist, aligned with a corporate light-mode aesthetic using soft blues and whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgW8ehsOf4cK-sH9Rrgc1_7aQZWOrwzHUG-pynmrU38fJOvkpcBrYobUl-GMw5Qx12YTLK_2zwh7VVEIhwp-489WduFBJacIg5NAx-QFtA3vAt0SvtcqZ0Hu6YFKw50Wif65_q3_gNrnEs0ClKhTt_8ztwNW1jLvCGHP7SX6yaCiEMGl7ItfHm3sjFUQU6A3gw-peJaevTiaFoE2itRlsqCS43Syh8eAs0VY_oAB4UYIB68T6LnlIRpmXT2Jbetbv7Er6ouwQP0Tg"/>
+<div>
+<p class="font-label-lg text-on-surface">Marco Rossi</p>
+<p class="text-label-sm text-on-surface-variant">Admin Mode</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="ml-64 min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 h-16 px-gutter-md flex justify-between items-center glass-header border-b border-outline-variant shadow-sm">
+<h2 class="font-headline-md text-headline-md text-primary">Bentornato, Marco</h2>
+<div class="flex items-center gap-4">
+<div class="relative">
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</div>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</button>
+</div>
+</header>
+<div class="pt-24 pb-12 px-gutter-md max-w-7xl mx-auto space-y-8">
+<!-- Bento Grid: Main Status Section -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Check-in Status Card -->
+<div class="md:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-xl p-6 card-shadow flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm mb-4">
+<span class="material-symbols-outlined text-[16px] mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                PRESENTE ORA
+                            </span>
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-2">Check-in Effettuato</h3>
+<p class="text-body-lg font-body-lg text-on-surface-variant">7th Floor, Desk 12</p>
+</div>
+<div class="bg-primary-container/10 p-4 rounded-xl border border-primary-container/20">
+<span class="material-symbols-outlined text-primary text-[48px]">desktop_windows</span>
+</div>
+</div>
+<div class="mt-8 flex gap-3">
+<button class="flex-1 h-[52px] bg-primary text-on-primary rounded-xl font-label-lg text-label-lg hover:opacity-90 active:scale-95 transition-all">
+                            Cambia Posto
+                        </button>
+<button class="px-6 h-[52px] border border-outline text-on-surface-variant rounded-xl font-label-lg text-label-lg hover:bg-surface-container-high active:scale-95 transition-all">
+                            Logout
+                        </button>
+</div>
+</div>
+<!-- Office Stats Card -->
+<div class="bg-primary-container text-on-primary-container rounded-xl p-6 flex flex-col justify-between card-shadow">
+<div>
+<h4 class="font-label-lg text-label-lg text-on-primary-container/80 uppercase tracking-wider">Occupazione Piano</h4>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="text-[48px] font-bold leading-none">64%</span>
+<span class="text-label-lg text-on-primary-container/70">Pieno</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="w-full bg-white/20 h-2 rounded-full overflow-hidden">
+<div class="bg-secondary-fixed-dim h-full w-[64%] rounded-full"></div>
+</div>
+<p class="text-body-md font-body-md">24 scrivanie disponibili su questo piano.</p>
+</div>
+</div>
+</section>
+<!-- Colleghi Section -->
+<section class="space-y-6">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">group</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Colleghi in ufficio (7°)</h3>
+</div>
+<button class="text-primary font-label-lg text-label-lg hover:underline">Vedi tutti</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Colleague Card: Chiara -->
+<div class="bg-white border border-outline-variant rounded-xl p-4 card-shadow hover:border-primary transition-all group">
+<div class="flex items-center gap-4 mb-4">
+<img alt="Chiara profile" class="w-12 h-12 rounded-full object-cover border-2 border-surface-container" data-alt="A professional portrait of a woman with a warm, confident smile, set against a bright, airy office space with clean lines. The lighting is soft and high-key, reinforcing a professional minimalist brand identity with soft teal and blue tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPHpl-hyYLj7NDVZwo5BZ2OPYxqnWLh_OSFOGHBTVcbcIqDTBjoyzYm30q3xX1zBEYj8na6kroqTV8r4Q4gqYAmEW6GVJl5Fh2fsD2LdrguJ7nMsnGGSHGUZ5mzpDhdOgK4KPB4ZWTeoTG9bNk0oezatuIonaxnSyorBenhx7qN-tPp-FgMlWTDxNWMiAKgcA5qkpp2VeQdroSgHnbjzFFJfD4RsK-5uRv3IpnuwwYSSQE3EmnIuo5PMwudohOAFOpDBCLz42zh5M"/>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">Chiara</h4>
+<p class="text-label-sm text-on-surface-variant">Product Designer</p>
+</div>
+</div>
+<span class="inline-flex w-full justify-center px-3 py-1.5 rounded-lg bg-[#DCFCE7] text-[#166534] text-label-sm font-bold uppercase tracking-wide">
+                            PRESENTE
+                        </span>
+</div>
+<!-- Colleague Card: Luca -->
+<div class="bg-white border border-outline-variant rounded-xl p-4 card-shadow hover:border-primary transition-all group">
+<div class="flex items-center gap-4 mb-4">
+<img alt="Luca profile" class="w-12 h-12 rounded-full object-cover border-2 border-surface-container" data-alt="Portrait of a male professional in a smart-casual outfit, standing in a contemporary corporate lobby with glass walls and bright ambient light. The style is modern-minimalist, featuring clean compositions and a refined color palette of whites and deep blues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCywleehaE_sfj6UKm9artPyjxynbiHnwF6kWY5xAg37ETlTHOe2GlD9MzCb-aAzW7UZq8ivXLsoSyEdv0alIoV8IlKeLRzKAsSj4OppH3XI2MTJRLfp2UgUotts6RCPad31kCRcINykfgwYnSjXl7K0sd04LArLGR7FqlSHQOy6BrwkIfBMNT4eVtvS-VAULwmVXaSsFy9Q3Pnf9vg7stk5348PFkQQu-UyKqYqxv4kYZ8fezEFWM58grzVWtu67agGAvfbBYjLJU"/>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">Luca</h4>
+<p class="text-label-sm text-on-surface-variant">Senior Dev</p>
+</div>
+</div>
+<span class="inline-flex w-full justify-center px-3 py-1.5 rounded-lg bg-tertiary-container/20 text-tertiary text-label-sm font-bold uppercase tracking-wide">
+                            IN RIUNIONE
+                        </span>
+</div>
+<!-- Colleague Card: Sofia -->
+<div class="bg-white border border-outline-variant rounded-xl p-4 card-shadow hover:border-primary transition-all group">
+<div class="flex items-center gap-4 mb-4">
+<img alt="Sofia profile" class="w-12 h-12 rounded-full object-cover border-2 border-surface-container" data-alt="Close-up headshot of a focused professional woman in a bright, modern workplace. Subtle geometric architectural elements are visible in the background. The lighting is bright and even, creating a clean, high-contrast visual style with a corporate minimal feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5qMG4hwOBD0VfxcH4WsgO0WFfNoVxsFYuDgl0d5iE7WvMGVKoLmrNxd3GzE_1lc_AMCR0Oux3j4xXkf5nMPr6EIySKDiKHm8Gdo8f_KvkIE2cDNSraJFqxY7rQ0psSLb6S7wgKl5breVDI-rff2tDwocuzZJsy_X_3phpJLcVrTXYdtdzWt273ak-4kFf01y4Bs5i7Ha3ZnTHRdFveeqBEXU1y3mElieah26OObQUyTfkbPF9M9jSVGCju-SKf6TTyH61nXaxZWU"/>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">Sofia</h4>
+<p class="text-label-sm text-on-surface-variant">Marketing Lead</p>
+</div>
+</div>
+<span class="inline-flex w-full justify-center px-3 py-1.5 rounded-lg bg-[#DCFCE7] text-[#166534] text-label-sm font-bold uppercase tracking-wide">
+                            PRESENTE
+                        </span>
+</div>
+<!-- Colleague Card: Andrea -->
+<div class="bg-white border border-outline-variant rounded-xl p-4 card-shadow hover:border-primary transition-all group">
+<div class="flex items-center gap-4 mb-4">
+<img alt="Andrea profile" class="w-12 h-12 rounded-full object-cover border-2 border-surface-container" data-alt="A portrait of a male professional looking directly at the camera with a neutral, professional expression. The background is a blurred office interior with soft lighting and a clean aesthetic. The visual tone is reliable and clear, using a restricted corporate color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDB7fuBhqGk-KE-VfnMBbBXE3lX-MVDKnMNk7ckzgTcZ3D1c1Fu82Ou0EgYyAHN3HgmlkA2XBvNm9x3tbhORIIiWlXv0z5pZXEzAuMGD9aAhPbHGuwJpcfM16QDlQwiaQl-0_6uqzHSQ-bPzXdsBe4MkGCJp9Tx3lRLQJEMU38lQqVXLcYHlEGBF0upFjROgX_hkPVClKmmUFYVhB1n5zM6GQRJFxY_JVdedrden2AwkJQAqqrTiNOzcm4cUqiVVOnRePlM2yVZzDk"/>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">Andrea</h4>
+<p class="text-label-sm text-on-surface-variant">HR Manager</p>
+</div>
+</div>
+<span class="inline-flex w-full justify-center px-3 py-1.5 rounded-lg bg-tertiary-container/20 text-tertiary text-label-sm font-bold uppercase tracking-wide">
+                            IN RIUNIONE
+                        </span>
+</div>
+</div>
+</section>
+<!-- Additional Context: Office Map Preview -->
+<section class="bg-surface-container rounded-2xl p-1 overflow-hidden h-[300px] relative border border-outline-variant">
+<img alt="Office Background" class="w-full h-full object-cover opacity-60 grayscale-[40%]" data-alt="A wide-angle interior shot of a contemporary open-plan office with desks, ergonomic chairs, and large windows. The environment is clean, professional, and minimalist, with a cool-toned light scheme. The atmosphere is organized and productive, featuring modern architecture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjUpZnwjQajIjDi0M259amYQXGdkJ3Z8UvxZPExsjtFY2pxpt7QpENm7DkfNluKTS2Smg-b42CZT8VcfiEyeQecWH-58gPALjorH40HyILw7cBzKwHq0LwThAT2E_xJETnyGpuMSi1j3_fzEoWvrGtuGiXTOb5UvKmqZA9Z460AHesLiT1YDEUH0zqyjWk6Hc6xqNe0Agu4_BVZhwoP_it0rl4h8gsSM8IVy4g405MD7ky0QBX7RRzt3bVab6hGZb7VpIsvVUS_r8"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-outline-variant text-center max-w-sm">
+<span class="material-symbols-outlined text-primary mb-2 text-4xl">map</span>
+<h4 class="font-headline-md text-headline-md text-on-surface mb-2">Mappa del 7° Piano</h4>
+<p class="text-body-md text-on-surface-variant mb-4">Visualizza la disposizione dei posti e trova i tuoi colleghi in tempo reale.</p>
+<button class="font-label-lg text-label-lg text-primary hover:bg-primary/5 px-4 py-2 rounded-lg transition-colors">Apri Mappa Interattiva</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:shadow-xl hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</body></html>

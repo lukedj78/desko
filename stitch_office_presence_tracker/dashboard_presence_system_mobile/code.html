@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html class="light" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#a0c9ff",
+                    "on-secondary-container": "#007165",
+                    "on-error": "#ffffff",
+                    "secondary": "#006b5f",
+                    "on-background": "#191c1f",
+                    "inverse-surface": "#2e3034",
+                    "background": "#f9f9fe",
+                    "surface-container": "#ededf3",
+                    "outline": "#727780",
+                    "primary-fixed": "#d2e4ff",
+                    "surface-container-low": "#f3f3f8",
+                    "surface-container-high": "#e7e8ed",
+                    "secondary-fixed-dim": "#3cddc7",
+                    "on-primary-fixed": "#001c37",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#2d6197",
+                    "primary": "#00355f",
+                    "surface-dim": "#d9dadf",
+                    "outline-variant": "#c2c7d1",
+                    "on-primary-container": "#8ebdf9",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "surface": "#f9f9fe",
+                    "on-surface": "#191c1f",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#f0f0f5",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#e2e2e7",
+                    "on-secondary-fixed": "#00201c",
+                    "error": "#ba1a1a",
+                    "tertiary": "#243449",
+                    "inverse-primary": "#a0c9ff",
+                    "surface-variant": "#e2e2e7",
+                    "primary-container": "#0f4c81",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#42474f",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#f9f9fe",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "tertiary-container": "#3b4b60",
+                    "secondary-container": "#62fae3",
+                    "on-tertiary-container": "#aabbd4",
+                    "on-secondary-fixed-variant": "#005047",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "tertiary-fixed": "#d3e4fe",
+                    "secondary-fixed": "#62fae3",
+                    "on-primary-fixed-variant": "#07497d",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-gap": "0.75rem",
+                    "gutter-md": "1rem",
+                    "margin-mobile": "1.25rem",
+                    "section-padding": "1.5rem",
+                    "touch-target-min": "48px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f9f9fe;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .presence-card-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-surface">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim w-full sticky top-0 z-50 flex items-center justify-between px-margin-mobile h-14 w-full">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full overflow-hidden bg-surface-container-high">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a modern businessman with a friendly expression. He is wearing a clean, minimalist charcoal sweater against a soft, out-of-focus office background. The lighting is bright and natural, reflecting a professional yet approachable corporate atmosphere with high-key light tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFjbPF13GGClrbL4DZ_JFjdbAS4IC7Yt1f6F8Xofe9XLHNeDwRFBzVCpXIo3n7J8eIvEeE4z_14OPebk1tCbESAI4NFeoYS4Mcn_mPPvIpUMTborv8tO34f6Z-Itc3iNI1pxp-0h5x6e8YTNvAsDyxIWhy1hTEpTCuO38F9y0-OkEz9BcMntyyzFZ306ESZjZi-oIhm3O1OkRowUyN31abV-Izs1Lf86O7DTxr0GUue32mIjLs4qFbaXk2L_iO7vCSWStvf8gpSSM"/>
+</div>
+<span class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim">Presence</span>
+</div>
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed-dim hover:opacity-80 transition-opacity active:scale-95 transition-transform">
+            notifications
+        </button>
+</header>
+<main class="px-margin-mobile py-6 space-y-6 pb-24">
+<!-- Welcome Section -->
+<section>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Bentornato, Marco</h1>
+<p class="font-body-md text-on-surface-variant mt-1">Ecco il riepilogo della tua giornata in ufficio.</p>
+</section>
+<!-- Status Card -->
+<section class="bg-surface-container-lowest rounded-xl p-5 presence-card-shadow border border-outline-variant/30">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-[#166534]"></div>
+<span class="font-label-lg text-label-lg text-on-surface">Check-in Effettuato</span>
+</div>
+<span class="bg-[#DCFCE7] text-[#166534] px-3 py-1 rounded-full font-label-sm text-label-sm">In Sede</span>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="bg-surface-container-low p-3 rounded-lg">
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Piano</span>
+<span class="font-headline-md text-headline-md text-primary">7° Piano</span>
+</div>
+<div class="bg-surface-container-low p-3 rounded-lg">
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Postazione</span>
+<span class="font-headline-md text-headline-md text-primary">N. 12</span>
+</div>
+</div>
+<div class="space-y-3">
+<button class="w-full h-touch-target-min bg-primary text-on-primary rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]">sync_alt</span>
+                    Cambia Posto
+                </button>
+<button class="w-full h-touch-target-min bg-surface-container-high text-on-surface rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+                    Logout
+                </button>
+</div>
+</section>
+<!-- Colleagues Section -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline-md text-headline-md text-on-surface">Colleghi in sede</h2>
+<span class="font-label-sm text-label-sm text-primary">Vedi tutti</span>
+</div>
+<div class="space-y-3">
+<!-- Colleague Chiara -->
+<div class="flex items-center justify-between bg-surface-container-lowest p-4 rounded-xl presence-card-shadow">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Chiara" class="w-12 h-12 rounded-full object-cover" data-alt="Portrait of a young professional woman with a warm smile, wearing a modern beige blazer. The background is a brightly lit, clean architectural space with soft shadows. The lighting is sophisticated and professional, capturing a high-end corporate minimalist aesthetic with a focus on clarity and openness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiWbthIOpVgAm1H2qfNwvzzeRGnkINIJtzCHoiMSsv7X85uravKuwqjPIEzP8gMWlNg-TPHbyvYcnIvBMhNHg19gfIv9pnyp0to1DcnMrkFXCF06k1dP-UuoPLTKf_2HCwpJ3WTXkH_bv7RBmpgSGzCpvHS3GWem6IPcN7wqNUjHtVMJseiWEIXYCFi3vp07MUouPbEDs8CYocdrqWT278Gih3HTTF8WcqIcYZjOEkhkmb6y4q9mR15gWiIxnViJl52Y3n-5225-4"/>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#166534] border-2 border-surface-container-lowest rounded-full"></div>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Chiara</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">7° Piano • Desk 04</p>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-primary-fixed text-on-primary-fixed active:scale-90 transition-transform">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+</div>
+<!-- Colleague Luca -->
+<div class="flex items-center justify-between bg-surface-container-lowest p-4 rounded-xl presence-card-shadow">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Luca" class="w-12 h-12 rounded-full object-cover" data-alt="Close-up of a smiling male creative professional with glasses, wearing a simple white t-shirt. He is positioned against a soft-focus office interior that feels spacious and bright. The lighting is crisp and modern, emphasizing a minimalist and reliable corporate atmosphere in light mode." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2T6QUoYnhi2ju_tfMjoiwFWT-e_xAZDJAehTL6nxNnWzyb_NgM_wBo1gPEB3t6EV3zHLlK1SOseBkJEBva3n5E96paUoczS6EX4DRBx-kcvRNkwF8F-ws8pT0TvekYy3WMeIpT8J7yyPa9me9qoacKPx2yMjnUd1jnVaM4VJhpRgW5--5InZ7_MbAhlNqwbt_V5NmMDX_0zd0xpFd5RGzDR19XQ_MFsN9NpRzDLdgusXQglprEh1_pOBl_Ei31HFNFgBHo3qqK-0"/>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#166534] border-2 border-surface-container-lowest rounded-full"></div>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Luca</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">7° Piano • Desk 18</p>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-primary-fixed text-on-primary-fixed active:scale-90 transition-transform">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+</div>
+<!-- Colleague Sofia -->
+<div class="flex items-center justify-between bg-surface-container-lowest p-4 rounded-xl presence-card-shadow">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Sofia" class="w-12 h-12 rounded-full object-cover" data-alt="A portrait of a confident female executive with sleek dark hair and a professional navy blue top. The setting is a minimalist, contemporary office corridor with glass walls and diffused natural lighting. The overall mood is organized, clean, and professional, perfectly aligned with a high-end corporate mobile app interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvsvmid56PBm_t4tpcA1aqyxSoHLCgTTx7NbDCEsuLEcxnB2iYk2eDmHKIWbeVrOgwGdFNc7rm8_Hi7zwdgUpouqDikJqNOgmNYsrA2RwzVl5QOX2kO5yj13PTi2HDOnyNvUw4mcw_TLNnAz3XBwNo8Ttpn8c3wo8lJw4cfjslLWsNuotgStvNRov4pWGKx_g3lyHo8NPTjCLPvesmWpu3iltWcFn6YWsB1lsLLqOLYIe2a_9jEVw6Z0ayIYpB_q5NLA8H3ZLAqjY"/>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-tertiary-fixed-dim border-2 border-surface-container-lowest rounded-full"></div>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Sofia</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">In Riunione • 2° Piano</p>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-primary-fixed text-on-primary-fixed active:scale-90 transition-transform">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+</div>
+<!-- Colleague Andrea -->
+<div class="flex items-center justify-between bg-surface-container-lowest p-4 rounded-xl presence-card-shadow">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Andrea" class="w-12 h-12 rounded-full object-cover" data-alt="A studio portrait of a man in his 30s with a neat beard, wearing a light grey linen shirt. The background is a solid, soft grey that complements a light-mode UI design. The lighting is even and soft, creating a calm and professional look that fits seamlessly into a minimalist office management application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGwWCkGqyN2if5NxpyjanCQkKfMpBzPQHIlma26fCIkpjqoqRCfyFp15WFexeeuVhwyYfSdKcZr7r4TSUc7PfXauF3VG37Hd4IBva90wEEKR3DxSyp_lUICOiWiRM_7CqOh6WmQ3TqqDRpg21Ma80cFbDzUW7w1TFkxW8ERD5UPkJNpY_5m4v0mZ-XK8pZVxG6AxTMzrwNm5taPihnDVxhVxc-UM1RC6n8KhTdBNeKovMPEX1JKOptKFij7HS2xrqhZVMETN7LzXw"/>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#166534] border-2 border-surface-container-lowest rounded-full"></div>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Andrea</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">7° Piano • Desk 09</p>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-primary-fixed text-on-primary-fixed active:scale-90 transition-transform">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-touch-target-min pb-safe bg-surface dark:bg-surface-container-lowest shadow-[0_-4px_12px_rgba(0,0,0,0.04)] rounded-t-xl z-50">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-semibold hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<!-- Calendar -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-sm text-label-sm">Calendar</span>
+</a>
+<!-- Floors -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">layers</span>
+<span class="font-label-sm text-label-sm">Floors</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+</body></html>

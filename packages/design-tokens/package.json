@@ -1,0 +1,53 @@
+{
+  "name": "@desko/design-tokens",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./colors": {
+      "types": "./src/colors.ts",
+      "default": "./src/colors.ts"
+    },
+    "./typography": {
+      "types": "./src/typography.ts",
+      "default": "./src/typography.ts"
+    },
+    "./radii": {
+      "types": "./src/radii.ts",
+      "default": "./src/radii.ts"
+    },
+    "./spacing": {
+      "types": "./src/spacing.ts",
+      "default": "./src/spacing.ts"
+    },
+    "./shadows": {
+      "types": "./src/shadows.ts",
+      "default": "./src/shadows.ts"
+    },
+    "./motion": {
+      "types": "./src/motion.ts",
+      "default": "./src/motion.ts"
+    },
+    "./breakpoints": {
+      "types": "./src/breakpoints.ts",
+      "default": "./src/breakpoints.ts"
+    },
+    "./z-index": {
+      "types": "./src/z-index.ts",
+      "default": "./src/z-index.ts"
+    }
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf .turbo dist *.tsbuildinfo"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

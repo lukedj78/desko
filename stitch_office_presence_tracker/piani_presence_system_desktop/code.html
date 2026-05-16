@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html class="light" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#a0c9ff",
+                    "on-secondary-container": "#007165",
+                    "on-error": "#ffffff",
+                    "secondary": "#006b5f",
+                    "on-background": "#191c1f",
+                    "inverse-surface": "#2e3034",
+                    "background": "#f9f9fe",
+                    "surface-container": "#ededf3",
+                    "outline": "#727780",
+                    "primary-fixed": "#d2e4ff",
+                    "surface-container-low": "#f3f3f8",
+                    "surface-container-high": "#e7e8ed",
+                    "secondary-fixed-dim": "#3cddc7",
+                    "on-primary-fixed": "#001c37",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#2d6197",
+                    "primary": "#00355f",
+                    "surface-dim": "#d9dadf",
+                    "outline-variant": "#c2c7d1",
+                    "on-primary-container": "#8ebdf9",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "surface": "#f9f9fe",
+                    "on-surface": "#191c1f",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#f0f0f5",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#e2e2e7",
+                    "on-secondary-fixed": "#00201c",
+                    "error": "#ba1a1a",
+                    "tertiary": "#243449",
+                    "inverse-primary": "#a0c9ff",
+                    "surface-variant": "#e2e2e7",
+                    "primary-container": "#0f4c81",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#42474f",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#f9f9fe",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "tertiary-container": "#3b4b60",
+                    "secondary-container": "#62fae3",
+                    "on-tertiary-container": "#aabbd4",
+                    "on-secondary-fixed-variant": "#005047",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "tertiary-fixed": "#d3e4fe",
+                    "secondary-fixed": "#62fae3",
+                    "on-primary-fixed-variant": "#07497d",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-gap": "0.75rem",
+                    "gutter-md": "1rem",
+                    "margin-mobile": "1.25rem",
+                    "section-padding": "1.5rem",
+                    "touch-target-min": "48px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #f9f9fe; color: #191c1f; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .card-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; shadow-sm: 0 4px 12px rgba(0,0,0,0.04); }
+        .card-lift:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body class="font-body-md text-body-md min-h-screen flex">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface dark:bg-inverse-surface border-r border-outline-variant dark:border-outline flex flex-col p-4 gap-stack-gap z-50">
+<div class="mb-8 px-4">
+<h1 class="text-headline-md font-headline-lg text-primary dark:text-primary-fixed-dim">Presence</h1>
+<p class="font-label-sm text-on-surface-variant">Office Management</p>
+</div>
+<nav class="flex-grow space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-lg text-label-lg">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-lg text-label-lg">Calendar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">layers</span>
+<span class="font-label-lg text-label-lg">Floors</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-lg text-label-lg">Profile</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-outline-variant pt-4 px-4 flex items-center gap-3">
+<img alt="Marco Profile" class="w-10 h-10 rounded-full border-2 border-primary" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0TTp2PzDgBaa07p0oKCVU4_PadfjXS51vl1ToPLx9hK7dIWvjgTKo_UKuoXnOzMEU9J3FqoNqof-VSHG6TQWdY6SChBNCLtbszk_BoZXIejSoXqEkzzg9lkPJeABcvekUOHiBEK7wxjP1Bps104Zn8t4n_JPVNaSO_Uo6f7HyiNw4AV_bVU5Le4tRviOGSGPJm96KPhVDYy0eNj8tjTrf_HjfKy-KmXm4qwrX4WlJ6Dtt9gd5zxMbbbU0_B3X3UocsuKy0I96Vds"/>
+<div>
+<p class="font-label-lg text-on-surface">Marco Rossi</p>
+<p class="font-label-sm text-on-surface-variant">Admin Level</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="ml-64 flex-grow relative">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-surface/80 dark:bg-background/80 backdrop-blur-md border-b border-outline-variant dark:border-outline shadow-sm flex justify-between items-center h-16 px-gutter-md">
+<div class="flex items-center bg-surface-container-low rounded-full px-4 py-2 w-96 border border-outline-variant focus-within:ring-2 focus-within:ring-primary">
+<span class="material-symbols-outlined text-on-surface-variant mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-full" placeholder="Search spaces, colleagues..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<!-- Canvas Area -->
+<div class="pt-24 pb-12 px-margin-mobile max-w-7xl mx-auto">
+<!-- Welcome Header -->
+<section class="mb-10">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-2">Seleziona Spazio</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                    Ben tornato, Marco. Visualizza la disponibilità in tempo reale e prenota la tua postazione per oggi.
+                </p>
+</section>
+<!-- Floor Selection Cards: Asymmetric Bento Grid Pattern -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+<!-- 7th Floor Card -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant card-lift flex flex-col h-full">
+<div class="h-64 relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A sophisticated executive office suite with high ceilings and floor-to-ceiling windows overlooking a modern city skyline. The interior features minimalist furniture in a primary blue and soft gray palette, under bright diffused daylight. The atmosphere is professional, clean, and extremely organized, aligning with a premium corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvTCeMg4FoVtrYGUXAwPMUzk3nrggz5kT20e4M4Q5uxFYqwpKT9H3o9WSxi_ZZQla8XduylHCImyD5-g-rbypdq8g2IkA4QW7Mz2umWWaY3egKS5AoTdZdvo5iGxR5HQLIbJ44zjUVP0gPT5TbmfEqKvPIwc0qzt74Fz7wKB5s6x1cYmo8Ai2_piFQCUDL_kHjIQPannd9R-pn4q5sW8AuJzaIbRfxTozqoByQ3oZXkh0JYcONReI0bGLA2wzn6X66oyMaMurdrOw"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 rounded-full text-label-sm font-label-sm">
+                            7° Piano
+                        </div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Uffici Direzionali</h3>
+<p class="text-on-surface-variant">Focus zone &amp; Meeting rooms</p>
+</div>
+<div class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-label-sm font-label-sm">
+                                12/40 Occupati
+                            </div>
+</div>
+<div class="flex items-center -space-x-2 mb-6">
+<img alt="Team member" class="inline-block h-8 w-8 rounded-full ring-2 ring-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAqpKVi9CrKeGl9XddXYwJHqwnCgDE9fQm67f8PV1uiGj9lnRKcTgNjTLK_wQUjSeTpL6OZFK2lW0p_PLQMSLFmR8eJAbsoJzEYGgjVb9ucyX3C5BoOiAO2MVZj063wGbCbMh7EXB5aybU7CxqxreQ8pbwMYHrAX5Ji4MAKTLd6FDQfsOYhoqjwpWNRZ2s5jQtvgLYdf0VelHE7eBhJoB4z1RP0bHxugqDjXIFSpDguhmvuoxh9z_bnLYxFJ7q_9eOHHn_ZE1wChk"/>
+<img alt="Team member" class="inline-block h-8 w-8 rounded-full ring-2 ring-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDNXtog_lsJJfZHIF8VkhMXrkS2LLlO3DwKJqMkJQQPXyGGno4IdaaER7cDDldeNs3m-tDYshdUYVDphmsMzOblVsAMzEck0bxVSXdJ0NlFM6_LxCMYaid6nnf0IhdgvEm519UU3TeYi-zXEcOkBJ03XTGf3OHjsTzNGW_9nyvdQ-CFTxOZFpoRojk5fqBTdiJBEpcls4Q3S0fWQzCdMBsy2CadNGUMdlYnBhDB7pFI4u7VskMfqpLhaHflfvHOvh2JD_ds7hkb0o"/>
+<img alt="Team member" class="inline-block h-8 w-8 rounded-full ring-2 ring-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyOcKhs8SlWcE6YSk6u3o7JEMEBsLemOxod-7DLiTcHnQndTXZJ8ev9zxVlq1zTVnWW_5Ufuhi3ZwzcLgsQQtSXrlyYN4T4pX018T4MEw-iw90MC8j3KNHBZREvaSO-VUZCsrOpa5bfT6avzukamUOHMVztUhEr0iKb1E3bk2AaAWgMkf2xcsHr2Fk5oE0XV1g0cp2CuvYFC8LnY5lQruS7hI_KbnBdKF20Y-3Q-SWxNTKOpgKDhgm0ru9scf6x1X5RxmcdsCesKo"/>
+<div class="flex items-center justify-center h-8 w-8 rounded-full ring-2 ring-surface bg-surface-container-high text-on-surface-variant text-[10px] font-bold">
+                                +9
+                            </div>
+<span class="ml-4 text-label-sm text-on-surface-variant">Nel tuo team oggi</span>
+</div>
+<button class="mt-auto w-full bg-primary text-on-primary py-4 rounded-xl font-label-lg text-label-lg hover:shadow-lg transition-all active:scale-[0.98]">
+                            Seleziona Piano
+                        </button>
+</div>
+</div>
+<!-- 2nd Floor Card -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant card-lift flex flex-col h-full">
+<div class="h-64 relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A vibrant and open-plan coworking space featuring ergonomic desks, lush green indoor plants, and soft atmospheric lighting. The design uses a palette of mint green and slate gray accents against pristine white walls. The scene is bright and airy, capturing a modern, collaborative work environment that feels welcoming and productive." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGsCDccOtPLP1s--DrFD50X-c4z9yuzERH0eMPfHzk7vogj-ZCjr7kIV7vvh0KQBIUmtWcMDbYpjA34eez-Cj7kqM5xn_I7Q33zw43ZMl87Wrk3cKtEHbEpLB0n7TVt-PDPyXOMPS-duK9qVFv2ZNz4ADZCWn4QnCxSRpbd7N0GcL2i7KMaw-XR0eBnRLe4F6KWStRSA4nT7mW_vqq1oXwKCOIQ1Gp6tOGdcY6m7Srw_mHZ3z_9S5aRuGvccI1SjfCKj42KhSvCGA"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 rounded-full text-label-sm font-label-sm">
+                            2° Piano
+                        </div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Co-working Area</h3>
+<p class="text-on-surface-variant">Hot-desking &amp; Open lounge</p>
+</div>
+<div class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-label-sm font-label-sm">
+                                58/65 Occupati
+                            </div>
+</div>
+<div class="flex items-center -space-x-2 mb-6">
+<img alt="Team member" class="inline-block h-8 w-8 rounded-full ring-2 ring-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBgNRjKPh4EqxEt89WjC9zzuYNQlLFnNwVXxLIlZvYHrORrw9euzkz-oku2nw2FHREyP9WBflNMMdZc_OmRNgiOxzR3QRWjg67r2kdt5VeIkz18H0Xn7OzMlWL3WdIIuatz6g0LJEDP2_F8NRpBRGNjnkbb37Eht8yYFENuII3XeAz3XN00fQD59DPn2B_N5Yuf7jy2VpR8aNzSR2XnzJXiQVkov5unC-vzm-gTKrIF79nFYpPFVuaYwZ9WIiBcktAnJR-0SGAI5k"/>
+<img alt="Team member" class="inline-block h-8 w-8 rounded-full ring-2 ring-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmJKHRaUjv3zv4na3iikZBUCGH-XZF7pT62b5q2pULDxwZFzvtVltb805G6A2I74PMyYBV6swj-YRV9e1qaCLz-1VE1T9_8tP-ODvEwF57Y1MhXL3InQZz-2JRHkupURzXnU7Bl1RWeFAsJjoqBkUCtgdImAkFVIHriJKGNAnypIEkqv78vMB8eiMo-SA-E4yll61O7b2hnue3lNNWkm83a1SMbtwJgZGsaqhNJolJZsqEzChb37SemceK_S8pFgARfWS2L_5nSXc"/>
+<div class="flex items-center justify-center h-8 w-8 rounded-full ring-2 ring-surface bg-surface-container-high text-on-surface-variant text-[10px] font-bold">
+                                +56
+                            </div>
+<span class="ml-4 text-label-sm text-on-surface-variant">Molto affollato oggi</span>
+</div>
+<button class="mt-auto w-full border-2 border-primary text-primary py-4 rounded-xl font-label-lg text-label-lg hover:bg-surface-container-low transition-all active:scale-[0.98]">
+                            Visualizza Mappa
+                        </button>
+</div>
+</div>
+</div>
+<!-- Bottom Info Boxes (Horizontal Layout) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Il tuo Team -->
+<div class="bg-surface p-6 rounded-xl border border-outline-variant flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined">groups</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Il tuo Team</p>
+<p class="font-body-md text-body-md text-on-surface-variant">14 online ora</p>
+</div>
+</div>
+<!-- Servizi Attivi -->
+<div class="bg-surface p-6 rounded-xl border border-outline-variant flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-on-secondary-container/10 text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined">coffee</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Servizi Attivi</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Catering &amp; Wifi ok</p>
+</div>
+</div>
+<!-- Sale Riunioni -->
+<div class="bg-surface p-6 rounded-xl border border-outline-variant flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-tertiary-container text-on-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined">meeting_room</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Sale Riunioni</p>
+<p class="font-body-md text-body-md text-on-surface-variant">5 disponibili subito</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB (Suppressed on this desktop selection screen as per guidelines for Details/Selection contexts) -->
+</body></html>

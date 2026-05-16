@@ -1,0 +1,331 @@
+{
+  "project_slug": "desko",
+  "project_name": "Desko",
+  "created_at": "2026-05-09T10:40:44Z",
+  "updated_at": "2026-05-09T16:21:31Z",
+  "phase": "module-added",
+  "stack": {
+    "framework": "next",
+    "ui": "mui",
+    "auth": "better-auth",
+    "auth_providers": [
+      "email-password",
+      "microsoft-entra-id"
+    ],
+    "auth_plugins": [
+      "admin"
+    ],
+    "db": "neon-drizzle",
+    "email": "resend",
+    "payments": null,
+    "deploy": "tbd",
+    "monorepo": "turborepo-pnpm",
+    "future_apps": [
+      "mobile-react-native"
+    ]
+  },
+  "history": [
+    {
+      "skill": "prd-from-idea",
+      "ran_at": "2026-05-09T10:47:12Z",
+      "inputs": {
+        "interview": "PROJECT.md questions"
+      },
+      "outputs": [
+        "PROJECT.md"
+      ],
+      "phase_before": "idea_captured",
+      "phase_after": "idea_captured"
+    },
+    {
+      "skill": "prd-from-idea",
+      "ran_at": "2026-05-09T10:50:41Z",
+      "inputs": {
+        "interview": "PRD questions, 6 user stories"
+      },
+      "outputs": [
+        "PRD.md"
+      ],
+      "phase_before": "prd_drafted",
+      "phase_after": "prd_drafted"
+    },
+    {
+      "skill": "design-from-spec",
+      "ran_at": "2026-05-09T11:01:54Z",
+      "inputs": {
+        "source": "Wise-inspired user spec + tweaks (rounded lighter, ochre instead of lime, weight 800 instead of 900)"
+      },
+      "outputs": [
+        "DESIGN.md"
+      ],
+      "phase_before": "design_extracted",
+      "phase_after": "design_extracted"
+    },
+    {
+      "skill": "design-md-to-app",
+      "ran_at": "2026-05-09T11:36:53Z",
+      "inputs": {
+        "step": "C - minimal runnable scaffold",
+        "stack": {
+          "framework": "next-15",
+          "ui": "mui-6",
+          "monorepo": "turborepo-pnpm"
+        }
+      },
+      "outputs": [
+        "package.json",
+        "pnpm-workspace.yaml",
+        "turbo.json",
+        "tsconfig.base.json",
+        "packages/design-tokens/*",
+        "apps/web/{package.json,tsconfig.json,next.config.ts,lib/theme.ts,app/{layout.tsx,page.tsx,globals.css},components/site/theme-registry.tsx}"
+      ],
+      "phase_before": "design_extracted",
+      "phase_after": "design_extracted"
+    },
+    {
+      "skill": "design-md-to-app",
+      "ran_at": "2026-05-09T11:46:54Z",
+      "inputs": {
+        "step": "D - showcase page + site shell"
+      },
+      "outputs": [
+        "apps/web/app/showcase/page.tsx",
+        "apps/web/components/site/{eyebrow,site-top-nav,site-footer,showcase-section}.tsx"
+      ],
+      "phase_before": "design_extracted",
+      "phase_after": "design_extracted"
+    },
+    {
+      "skill": "design-md-to-app",
+      "ran_at": "2026-05-09T12:05:17Z",
+      "inputs": {
+        "step": "E - placeholder routes + server actions stub + AppShell + robustness scaffold + mobile padding fix"
+      },
+      "outputs": [
+        "apps/web/lib/env.ts",
+        "apps/web/app/{error,loading}.tsx",
+        "apps/web/components/site/{app-shell,placeholder-page}.tsx",
+        "apps/web/app/(app)/{layout,oggi/page,settimana/page,team/page,impostazioni/page}.tsx",
+        "apps/web/lib/server/presence.ts",
+        "apps/web/lib/queries/presence.ts",
+        "apps/web/.env.example"
+      ],
+      "phase_before": "scaffolded",
+      "phase_after": "scaffolded"
+    },
+    {
+      "skill": "prd-from-idea",
+      "ran_at": "2026-05-09T12:27:54Z",
+      "inputs": {
+        "revision": "v0.2 - extend US-1 with floor + add US-7 floor switching + refine Non-goal on desk booking"
+      },
+      "outputs": [
+        "PRD.md"
+      ],
+      "phase_before": "scaffolded",
+      "phase_after": "scaffolded"
+    },
+    {
+      "skill": "design-md-to-app",
+      "ran_at": "2026-05-09T12:47:29Z",
+      "inputs": {
+        "step": "F - Stitch-inspired 4 pages built (oggi/piani/settimana/impostazioni) + bottom-nav mobile + floor field domain"
+      },
+      "outputs": [
+        "PRD.md (US-7)",
+        "apps/web/lib/presence-domain.ts",
+        "apps/web/components/site/{app-shell,floor-badge,colleague-card}.tsx",
+        "apps/web/app/(app)/{oggi,piani,settimana,impostazioni}/page.tsx"
+      ],
+      "phase_before": "scaffolded",
+      "phase_after": "scaffolded"
+    },
+    {
+      "skill": "design-md-to-app",
+      "ran_at": "2026-05-09T13:26:05Z",
+      "inputs": {
+        "step": "G - polish: rename routes (oggi/dashboard, settimana/calendar), Stitch-aligned dashboard, bento impostazioni with Milano hero, calendar avatars, collapsable sidebar, ochre avatar borders global, button contrast fixes, container widening"
+      },
+      "outputs": [
+        "app/(app)/{dashboard,calendar,piani,impostazioni}/page.tsx",
+        "components/site/app-shell.tsx",
+        "lib/theme.ts (containedSecondary, MuiAvatar global)",
+        "PRD.md (US-7)"
+      ],
+      "phase_before": "scaffolded",
+      "phase_after": "scaffolded"
+    },
+    {
+      "skill": "prd-from-idea",
+      "ran_at": "2026-05-09T14:25:05Z",
+      "inputs": {
+        "revision": "v0.3 - dual auth (email+pwd + Microsoft) + US-8 admin/ruoli + better-auth stack details"
+      },
+      "outputs": [
+        "PRD.md",
+        "meta.json#stack"
+      ],
+      "phase_before": "scaffolded",
+      "phase_after": "scaffolded"
+    },
+    {
+      "skill": "module-add",
+      "ran_at": "2026-05-09T14:43:01Z",
+      "inputs": {
+        "module": "db",
+        "tech": "neon-drizzle"
+      },
+      "outputs": [
+        "apps/web/drizzle.config.ts",
+        "apps/web/lib/db/{index,schema}.ts",
+        "apps/web/package.json (db:* scripts)",
+        "apps/web/.env.example",
+        "apps/web/lib/env.ts (DATABASE_URL)"
+      ],
+      "phase_before": "module-added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "module-add",
+      "ran_at": "2026-05-09T14:50:41Z",
+      "inputs": {
+        "module": "auth",
+        "tech": "better-auth",
+        "providers": [
+          "email-password",
+          "microsoft-entra-id"
+        ],
+        "plugins": [
+          "admin"
+        ]
+      },
+      "outputs": [
+        "apps/web/lib/{auth,auth-client,auth-server,env}.ts",
+        "apps/web/app/api/auth/[...all]/route.ts",
+        "apps/web/lib/server/presence.ts (real getCurrentUserId)",
+        "apps/web/.env.example",
+        "apps/web/tsconfig.json (verbatimModuleSyntax off)"
+      ],
+      "phase_before": "module-added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "module-add",
+      "ran_at": "2026-05-09T14:57:04Z",
+      "inputs": {
+        "module": "email",
+        "tech": "resend"
+      },
+      "outputs": [
+        "apps/web/lib/email.ts",
+        "apps/web/emails/{verify-email,reset-password,welcome}.tsx",
+        "apps/web/lib/auth.ts (sendResetPassword + sendVerificationEmail wired)",
+        "apps/web/lib/env.ts (RESEND_DEV_TO)",
+        "apps/web/package.json (email:dev script)"
+      ],
+      "phase_before": "module-added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "design-md-to-app",
+      "ran_at": "2026-05-09T15:04:16Z",
+      "inputs": {
+        "step": "H - auth UI: /login + /signup + /admin/users + seed script + middleware admin gate"
+      },
+      "outputs": [
+        "apps/web/app/login/page.tsx",
+        "apps/web/app/signup/page.tsx",
+        "apps/web/app/(app)/admin/{layout,users/page}.tsx",
+        "apps/web/app/(app)/admin/users/_components/users-admin-client.tsx",
+        "apps/web/scripts/seed.ts",
+        "apps/web/components/site/microsoft-icon.tsx"
+      ],
+      "phase_before": "module-added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "design-md-to-app",
+      "ran_at": "2026-05-09T15:21:44Z",
+      "inputs": {
+        "step": "I - auth UX completa: PasswordField (eye toggle) + PasswordStrengthMeter + /forgot-password + /reset-password + /verify-email + 4 nuovi email templates (password-changed/invite/login-alert/ban-notice) + EmailShell shared layout"
+      },
+      "outputs": [
+        "apps/web/components/site/{password-field,password-strength-meter}.tsx",
+        "apps/web/app/{forgot-password,reset-password,verify-email}/page.tsx",
+        "apps/web/emails/_components/email-shell.tsx",
+        "apps/web/emails/{verify-email,reset-password,welcome,password-changed,invite,login-alert,ban-notice}.tsx"
+      ],
+      "phase_before": "module-added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "design-md-to-app",
+      "ran_at": "2026-05-09T15:51:08Z",
+      "inputs": {
+        "step": "L - real DB wiring + proxy.ts (Next 16) + UserDropdown + Drizzle queries/actions"
+      },
+      "outputs": [
+        "apps/web/lib/queries/presence.ts (real Drizzle joins/aggregates)",
+        "apps/web/lib/server/presence.ts (real Drizzle insert/update + 3 new actions: leaveOffice, declareWeek, follow/unfollow)",
+        "apps/web/proxy.ts (auth gating Next 16)",
+        "apps/web/components/site/user-dropdown.tsx (compact + full variants)",
+        "apps/web/app/(app)/layout.tsx (server-side session + force-dynamic)",
+        "apps/web/components/site/{app-shell,site-top-nav}.tsx (UserDropdown wired + Link wrap pattern)",
+        "apps/web/app/showcase/page.tsx + apps/web/app/(app)/dashboard/page.tsx (Link wrap pattern)",
+        "apps/web/package.json (next@16, @mui/material-nextjs@9, react@19)"
+      ],
+      "phase_before": "module-added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "module-add",
+      "ran_at": "2026-05-09T16:21:31Z",
+      "inputs": {
+        "step": "M - LIVE: Neon DB connected, schema migrated (7 tables), super-admin seeded, login flow end-to-end verified with real session"
+      },
+      "outputs": [
+        "lib/db/index.ts (neon-serverless WebSocket driver, drop-in for everywhere)",
+        "lib/db/migrations/0000_quick_callisto.sql",
+        "scripts/{migrate,seed}.ts (dynamic imports + dotenv)",
+        "proxy.ts (nodejs runtime + auth.api.getSession)",
+        "app/(app)/dashboard/page.tsx (session-aware: getCurrentUser firstName + dynamic date)"
+      ],
+      "phase_before": "module-added",
+      "phase_after": "module-added"
+    }
+  ],
+  "artifacts": {
+    ".workflow/PROJECT.md": {
+      "sha256": "d1a5c4ce6fd6e57322ad9c4839990b823cbfb2cb63fa37c3fd8eb8572d1465b5",
+      "produced_by": "prd-from-idea",
+      "produced_at": "2026-05-09T10:47:12Z"
+    },
+    ".workflow/PRD.md": {
+      "sha256": "07584f38c61e22ec90131bcd01716bd310ac8548a0d3a0119ce23ac1cf392af8",
+      "produced_by": "prd-from-idea",
+      "produced_at": "2026-05-09T14:25:05Z",
+      "derived_from": [
+        {
+          "path": ".workflow/PROJECT.md",
+          "sha256": "d1a5c4ce6fd6e57322ad9c4839990b823cbfb2cb63fa37c3fd8eb8572d1465b5"
+        }
+      ]
+    },
+    ".workflow/DESIGN.md": {
+      "sha256": "12aa517a383f8db670f89bef8934c66975a614df2d6d8c1d894806f7fc5ed039",
+      "produced_by": "design-from-spec",
+      "produced_at": "2026-05-09T11:01:54Z",
+      "derived_from": [
+        {
+          "path": ".workflow/PROJECT.md",
+          "sha256": "d1a5c4ce6fd6e57322ad9c4839990b823cbfb2cb63fa37c3fd8eb8572d1465b5"
+        },
+        {
+          "path": ".workflow/PRD.md",
+          "sha256": "a3cb99e984bc3a376c130e8159de0b928f06515045ee80f724b326fa5f81a9b5"
+        }
+      ]
+    }
+  }
+}
