@@ -60,25 +60,27 @@ export function DatePicker({
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          id={id}
-          type="button"
-          variant="outline"
-          className={cn(
-            'h-12 w-full justify-start px-4 text-left text-base font-normal',
-            !value && 'text-muted-foreground',
-            className,
-          )}
-        >
-          <CalendarIcon className="size-4 text-muted-foreground" />
-          {value ? (
-            <span className="capitalize">{format(value, formatPattern, { locale })}</span>
-          ) : (
-            <span>{placeholder}</span>
-          )}
-        </Button>
-      </PopoverTrigger>
+      <PopoverTrigger
+        render={
+          <Button
+            id={id}
+            type="button"
+            variant="outline"
+            className={cn(
+              'h-12 w-full justify-start px-4 text-left text-base font-normal',
+              !value && 'text-muted-foreground',
+              className,
+            )}
+          >
+            <CalendarIcon className="size-4 text-muted-foreground" />
+            {value ? (
+              <span className="capitalize">{format(value, formatPattern, { locale })}</span>
+            ) : (
+              <span>{placeholder}</span>
+            )}
+          </Button>
+        }
+      />
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
           mode="single"
@@ -87,7 +89,7 @@ export function DatePicker({
           disabled={computedDisabled}
           locale={locale}
           weekStartsOn={1}
-          initialFocus
+          autoFocus
         />
       </PopoverContent>
     </Popover>

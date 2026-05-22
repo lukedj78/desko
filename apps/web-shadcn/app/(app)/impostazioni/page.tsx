@@ -462,7 +462,7 @@ export default function ImpostazioniPage() {
                 <label htmlFor="visibility" className="text-sm font-medium">
                   Chi può vedere
                 </label>
-                <Select value={visibility} onValueChange={setVisibility}>
+                <Select value={visibility} onValueChange={(v) => v && setVisibility(v)}>
                   <SelectTrigger id="visibility">
                     <SelectValue />
                   </SelectTrigger>
@@ -529,7 +529,7 @@ export default function ImpostazioniPage() {
                   </div>
                   <Switch
                     checked={notifications[n.key]}
-                    onChange={() =>
+                    onCheckedChange={() =>
                       setNotifications((prev) => ({ ...prev, [n.key]: !prev[n.key] }))
                     }
                   />

@@ -68,11 +68,11 @@ export function TimePicker({
     return String(Math.min(Math.max(0, rounded), 59)).padStart(2, '0');
   }, [minutes, minuteStep, minuteOptions]);
 
-  const handleHourChange = (h: string) => {
-    onChange(`${h}:${roundedMinutes}`);
+  const handleHourChange = (h: string | null) => {
+    if (h) onChange(`${h}:${roundedMinutes}`);
   };
-  const handleMinuteChange = (m: string) => {
-    onChange(`${hours}:${m}`);
+  const handleMinuteChange = (m: string | null) => {
+    if (m) onChange(`${hours}:${m}`);
   };
 
   return (

@@ -171,7 +171,7 @@ export function CreateProposalButton({ restaurants, invitableUsers }: Props) {
               <Label htmlFor="proposal-restaurant" className="flex items-baseline gap-1">
                 Ristorante <span className="text-destructive">*</span>
               </Label>
-              <Select value={restaurantId} onValueChange={setRestaurantId}>
+              <Select value={restaurantId} onValueChange={(v) => v && setRestaurantId(v)}>
                 <SelectTrigger id="proposal-restaurant">
                   <SelectValue placeholder="Scegli un ristorante…" />
                 </SelectTrigger>
@@ -224,9 +224,11 @@ export function CreateProposalButton({ restaurants, invitableUsers }: Props) {
                 Visibilità
               </Label>
               <ToggleGroup
-                type="single"
-                value={visibility}
-                onValueChange={(v) => v && setVisibility(v as 'public' | 'private')}
+                multiple={false}
+                value={[visibility]}
+                onValueChange={(v) =>
+                  v[0] && setVisibility(v[0] as 'public' | 'private')
+                }
                 className="grid grid-cols-2 gap-2"
               >
                 <ToggleGroupItem
@@ -290,23 +292,25 @@ export function CreateProposalButton({ restaurants, invitableUsers }: Props) {
                 ) : null}
 
                 <Popover open={inviteeOpen} onOpenChange={setInviteeOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      id="proposal-invitees"
-                      type="button"
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={inviteeOpen}
-                      className="h-11 justify-between font-normal"
-                    >
-                      <span className="text-muted-foreground">
-                        {invitees.length === 0
-                          ? 'Aggiungi colleghi…'
-                          : `${invitees.length} ${invitees.length === 1 ? 'invitato' : 'invitati'}`}
-                      </span>
-                      <ChevronsUpDown className="size-4 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
+                  <PopoverTrigger
+                    render={
+                      <Button
+                        id="proposal-invitees"
+                        type="button"
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={inviteeOpen}
+                        className="h-11 justify-between font-normal"
+                      >
+                        <span className="text-muted-foreground">
+                          {invitees.length === 0
+                            ? 'Aggiungi colleghi…'
+                            : `${invitees.length} ${invitees.length === 1 ? 'invitato' : 'invitati'}`}
+                        </span>
+                        <ChevronsUpDown className="size-4 opacity-50" />
+                      </Button>
+                    }
+                  />
                   <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
                     <Command>
                       <CommandInput placeholder="Cerca nome o team…" />
