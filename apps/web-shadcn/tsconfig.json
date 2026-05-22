@@ -15,7 +15,8 @@
     "incremental": true,
     "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@desko/ui/*": ["../../packages/ui/src/*"]
     }
   },
   "include": [

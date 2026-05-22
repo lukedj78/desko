@@ -69,37 +69,39 @@ export function MyPresenceItem({ entry, date }: Props) {
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button
-            disabled={pending}
-            className="group flex w-full items-center gap-3 rounded-lg border border-primary bg-primary/10 px-3 py-2.5 text-left transition-colors hover:bg-primary/20 hover:border-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            style={{ width: 260 }}
-          >
-            <Avatar className="size-9 ring-2 ring-primary shrink-0">
-              <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
-                {entry.initials}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col min-w-0 flex-1 gap-0.5">
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="truncate text-sm font-semibold">
-                  {entry.displayName.replace(' (tu)', '')}
-                </span>
-                <span className="inline-flex items-center rounded bg-primary px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em] text-primary-foreground shrink-0">
-                  Tu
+        <DropdownMenuTrigger
+          render={
+            <button
+              disabled={pending}
+              className="group flex w-full items-center gap-3 rounded-lg border border-primary bg-primary/10 px-3 py-2.5 text-left transition-colors hover:bg-primary/20 hover:border-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              style={{ width: 260 }}
+            >
+              <Avatar className="size-9 ring-2 ring-primary shrink-0">
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
+                  {entry.initials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col min-w-0 flex-1 gap-0.5">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="truncate text-sm font-semibold">
+                    {entry.displayName.replace(' (tu)', '')}
+                  </span>
+                  <span className="inline-flex items-center rounded bg-primary px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em] text-primary-foreground shrink-0">
+                    Tu
+                  </span>
+                </div>
+                <span className="truncate text-[11px] text-muted-foreground">
+                  {entry.team ?? '—'}
                 </span>
               </div>
-              <span className="truncate text-[11px] text-muted-foreground">
-                {entry.team ?? '—'}
-              </span>
-            </div>
-            {pending ? (
-              <Loader2 className="size-4 animate-spin shrink-0" />
-            ) : (
-              <ChevronDown className="size-4 text-muted-foreground shrink-0" />
-            )}
-          </button>
-        </DropdownMenuTrigger>
+              {pending ? (
+                <Loader2 className="size-4 animate-spin shrink-0" />
+              ) : (
+                <ChevronDown className="size-4 text-muted-foreground shrink-0" />
+              )}
+            </button>
+          }
+        />
         <DropdownMenuContent align="start" sideOffset={4} className="min-w-[240px]">
           <DropdownMenuLabel className="flex flex-col gap-0.5 px-3 py-2">
             <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-muted-foreground">

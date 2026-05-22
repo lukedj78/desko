@@ -56,39 +56,41 @@ export function UserDropdown({ user, variant = 'compact' }: UserDropdownProps) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        {variant === 'compact' ? (
-          <button
-            aria-label={`Menu utente di ${user.name}`}
-            className="rounded-full transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          >
-            <Avatar className="size-9 ring-2 ring-primary">
-              {user.image ? <AvatarImage src={user.image} alt={user.name} /> : null}
-              <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
-          </button>
-        ) : (
-          <button
-            aria-label={`Menu utente di ${user.name}`}
-            className="flex w-full items-center gap-3 rounded-lg p-2 text-left transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          >
-            <Avatar className="size-9 shrink-0 ring-2 ring-primary">
-              {user.image ? <AvatarImage src={user.image} alt={user.name} /> : null}
-              <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex flex-col items-start">
-              <span className="truncate text-sm font-semibold">{user.name}</span>
-              <span className="truncate text-xs text-muted-foreground">
-                {isAdmin ? 'Admin' : isHrAnalytics ? 'HR Analytics' : user.email}
-              </span>
-            </div>
-          </button>
-        )}
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger
+        render={
+          variant === 'compact' ? (
+            <button
+              aria-label={`Menu utente di ${user.name}`}
+              className="rounded-full transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <Avatar className="size-9 ring-2 ring-primary">
+                {user.image ? <AvatarImage src={user.image} alt={user.name} /> : null}
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+            </button>
+          ) : (
+            <button
+              aria-label={`Menu utente di ${user.name}`}
+              className="flex w-full items-center gap-3 rounded-lg p-2 text-left transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <Avatar className="size-9 shrink-0 ring-2 ring-primary">
+                {user.image ? <AvatarImage src={user.image} alt={user.name} /> : null}
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex flex-col items-start">
+                <span className="truncate text-sm font-semibold">{user.name}</span>
+                <span className="truncate text-xs text-muted-foreground">
+                  {isAdmin ? 'Admin' : isHrAnalytics ? 'HR Analytics' : user.email}
+                </span>
+              </div>
+            </button>
+          )
+        }
+      />
 
       <DropdownMenuContent align="end" sideOffset={8} className="min-w-[240px]">
         {/* Header */}
@@ -119,36 +121,44 @@ export function UserDropdown({ user, variant = 'compact' }: UserDropdownProps) {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem asChild>
-          <Link href="/impostazioni" className="no-underline w-full">
-            <UserIcon className="size-4" />
-            <span>Profilo e preferenze</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/impostazioni" className="no-underline w-full">
-            <Settings className="size-4" />
-            <span>Impostazioni</span>
-          </Link>
-        </DropdownMenuItem>
+        <DropdownMenuItem
+          render={
+            <Link href="/impostazioni" className="no-underline w-full">
+              <UserIcon className="size-4" />
+              <span>Profilo e preferenze</span>
+            </Link>
+          }
+        />
+        <DropdownMenuItem
+          render={
+            <Link href="/impostazioni" className="no-underline w-full">
+              <Settings className="size-4" />
+              <span>Impostazioni</span>
+            </Link>
+          }
+        />
 
         {canSeeHrAnalytics || isAdmin ? <DropdownMenuSeparator /> : null}
 
         {canSeeHrAnalytics ? (
-          <DropdownMenuItem asChild>
-            <Link href="/admin/analytics" className="no-underline w-full text-info">
-              <BarChart3 className="size-4" />
-              <span className="font-semibold">HR Analytics</span>
-            </Link>
-          </DropdownMenuItem>
+          <DropdownMenuItem
+            render={
+              <Link href="/admin/analytics" className="no-underline w-full text-info">
+                <BarChart3 className="size-4" />
+                <span className="font-semibold">HR Analytics</span>
+              </Link>
+            }
+          />
         ) : null}
         {isAdmin ? (
-          <DropdownMenuItem asChild>
-            <Link href="/admin/users" className="no-underline w-full">
-              <ShieldCheck className="size-4 text-primary-foreground" />
-              <span className="font-semibold text-primary-foreground">Gestione utenti</span>
-            </Link>
-          </DropdownMenuItem>
+          <DropdownMenuItem
+            render={
+              <Link href="/admin/users" className="no-underline w-full">
+                <ShieldCheck className="size-4 text-primary-foreground" />
+                <span className="font-semibold text-primary-foreground">Gestione utenti</span>
+              </Link>
+            }
+          />
         ) : null}
 
         <DropdownMenuSeparator />

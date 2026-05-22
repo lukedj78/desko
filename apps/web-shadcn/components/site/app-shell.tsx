@@ -67,22 +67,24 @@ function SidebarContent({
   const pathname = usePathname();
 
   return (
-    <TooltipProvider delayDuration={300}>
+    <TooltipProvider delay={300}>
       <div className="flex h-full flex-col">
         {collapsed ? (
           // Collapsed: prima il chevron espandi, poi il logo D
           <div className="flex flex-col items-center gap-2 py-3">
             <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  onClick={onToggleCollapsed}
-                  aria-label="Espandi sidebar"
-                  className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
-                >
-                  <ChevronRight className="size-4" />
-                </button>
-              </TooltipTrigger>
+              <TooltipTrigger
+                render={
+                  <button
+                    type="button"
+                    onClick={onToggleCollapsed}
+                    aria-label="Espandi sidebar"
+                    className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+                  >
+                    <ChevronRight className="size-4" />
+                  </button>
+                }
+              />
               <TooltipContent side="right" sideOffset={8}>
                 Espandi sidebar
               </TooltipContent>
@@ -109,16 +111,18 @@ function SidebarContent({
               </span>
             </Link>
             <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  onClick={onToggleCollapsed}
-                  aria-label="Comprimi sidebar"
-                  className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
-                >
-                  <ChevronLeft className="size-4" />
-                </button>
-              </TooltipTrigger>
+              <TooltipTrigger
+                render={
+                  <button
+                    type="button"
+                    onClick={onToggleCollapsed}
+                    aria-label="Comprimi sidebar"
+                    className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+                  >
+                    <ChevronLeft className="size-4" />
+                  </button>
+                }
+              />
               <TooltipContent side="right" sideOffset={8}>
                 Comprimi sidebar
               </TooltipContent>
@@ -166,7 +170,7 @@ function SidebarContent({
             );
             return collapsed ? (
               <Tooltip key={item.href}>
-                <TooltipTrigger asChild>{link}</TooltipTrigger>
+                <TooltipTrigger render={link} />
                 <TooltipContent side="right" sideOffset={8}>
                   {item.label}
                 </TooltipContent>
@@ -283,7 +287,7 @@ export function AppShell({
     : SIDEBAR_WIDTH_EXPANDED;
 
   return (
-    <TooltipProvider delayDuration={300}>
+    <TooltipProvider delay={300}>
       <div className="flex min-h-dvh bg-background">
         {/* Permanent sidebar — desktop only */}
         <aside
@@ -325,27 +329,31 @@ export function AppShell({
               <div className="flex-1" />
 
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    aria-label="Aiuto"
-                    className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
-                  >
-                    <HelpCircle className="size-5" />
-                  </button>
-                </TooltipTrigger>
+                <TooltipTrigger
+                  render={
+                    <button
+                      type="button"
+                      aria-label="Aiuto"
+                      className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+                    >
+                      <HelpCircle className="size-5" />
+                    </button>
+                  }
+                />
                 <TooltipContent>Aiuto</TooltipContent>
               </Tooltip>
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    aria-label="Notifiche"
-                    className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
-                  >
-                    <Bell className="size-5" />
-                  </button>
-                </TooltipTrigger>
+                <TooltipTrigger
+                  render={
+                    <button
+                      type="button"
+                      aria-label="Notifiche"
+                      className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+                    >
+                      <Bell className="size-5" />
+                    </button>
+                  }
+                />
                 <TooltipContent>Notifiche</TooltipContent>
               </Tooltip>
               <div className="ml-0.5">

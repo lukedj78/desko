@@ -5,17 +5,17 @@
   "tsx": true,
   "tailwind": {
     "config": "",
-    "css": "app/globals.css",
+    "css": "../../apps/web-shadcn/app/globals.css",
     "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
   },
+  "iconLibrary": "lucide",
   "aliases": {
     "components": "@desko/ui/components",
     "utils": "@desko/ui/lib/utils",
-    "ui": "@desko/ui/components",
+    "hooks": "@desko/ui/hooks",
     "lib": "@desko/ui/lib",
-    "hooks": "@desko/ui/hooks"
-  },
-  "iconLibrary": "lucide"
+    "ui": "@desko/ui/components"
+  }
 }
