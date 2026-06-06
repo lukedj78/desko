@@ -8,24 +8,32 @@ import { DeleteDialog } from './delete-dialog';
 import { Filters } from './filters';
 import { Header } from './header';
 import { Table } from './table';
+import type { AdminUser } from './types';
+
+type UsersAdminClientProps = {
+  currentUserId: string;
+  /** Lista iniziale fetchata server-side (data-fetching skill). */
+  initialUsers: AdminUser[];
+  /** Errore iniziale (es. listUsers fallita lato server). */
+  initialError?: string | null;
+};
 
 /**
  * UsersAdminClient — pannello admin con tabella utenti + azioni (impersona,
  * banna, revoca sessioni, elimina).
  *
- * Pattern compound + Context: tutte le parti (Header, Filters, Table,
- * ActionsDialog, DeleteDialog) leggono stato e handlers dal
- * <UsersAdminProvider> via `useUsersAdmin()`. La pagina consumer monta solo
- * `<UsersAdminClient currentUserId>` e ottiene il pannello completo.
+ * Architettura data-fetching skill compliant:
+ * - `initialUsers` fetchato server-side (page.tsx → auth.api.listUsers)
+ * - filtri sincronizzati con URL searchParams (q + role)
+ * - mutations chiamano `router.refresh()` per re-render server (no useEffect)
+ * - role change usa `useOptimistic` per UI snappiness
  *
  * Sub-components esposti come dot-properties per consentire ricomposizione:
  *
- *   import { UsersAdminClient } from './users-admin';
- *
- *   <UsersAdminClient currentUserId={id} />          // composizione default
+ *   <UsersAdminClient currentUserId={id} initialUsers={users} />
  *
  *   // oppure custom layout:
- *   <UsersAdminClient.Provider currentUserId={id}>
+ *   <UsersAdminClient.Provider currentUserId={id} initialUsers={users}>
  *     <UsersAdminClient.Header />
  *     <UsersAdminClient.Filters />
  *     <UsersAdminClient.Table />
@@ -33,9 +41,17 @@ import { Table } from './table';
  *     <UsersAdminClient.DeleteDialog />
  *   </UsersAdminClient.Provider>
  */
-export function UsersAdminClient({ currentUserId }: { currentUserId: string }) {
+export function UsersAdminClient({
+  currentUserId,
+  initialUsers,
+  initialError = null,
+}: UsersAdminClientProps) {
   return (
-    <UsersAdminProvider currentUserId={currentUserId}>
+    <UsersAdminProvider
+      currentUserId={currentUserId}
+      initialUsers={initialUsers}
+      initialError={initialError}
+    >
       <div className="mx-auto w-full max-w-screen-2xl px-5 py-8 sm:px-6 md:px-8 md:py-12">
         <div className="flex flex-col gap-6">
           <Header />
