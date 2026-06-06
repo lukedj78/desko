@@ -13,7 +13,7 @@ import {
 } from '@desko/ui/components/tooltip';
 import type { PresenceEntry } from '@desko/queries/presence';
 
-import { FloorBadge } from './floor-badge';
+import { FloorBadge } from '@/components/shared/floor/floor-badge';
 
 const TEAM_COLORS: Record<string, string> = {
   Engineering: '#3D87C9',

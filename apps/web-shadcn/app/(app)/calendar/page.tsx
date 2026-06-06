@@ -17,7 +17,7 @@ import { Button } from '@desko/ui/components/button';
 import { Card } from '@desko/ui/components/card';
 import { Eyebrow } from '@desko/ui/components/eyebrow';
 import { Avatar, AvatarFallback } from '@desko/ui/components/avatar';
-import { EmployeeHoverCard } from '@/components/site/employee-hover-card';
+import { EmployeeHoverCard } from '@/components/shared/employee/employee-hover-card';
 import { getCurrentUser } from '@desko/auth/server';
 import { db, schema } from '@desko/db';
 import type { Floor } from '@desko/domain';

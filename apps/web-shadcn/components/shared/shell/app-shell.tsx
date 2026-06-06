@@ -23,8 +23,8 @@ import {
 } from '@desko/ui/components/tooltip';
 import { cn } from '@desko/ui/lib/utils';
 
-import { DeskoBrand } from './desko-brand';
-import { UserDropdown } from './user-dropdown';
+import { DeskoBrand } from '@/components/shared/brand/desko-brand';
+import { UserDropdown } from '@/components/shared/user/user-dropdown';
 
 type SessionUser = {
   name: string;
