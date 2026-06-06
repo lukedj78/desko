@@ -3,43 +3,49 @@
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
+import { z } from 'zod';
 
 import { Alert } from '@desko/ui/components/alert';
 import { Button } from '@desko/ui/components/button';
 import { Card, CardContent } from '@desko/ui/components/card';
 import { Eyebrow } from '@desko/ui/components/eyebrow';
 import { Field } from '@desko/ui/components/field';
+import { DeskoBrand } from '@/components/shared/brand/desko-brand';
 import { MicrosoftIcon } from '@/components/shared/auth/microsoft-icon';
 import { PasswordField } from '@/components/shared/auth/password-field';
 import { signIn } from '@/lib/auth-client';
+import { useCreateForm } from '@/lib/forms';
+
+const LoginSchema = z.object({
+  email: z.string().email('Email non valida'),
+  password: z.string().min(1, 'Password richiesta'),
+});
+
+type LoginInput = z.infer<typeof LoginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
-  const [pending, startTransition] = useTransition();
   const [microsoftPending, setMicrosoftPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [microsoftError, setMicrosoftError] = useState<string | null>(null);
 
-  const handleEmailLogin = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    const formData = new FormData(e.currentTarget);
-    const email = String(formData.get('email') ?? '');
-    const password = String(formData.get('password') ?? '');
-
-    startTransition(async () => {
-      const { error: err } = await signIn.email({ email, password });
-      if (err) {
-        setError(err.message ?? 'Credenziali non valide.');
-        return;
-      }
+  // Email/password login — gestito da useCreateForm (skill forms compliant)
+  const { form, formError } = useCreateForm<LoginInput, void>({
+    schema: LoginSchema,
+    defaultValues: { email: '', password: '' },
+    submit: async ({ email, password }) => {
+      const { error } = await signIn.email({ email, password });
+      if (error) throw new Error(error.message ?? 'Credenziali non valide.');
+    },
+    onSuccess: () => {
       router.push('/dashboard');
       router.refresh();
-    });
-  };
+    },
+  });
 
+  // Microsoft SSO — handler isolato (no form fields, no toolkit overhead)
   const handleMicrosoftLogin = async () => {
-    setError(null);
+    setMicrosoftError(null);
     setMicrosoftPending(true);
     try {
       const result = await signIn.social({
@@ -47,26 +53,24 @@ export default function LoginPage() {
         callbackURL: '/dashboard',
       });
       if (result.error) {
-        setError(
+        setMicrosoftError(
           result.error.message ?? 'Microsoft non ancora configurato. Usa email e password.',
         );
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Errore Microsoft login.');
+      setMicrosoftError(e instanceof Error ? e.message : 'Errore Microsoft login.');
     } finally {
       setMicrosoftPending(false);
     }
   };
 
+  const displayError = microsoftError ?? formError?.message ?? null;
+
   return (
     <main className="min-h-dvh flex flex-col items-center justify-center bg-muted px-6 py-10 md:py-16">
       <div className="w-full max-w-[600px] flex flex-col gap-8">
-        {/* Brand */}
-        <div className="flex items-center justify-center gap-3">
-          <span className="inline-flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-extrabold text-lg">
-            D
-          </span>
-          <h2 className="text-2xl font-bold tracking-tight">Desko</h2>
+        <div className="flex items-center justify-center">
+          <DeskoBrand size="lg" wordmark />
         </div>
 
         <Card>
@@ -82,12 +86,12 @@ export default function LoginPage() {
                 </p>
               </div>
 
-              {error ? <Alert variant="destructive">{error}</Alert> : null}
+              {displayError ? <Alert variant="destructive">{displayError}</Alert> : null}
 
-              {/* Microsoft */}
+              {/* Microsoft SSO */}
               <Button
                 onClick={handleMicrosoftLogin}
-                disabled={microsoftPending || pending}
+                disabled={microsoftPending || form.state.isSubmitting}
                 variant="outline"
                 size="lg"
                 className="w-full"
@@ -107,42 +111,77 @@ export default function LoginPage() {
                 <div className="h-px flex-1 bg-border" />
               </div>
 
-              {/* Email + password */}
-              <form onSubmit={handleEmailLogin} className="flex flex-col gap-4">
-                <Field
-                  id="login-email"
-                  name="email"
-                  label="Email"
-                  type="email"
-                  placeholder="tu@azienda.it"
-                  autoComplete="email"
-                  required
-                />
-                <PasswordField
-                  id="login-password"
-                  name="password"
-                  label="Password"
-                  placeholder="La tua password"
-                  autoComplete="current-password"
-                  required
-                  hint={
-                    <Link
-                      href="/forgot-password"
-                      className="text-muted-foreground underline hover:text-foreground"
-                    >
-                      Password dimenticata?
-                    </Link>
-                  }
-                />
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full"
-                  disabled={pending || microsoftPending}
+              {/* Email + password form */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void form.handleSubmit();
+                }}
+                className="flex flex-col gap-4"
+              >
+                <form.Field name="email">
+                  {(field) => (
+                    <Field
+                      id="login-email"
+                      label="Email"
+                      type="email"
+                      placeholder="tu@azienda.it"
+                      autoComplete="email"
+                      required
+                      value={String(field.state.value ?? '')}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
+                      aria-invalid={
+                        field.state.meta.isTouched && field.state.meta.errors.length > 0
+                      }
+                    />
+                  )}
+                </form.Field>
+
+                <form.Field name="password">
+                  {(field) => (
+                    <PasswordField
+                      id="login-password"
+                      label="Password"
+                      placeholder="La tua password"
+                      autoComplete="current-password"
+                      required
+                      value={String(field.state.value ?? '')}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
+                      aria-invalid={
+                        field.state.meta.isTouched && field.state.meta.errors.length > 0
+                      }
+                      hint={
+                        <Link
+                          href="/forgot-password"
+                          className="text-muted-foreground underline hover:text-foreground"
+                        >
+                          Password dimenticata?
+                        </Link>
+                      }
+                    />
+                  )}
+                </form.Field>
+
+                <form.Subscribe
+                  selector={(s) => ({
+                    canSubmit: s.canSubmit,
+                    isSubmitting: s.isSubmitting,
+                  })}
                 >
-                  {pending ? <Loader2 className="size-4 animate-spin" /> : null}
-                  Accedi
-                </Button>
+                  {({ canSubmit, isSubmitting }) => (
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full"
+                      disabled={!canSubmit || microsoftPending}
+                    >
+                      {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
+                      Accedi
+                    </Button>
+                  )}
+                </form.Subscribe>
               </form>
 
               <p className="text-center text-sm text-muted-foreground">
