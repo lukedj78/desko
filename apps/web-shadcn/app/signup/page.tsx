@@ -10,12 +10,12 @@ import { Button } from '@desko/ui/components/button';
 import { Card, CardContent } from '@desko/ui/components/card';
 import { Eyebrow } from '@desko/ui/components/eyebrow';
 import { Field } from '@desko/ui/components/field';
-import { MicrosoftIcon } from '@/components/site/microsoft-icon';
-import { PasswordField } from '@/components/site/password-field';
+import { MicrosoftIcon } from '@/components/shared/auth/microsoft-icon';
+import { PasswordField } from '@/components/shared/auth/password-field';
 import {
   PasswordStrengthMeter,
   passwordStrength,
-} from '@/components/site/password-strength-meter';
+} from '@/components/shared/auth/password-strength-meter';
 import { signIn, signUp } from '@/lib/auth-client';
 
 export default function SignupPage() {

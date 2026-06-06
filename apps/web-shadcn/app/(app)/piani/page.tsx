@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback } from '@desko/ui/components/avatar';
 import { Button } from '@desko/ui/components/button';
 import { Card } from '@desko/ui/components/card';
 import { Eyebrow } from '@desko/ui/components/eyebrow';
-import { EmployeeHoverCard } from '@/components/site/employee-hover-card';
+import { EmployeeHoverCard } from '@/components/shared/employee/employee-hover-card';
 import { FLOOR_META, type Floor } from '@desko/domain';
 import {
   getFloorOccupancy,

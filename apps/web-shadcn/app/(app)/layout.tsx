@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 
-import { AppShell } from '@/components/site/app-shell';
+import { AppShell } from '@/components/shared/shell/app-shell';
 import { getSession } from '@desko/auth/server';
 
 import { ImpersonationBanner } from './_components/impersonation-banner';

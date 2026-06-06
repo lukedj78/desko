@@ -9,11 +9,11 @@ import { Alert } from '@desko/ui/components/alert';
 import { Button } from '@desko/ui/components/button';
 import { Card, CardContent } from '@desko/ui/components/card';
 import { Eyebrow } from '@desko/ui/components/eyebrow';
-import { PasswordField } from '@/components/site/password-field';
+import { PasswordField } from '@/components/shared/auth/password-field';
 import {
   PasswordStrengthMeter,
   passwordStrength,
-} from '@/components/site/password-strength-meter';
+} from '@/components/shared/auth/password-strength-meter';
 import { authClient } from '@/lib/auth-client';
 
 function ResetPasswordForm() {
