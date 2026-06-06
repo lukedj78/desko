@@ -23,6 +23,7 @@ import {
 } from '@desko/ui/components/tooltip';
 import { cn } from '@desko/ui/lib/utils';
 
+import { DeskoBrand } from './desko-brand';
 import { UserDropdown } from './user-dropdown';
 
 type SessionUser = {
@@ -39,17 +40,23 @@ const STORAGE_KEY = 'desko:sidebar-collapsed';
 
 type NavItem = {
   label: string;
-  shortLabel: string;
   href: string;
   icon: React.ReactNode;
 };
 
+type TopbarAction = { label: string; icon: React.ComponentType<{ className?: string }> };
+
+const TOPBAR_ACTIONS: TopbarAction[] = [
+  { label: 'Aiuto', icon: HelpCircle },
+  { label: 'Notifiche', icon: Bell },
+];
+
 const NAV_ITEMS: NavItem[] = [
-  { label: 'Dashboard', shortLabel: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className="size-5" /> },
-  { label: 'Calendar', shortLabel: 'Calendar', href: '/calendar', icon: <CalendarDays className="size-5" /> },
-  { label: 'Piani', shortLabel: 'Piani', href: '/piani', icon: <Layers className="size-5" /> },
-  { label: 'Pranzo', shortLabel: 'Pranzo', href: '/lunch', icon: <Utensils className="size-5" /> },
-  { label: 'Profilo', shortLabel: 'Profilo', href: '/impostazioni', icon: <UserIcon className="size-5" /> },
+  { label: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className="size-5" /> },
+  { label: 'Calendar', href: '/calendar', icon: <CalendarDays className="size-5" /> },
+  { label: 'Piani', href: '/piani', icon: <Layers className="size-5" /> },
+  { label: 'Pranzo', href: '/lunch', icon: <Utensils className="size-5" /> },
+  { label: 'Profilo', href: '/impostazioni', icon: <UserIcon className="size-5" /> },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -67,8 +74,8 @@ function SidebarContent({
   const pathname = usePathname();
 
   return (
-    <TooltipProvider delay={300}>
-      <div className="flex h-full flex-col">
+    // TooltipProvider è fornito da AppShell (root), evitato wrapping ridondante
+    <div className="flex h-full flex-col">
         {collapsed ? (
           // Collapsed: prima il chevron espandi, poi il logo D
           <div className="flex flex-col items-center gap-2 py-3">
@@ -89,26 +96,13 @@ function SidebarContent({
                 Espandi sidebar
               </TooltipContent>
             </Tooltip>
-            <span
-              aria-hidden
-              className="inline-flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground font-extrabold text-sm"
-            >
-              D
-            </span>
+            <DeskoBrand size="md" />
           </div>
         ) : (
           // Expanded: logo + wordmark a sinistra, chevron comprimi a destra
           <div className="flex min-h-14 items-center justify-between gap-2 px-5 py-3">
-            <Link href="/dashboard" className="flex min-w-0 items-center gap-3 no-underline">
-              <span
-                aria-hidden
-                className="inline-flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground font-extrabold text-sm shrink-0"
-              >
-                D
-              </span>
-              <span className="text-base font-extrabold tracking-tight truncate">
-                Desko
-              </span>
+            <Link href="/dashboard" className="no-underline">
+              <DeskoBrand size="md" wordmark />
             </Link>
             <Tooltip>
               <TooltipTrigger
@@ -194,7 +188,6 @@ function SidebarContent({
           />
         </div>
       </div>
-    </TooltipProvider>
   );
 }
 
@@ -237,7 +230,7 @@ function MobileBottomNav() {
               )}
             >
               <span className="inline-flex">{item.icon}</span>
-              <span>{item.shortLabel}</span>
+              <span>{item.label}</span>
             </button>
           );
         })}
@@ -311,51 +304,28 @@ export function AppShell({
           <header className="sticky top-0 z-30 border-b border-border bg-card">
             <div className="flex min-h-14 items-center gap-3 px-4 sm:px-6 md:min-h-16 md:px-8">
               {/* Mobile logo (sidebar è hidden su mobile) */}
-              <Link
-                href="/dashboard"
-                className="flex items-center gap-3 no-underline md:hidden"
-              >
-                <span
-                  aria-hidden
-                  className="inline-flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground font-extrabold text-sm"
-                >
-                  D
-                </span>
-                <span className="text-base font-extrabold tracking-tight">
-                  Desko
-                </span>
+              <Link href="/dashboard" className="no-underline md:hidden">
+                <DeskoBrand size="md" wordmark />
               </Link>
 
               <div className="flex-1" />
 
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <button
-                      type="button"
-                      aria-label="Aiuto"
-                      className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
-                    >
-                      <HelpCircle className="size-5" />
-                    </button>
-                  }
-                />
-                <TooltipContent>Aiuto</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <button
-                      type="button"
-                      aria-label="Notifiche"
-                      className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
-                    >
-                      <Bell className="size-5" />
-                    </button>
-                  }
-                />
-                <TooltipContent>Notifiche</TooltipContent>
-              </Tooltip>
+              {TOPBAR_ACTIONS.map(({ label, icon: Icon }) => (
+                <Tooltip key={label}>
+                  <TooltipTrigger
+                    render={
+                      <button
+                        type="button"
+                        aria-label={label}
+                        className="inline-flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+                      >
+                        <Icon className="size-5" />
+                      </button>
+                    }
+                  />
+                  <TooltipContent>{label}</TooltipContent>
+                </Tooltip>
+              ))}
               <div className="ml-0.5">
                 <UserDropdown user={user} variant="compact" />
               </div>

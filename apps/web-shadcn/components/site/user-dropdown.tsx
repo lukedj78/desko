@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { useTransition } from 'react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@desko/ui/components/avatar';
 import {
@@ -37,8 +37,7 @@ const initialsFromName = (name: string) => {
 
 export function UserDropdown({ user, variant = 'compact' }: UserDropdownProps) {
   const router = useRouter();
-  const [, startTransition] = useTransition();
-  const [pending, setPending] = useState(false);
+  const [pending, startTransition] = useTransition();
 
   const isAdmin = user.role === 'admin';
   const isHrAnalytics = user.role === 'hr_analytics';
@@ -46,7 +45,6 @@ export function UserDropdown({ user, variant = 'compact' }: UserDropdownProps) {
   const initials = initialsFromName(user.name);
 
   const handleLogout = () => {
-    setPending(true);
     startTransition(async () => {
       await signOut();
       router.push('/login');
@@ -138,7 +136,7 @@ export function UserDropdown({ user, variant = 'compact' }: UserDropdownProps) {
           }
         />
 
-        {canSeeHrAnalytics || isAdmin ? <DropdownMenuSeparator /> : null}
+        {canSeeHrAnalytics ? <DropdownMenuSeparator /> : null}
 
         {canSeeHrAnalytics ? (
           <DropdownMenuItem

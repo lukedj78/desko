@@ -65,6 +65,11 @@ const startOfToday = (): Date => {
   return d;
 };
 
+const VISIBILITY_OPTIONS = [
+  { value: 'public' as const, icon: Globe, label: 'Pubblica', sub: 'Visibile a tutti' },
+  { value: 'private' as const, icon: Lock, label: 'Privata', sub: 'Solo invitati' },
+];
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Component
 // ─────────────────────────────────────────────────────────────────────────────
@@ -132,9 +137,17 @@ export function CreateProposalButton({ restaurants, invitableUsers }: Props) {
     );
   };
 
+  // Map per lookup O(1) invece di O(N*M) ad ogni keystroke
+  const userMap = React.useMemo(
+    () => new Map(invitableUsers.map((u) => [u.userId, u])),
+    [invitableUsers],
+  );
   const selectedInvitees = invitees
-    .map((id) => invitableUsers.find((u) => u.userId === id))
+    .map((id) => userMap.get(id))
     .filter((u): u is InvitableUser => Boolean(u));
+
+  // minDate stabile per non re-creare un Date a ogni render
+  const minDateToday = React.useMemo(() => startOfToday(), []);
 
   return (
     <>
@@ -146,12 +159,9 @@ export function CreateProposalButton({ restaurants, invitableUsers }: Props) {
       <Dialog
         open={open}
         onOpenChange={(o) => {
-          if (pending) return;
-          if (o) setOpen(true);
-          else {
-            setOpen(false);
-            reset();
-          }
+          if (pending || o) return;
+          setOpen(false);
+          reset();
         }}
       >
         <DialogContent className="sm:max-w-[560px]">
@@ -199,7 +209,7 @@ export function CreateProposalButton({ restaurants, invitableUsers }: Props) {
                   id="proposal-date"
                   value={date}
                   onChange={setDate}
-                  minDate={startOfToday()}
+                  minDate={minDateToday}
                   placeholder="Scegli una data"
                 />
               </div>
@@ -231,26 +241,19 @@ export function CreateProposalButton({ restaurants, invitableUsers }: Props) {
                 }
                 className="grid grid-cols-2 gap-2"
               >
-                <ToggleGroupItem
-                  value="public"
-                  className="h-auto justify-start gap-3 rounded-md border border-border bg-card p-3 data-[state=on]:border-primary data-[state=on]:bg-primary/10"
-                >
-                  <Globe className="size-4 shrink-0" />
-                  <span className="flex flex-col items-start text-left">
-                    <span className="text-sm font-semibold">Pubblica</span>
-                    <span className="text-xs text-muted-foreground">Visibile a tutti</span>
-                  </span>
-                </ToggleGroupItem>
-                <ToggleGroupItem
-                  value="private"
-                  className="h-auto justify-start gap-3 rounded-md border border-border bg-card p-3 data-[state=on]:border-primary data-[state=on]:bg-primary/10"
-                >
-                  <Lock className="size-4 shrink-0" />
-                  <span className="flex flex-col items-start text-left">
-                    <span className="text-sm font-semibold">Privata</span>
-                    <span className="text-xs text-muted-foreground">Solo invitati</span>
-                  </span>
-                </ToggleGroupItem>
+                {VISIBILITY_OPTIONS.map(({ value, icon: Icon, label, sub }) => (
+                  <ToggleGroupItem
+                    key={value}
+                    value={value}
+                    className="h-auto justify-start gap-3 rounded-md border border-border bg-card p-3 data-[state=on]:border-primary data-[state=on]:bg-primary/10"
+                  >
+                    <Icon className="size-4 shrink-0" />
+                    <span className="flex flex-col items-start text-left">
+                      <span className="text-sm font-semibold">{label}</span>
+                      <span className="text-xs text-muted-foreground">{sub}</span>
+                    </span>
+                  </ToggleGroupItem>
+                ))}
               </ToggleGroup>
             </div>
 
@@ -311,7 +314,7 @@ export function CreateProposalButton({ restaurants, invitableUsers }: Props) {
                       </Button>
                     }
                   />
-                  <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+                  <PopoverContent className="w-(--anchor-width) p-0" align="start">
                     <Command>
                       <CommandInput placeholder="Cerca nome o team…" />
                       <CommandList>
