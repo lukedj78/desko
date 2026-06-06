@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 
 import { getSession } from '@desko/auth/server';
 
-import { UsersAdminClient } from './_components/users-admin-client';
+import { UsersAdminClient } from './_components/users-admin';
 
 export const metadata = { title: 'Gestione utenti' };
 
