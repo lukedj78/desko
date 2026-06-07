@@ -21,22 +21,15 @@ import { ROLE_OPTIONS, type AdminUser, type Role, formatDate, initialsFromName }
 // Table (Card wrapper + states + tbody)
 // ─────────────────────────────────────────────────────────────────────────────
 export function Table() {
-  const { loading, users, filteredUsers } = useUsersAdmin();
+  const { users } = useUsersAdmin();
 
+  // Loading non esiste più: i dati arrivano dal Server Component al render
+  // iniziale, refresh usa router.refresh() che mostra lo spinner sul button
+  // header (non sulla tabella, che resta interattiva).
   return (
     <Card className="overflow-hidden">
-      {loading ? <LoadingState /> : users.length === 0 ? <EmptyState /> : <UsersTable />}
-      {!loading && users.length > 0 && filteredUsers.length === 0 ? null : null}
+      {users.length === 0 ? <EmptyState /> : <UsersTable />}
     </Card>
-  );
-}
-
-function LoadingState() {
-  return (
-    <div className="p-12 text-center">
-      <Loader2 className="size-8 animate-spin mx-auto text-muted-foreground" />
-      <p className="text-sm text-muted-foreground mt-3">Caricamento utenti…</p>
-    </div>
   );
 }
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import * as React from 'react';
 
 import { admin } from '@/lib/auth-client';
@@ -13,20 +14,23 @@ type UsersAdminContextValue = {
   // Identity
   currentUserId: string;
 
-  // Data
+  // Data (provenienti da Server Component come prop)
   users: AdminUser[];
   filteredUsers: AdminUser[];
-  loading: boolean;
+
+  // Refresh / errori UI
+  refresh: () => void;
+  refreshing: boolean;
   error: string | null;
   clearError: () => void;
 
-  // Filters
+  // Filtri sincronizzati con URL searchParams (q + role)
   search: string;
   setSearch: (v: string) => void;
   roleFilter: Role | 'all';
   setRoleFilter: (v: Role | 'all') => void;
 
-  // Modals
+  // Modali
   actionsDialog: AdminUser | null;
   openActionsDialog: (u: AdminUser) => void;
   closeActionsDialog: () => void;
@@ -41,8 +45,7 @@ type UsersAdminContextValue = {
 
   impersonatingId: string | null;
 
-  // Actions
-  fetchUsers: () => Promise<void>;
+  // Mutation handlers (chiamano admin.* e poi router.refresh())
   handleRoleChange: (userId: string, role: Role) => Promise<void>;
   handleImpersonate: (userId: string) => Promise<void>;
   handleRevokeSessions: (userId: string) => Promise<void>;
@@ -67,65 +70,103 @@ export function useUsersAdmin(): UsersAdminContextValue {
 // ─────────────────────────────────────────────────────────────────────────────
 type ProviderProps = {
   currentUserId: string;
+  initialUsers: AdminUser[];
+  initialError: string | null;
   children: React.ReactNode;
 };
 
-export function UsersAdminProvider({ currentUserId, children }: ProviderProps) {
-  // Data
-  const [users, setUsers] = React.useState<AdminUser[]>([]);
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState<string | null>(null);
+export function UsersAdminProvider({
+  currentUserId,
+  initialUsers,
+  initialError,
+  children,
+}: ProviderProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  // Filters
-  const [search, setSearch] = React.useState('');
-  const [roleFilter, setRoleFilter] = React.useState<Role | 'all'>('all');
+  // Optimistic users — applica setRole immediato in UI, server-render fa
+  // la sync vera al successivo router.refresh()
+  const [optimisticUsers, applyOptimisticUsers] = React.useOptimistic<
+    AdminUser[],
+    { userId: string; role: Role }
+  >(initialUsers, (current, change) =>
+    current.map((u) => (u.id === change.userId ? { ...u, role: change.role } : u)),
+  );
 
-  // Modals
+  // Refresh (revalidate Server Component)
+  const [refreshing, startRefresh] = React.useTransition();
+  const refresh = React.useCallback(() => {
+    startRefresh(() => {
+      router.refresh();
+    });
+  }, [router]);
+
+  // UI state locale (no useEffect, no server data)
+  const [error, setError] = React.useState<string | null>(initialError);
   const [actionsDialog, setActionsDialog] = React.useState<AdminUser | null>(null);
   const [deleteDialog, setDeleteDialog] = React.useState<AdminUser | null>(null);
   const [deleteConfirmText, setDeleteConfirmText] = React.useState('');
   const [deletePending, setDeletePending] = React.useState(false);
-
-  // Impersonation transition
   const [impersonatingId, setImpersonatingId] = React.useState<string | null>(null);
 
-  // ── Actions ───────────────────────────────────────────────────────────────
-  const fetchUsers = React.useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await admin.listUsers({
-        query: { limit: 100, sortBy: 'createdAt', sortDirection: 'desc' },
-      });
-      if (result.error) {
-        setError(result.error.message ?? 'Impossibile caricare gli utenti.');
-      } else {
-        setUsers((result.data?.users ?? []) as AdminUser[]);
+  // ── URL-bound filters (state-discipline rung 2 + data-fetching) ───────────
+  const search = searchParams.get('q') ?? '';
+  const roleFilter = (searchParams.get('role') as Role | 'all' | null) ?? 'all';
+
+  const updateUrlParams = React.useCallback(
+    (updates: Record<string, string | null>) => {
+      const next = new URLSearchParams(searchParams.toString());
+      for (const [key, value] of Object.entries(updates)) {
+        if (value === null || value === '' || value === 'all') {
+          next.delete(key);
+        } else {
+          next.set(key, value);
+        }
       }
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Errore caricamento.');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      const qs = next.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
 
-  React.useEffect(() => {
-    void fetchUsers();
-  }, [fetchUsers]);
+  const setSearch = React.useCallback(
+    (v: string) => updateUrlParams({ q: v }),
+    [updateUrlParams],
+  );
+  const setRoleFilter = React.useCallback(
+    (v: Role | 'all') => updateUrlParams({ role: v }),
+    [updateUrlParams],
+  );
 
+  // ── Filtered (derived) ────────────────────────────────────────────────────
+  const filteredUsers = React.useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return optimisticUsers.filter((u) => {
+      const matchesSearch =
+        !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+      const matchesRole = roleFilter === 'all' || (u.role ?? 'user') === roleFilter;
+      return matchesSearch && matchesRole;
+    });
+  }, [optimisticUsers, search, roleFilter]);
+
+  // ── Mutations ─────────────────────────────────────────────────────────────
   const handleRoleChange = React.useCallback(
     async (userId: string, newRole: Role) => {
-      const previous = users.find((u) => u.id === userId)?.role;
-      setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, role: newRole } : u)));
+      // Optimistic update (UI immediato), poi sync server via refresh
+      React.startTransition(() => {
+        applyOptimisticUsers({ userId, role: newRole });
+      });
       const { error: err } = await admin.setRole({ userId, role: newRole });
       if (err) {
         setError(err.message ?? 'Errore cambio ruolo.');
-        setUsers((prev) =>
-          prev.map((u) => (u.id === userId ? { ...u, role: previous as string } : u)),
-        );
+        // refresh ripristina lo stato server (cancella l'optimistic)
+        refresh();
+        return;
       }
+      refresh();
     },
-    [users],
+    [applyOptimisticUsers, refresh],
   );
 
   const handleImpersonate = React.useCallback(async (userId: string) => {
@@ -156,9 +197,9 @@ export function UsersAdminProvider({ currentUserId, children }: ProviderProps) {
         banExpiresIn: 60 * 60 * 24 * 30,
       });
       if (err) setError(err.message ?? 'Errore ban.');
-      else void fetchUsers();
+      else refresh();
     },
-    [fetchUsers],
+    [refresh],
   );
 
   const handleUnban = React.useCallback(
@@ -166,9 +207,9 @@ export function UsersAdminProvider({ currentUserId, children }: ProviderProps) {
       setActionsDialog(null);
       const { error: err } = await admin.unbanUser({ userId: u.id });
       if (err) setError(err.message ?? 'Errore unban.');
-      else void fetchUsers();
+      else refresh();
     },
-    [fetchUsers],
+    [refresh],
   );
 
   const handleDelete = React.useCallback(async () => {
@@ -182,26 +223,16 @@ export function UsersAdminProvider({ currentUserId, children }: ProviderProps) {
     }
     setDeleteDialog(null);
     setDeleteConfirmText('');
-    void fetchUsers();
-  }, [deleteDialog, fetchUsers]);
-
-  // ── Derived ───────────────────────────────────────────────────────────────
-  const filteredUsers = React.useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return users.filter((u) => {
-      const matchesSearch =
-        !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
-      const matchesRole = roleFilter === 'all' || (u.role ?? 'user') === roleFilter;
-      return matchesSearch && matchesRole;
-    });
-  }, [users, search, roleFilter]);
+    refresh();
+  }, [deleteDialog, refresh]);
 
   const value = React.useMemo<UsersAdminContextValue>(
     () => ({
       currentUserId,
-      users,
+      users: optimisticUsers,
       filteredUsers,
-      loading,
+      refresh,
+      refreshing,
       error,
       clearError: () => setError(null),
       search,
@@ -224,7 +255,6 @@ export function UsersAdminProvider({ currentUserId, children }: ProviderProps) {
       setDeleteConfirmText,
       deletePending,
       impersonatingId,
-      fetchUsers,
       handleRoleChange,
       handleImpersonate,
       handleRevokeSessions,
@@ -234,18 +264,20 @@ export function UsersAdminProvider({ currentUserId, children }: ProviderProps) {
     }),
     [
       currentUserId,
-      users,
+      optimisticUsers,
       filteredUsers,
-      loading,
+      refresh,
+      refreshing,
       error,
       search,
+      setSearch,
       roleFilter,
+      setRoleFilter,
       actionsDialog,
       deleteDialog,
       deleteConfirmText,
       deletePending,
       impersonatingId,
-      fetchUsers,
       handleRoleChange,
       handleImpersonate,
       handleRevokeSessions,

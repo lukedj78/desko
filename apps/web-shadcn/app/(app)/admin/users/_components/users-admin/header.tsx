@@ -9,7 +9,7 @@ import { cn } from '@desko/ui/lib/utils';
 import { useUsersAdmin } from './context';
 
 export function Header() {
-  const { loading, fetchUsers } = useUsersAdmin();
+  const { refresh, refreshing } = useUsersAdmin();
 
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -26,11 +26,11 @@ export function Header() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => void fetchUsers()}
-          disabled={loading}
+          onClick={refresh}
+          disabled={refreshing}
           aria-label="Aggiorna lista"
         >
-          <RefreshCw className={cn('size-4', loading && 'animate-spin')} />
+          <RefreshCw className={cn('size-4', refreshing && 'animate-spin')} />
         </Button>
         <Button>
           <Plus className="size-4" />

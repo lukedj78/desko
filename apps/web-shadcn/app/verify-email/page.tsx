@@ -1,119 +1,123 @@
-'use client';
-
-import { CheckCircle2, Hourglass, Loader2, MailCheck, ShieldAlert } from 'lucide-react';
+import { CheckCircle2, MailCheck, ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { Suspense, useEffect, useState } from 'react';
 
 import { Button } from '@desko/ui/components/button';
 import { Card, CardContent } from '@desko/ui/components/card';
 import { Eyebrow } from '@desko/ui/components/eyebrow';
-import { authClient } from '@/lib/auth-client';
+import { auth } from '@desko/auth';
 
-type Status = 'pending' | 'no-token' | 'verifying' | 'success' | 'error';
+import { DeskoBrand } from '@/components/shared/brand/desko-brand';
 
-function VerifyEmailContent() {
-  const searchParams = useSearchParams();
-  const token = searchParams.get('token');
+export const metadata = { title: 'Verifica email' };
+export const dynamic = 'force-dynamic'; // verifica è side-effect, no caching
 
-  const [status, setStatus] = useState<Status>(token ? 'verifying' : 'no-token');
-  const [errorMessage, setErrorMessage] = useState<string>('');
+/**
+ * Async Server Component — verifica email server-side al primo render.
+ *
+ * Pattern canonico data-fetching skill: niente "use client", niente useEffect
+ * + Client SDK call. Il token arriva via searchParams; chiamiamo
+ * `auth.api.verifyEmail` direttamente sul server (nessuna seconda hop HTTP
+ * verso /api/auth/verify-email) e renderizziamo il risultato sincrono.
+ */
+export default async function VerifyEmailPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ token?: string }>;
+}) {
+  const { token } = await searchParams;
 
-  useEffect(() => {
-    if (!token) return;
-    let cancelled = false;
-    (async () => {
-      const { error } = await authClient.verifyEmail({ query: { token } });
-      if (cancelled) return;
-      if (error) {
-        setErrorMessage(
-          error.message ?? 'Verifica fallita. Il link potrebbe essere scaduto o già usato.',
-        );
-        setStatus('error');
-      } else {
-        setStatus('success');
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [token]);
+  let status: 'no-token' | 'success' | 'error';
+  let errorMessage = '';
 
-  if (status === 'no-token') {
-    return (
-      <Card>
-        <CardContent className="p-6 md:p-8 text-center">
-          <div className="flex flex-col items-center gap-6">
-            <div className="inline-flex size-16 items-center justify-center rounded-xl bg-primary/85 text-primary-foreground">
-              <MailCheck className="size-8" />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Eyebrow>Verifica email</Eyebrow>
-              <h1 className="font-sans text-xl md:text-2xl font-bold">Controlla la tua casella.</h1>
-              <p className="text-sm text-muted-foreground">
-                Ti abbiamo inviato un link di conferma. Clicca il pulsante nell&apos;email per
-                attivare il tuo account. Il link scade tra 24 ore.
-              </p>
-            </div>
-            <Link href="/login" className="no-underline">
-              <Button variant="outline">Vai al login</Button>
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
-    );
+  if (!token) {
+    status = 'no-token';
+  } else {
+    try {
+      await auth.api.verifyEmail({ query: { token } });
+      status = 'success';
+    } catch (e) {
+      status = 'error';
+      errorMessage =
+        e instanceof Error
+          ? e.message
+          : 'Verifica fallita. Il link potrebbe essere scaduto o già usato.';
+    }
   }
 
-  if (status === 'verifying') {
-    return (
-      <Card>
-        <CardContent className="p-6 md:p-8 text-center">
-          <div className="flex flex-col items-center gap-6">
-            <div className="inline-flex size-16 items-center justify-center rounded-xl bg-muted border border-border text-foreground">
-              <Hourglass className="size-7" />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Eyebrow>Verifica in corso</Eyebrow>
-              <h1 className="font-sans text-xl md:text-2xl font-bold">
-                Stiamo confermando la tua email…
-              </h1>
-              <p className="text-sm text-muted-foreground">Solo un secondo.</p>
-            </div>
-            <Loader2 className="size-7 animate-spin text-muted-foreground" />
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  return (
+    <main className="min-h-dvh flex flex-col items-center justify-center bg-muted px-6 py-10 md:py-16">
+      <div className="w-full max-w-[600px] flex flex-col gap-8">
+        <div className="flex items-center justify-center">
+          <DeskoBrand size="lg" wordmark />
+        </div>
 
-  if (status === 'success') {
-    return (
-      <Card>
-        <CardContent className="p-6 md:p-8 text-center">
-          <div className="flex flex-col items-center gap-6">
-            <div
-              className="inline-flex size-16 items-center justify-center rounded-xl bg-success text-success-foreground"
-              style={{ boxShadow: '0 0 0 6px rgba(45, 122, 63, 0.12)' }}
-            >
-              <CheckCircle2 className="size-8" />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Eyebrow>Email verificata</Eyebrow>
-              <h1 className="font-sans text-xl md:text-2xl font-bold">Tutto pronto.</h1>
-              <p className="text-sm text-muted-foreground">
-                Il tuo account è attivo. Ora puoi accedere e iniziare a dichiarare le tue
-                presenze in ufficio.
-              </p>
-            </div>
-            <Link href="/dashboard" className="no-underline">
-              <Button size="lg">Vai alla dashboard</Button>
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+        {status === 'no-token' ? <NoTokenState /> : null}
+        {status === 'success' ? <SuccessState /> : null}
+        {status === 'error' ? <ErrorState message={errorMessage} /> : null}
+      </div>
+    </main>
+  );
+}
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Stati statici — solo presentazione, nessun JS client
+// ─────────────────────────────────────────────────────────────────────────────
+function NoTokenState() {
+  return (
+    <Card>
+      <CardContent className="p-6 md:p-8 text-center">
+        <div className="flex flex-col items-center gap-6">
+          <div className="inline-flex size-16 items-center justify-center rounded-xl bg-primary/85 text-primary-foreground">
+            <MailCheck className="size-8" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Eyebrow>Verifica email</Eyebrow>
+            <h1 className="font-sans text-xl md:text-2xl font-bold">
+              Controlla la tua casella.
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Ti abbiamo inviato un link di conferma. Clicca il pulsante nell&apos;email per
+              attivare il tuo account. Il link scade tra 24 ore.
+            </p>
+          </div>
+          <Link href="/login" className="no-underline">
+            <Button variant="outline">Vai al login</Button>
+          </Link>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function SuccessState() {
+  return (
+    <Card>
+      <CardContent className="p-6 md:p-8 text-center">
+        <div className="flex flex-col items-center gap-6">
+          <div
+            className="inline-flex size-16 items-center justify-center rounded-xl bg-success text-success-foreground"
+            style={{ boxShadow: '0 0 0 6px rgba(45, 122, 63, 0.12)' }}
+          >
+            <CheckCircle2 className="size-8" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Eyebrow>Email verificata</Eyebrow>
+            <h1 className="font-sans text-xl md:text-2xl font-bold">Tutto pronto.</h1>
+            <p className="text-sm text-muted-foreground">
+              Il tuo account è attivo. Ora puoi accedere e iniziare a dichiarare le tue
+              presenze in ufficio.
+            </p>
+          </div>
+          <Link href="/dashboard" className="no-underline">
+            <Button size="lg">Vai alla dashboard</Button>
+          </Link>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function ErrorState({ message }: { message: string }) {
   return (
     <Card>
       <CardContent className="p-6 md:p-8 text-center">
@@ -124,7 +128,7 @@ function VerifyEmailContent() {
           <div className="flex flex-col gap-2">
             <Eyebrow>Verifica fallita</Eyebrow>
             <h1 className="font-sans text-xl md:text-2xl font-bold">Link non valido.</h1>
-            <p className="text-sm text-muted-foreground">{errorMessage}</p>
+            <p className="text-sm text-muted-foreground">{message}</p>
           </div>
           <div className="flex gap-3">
             <Link href="/signup" className="no-underline">
@@ -137,32 +141,5 @@ function VerifyEmailContent() {
         </div>
       </CardContent>
     </Card>
-  );
-}
-
-export default function VerifyEmailPage() {
-  return (
-    <main className="min-h-dvh flex flex-col items-center justify-center bg-muted px-6 py-10 md:py-16">
-      <div className="w-full max-w-[600px] flex flex-col gap-8">
-        <div className="flex items-center justify-center gap-3">
-          <span className="inline-flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-extrabold text-lg">
-            D
-          </span>
-          <h2 className="text-2xl font-bold tracking-tight">Desko</h2>
-        </div>
-
-        <Suspense
-          fallback={
-            <Card>
-              <CardContent className="p-12 text-center">
-                <Loader2 className="size-8 animate-spin mx-auto text-muted-foreground" />
-              </CardContent>
-            </Card>
-          }
-        >
-          <VerifyEmailContent />
-        </Suspense>
-      </div>
-    </main>
   );
 }

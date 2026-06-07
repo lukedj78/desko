@@ -6,7 +6,10 @@
   "phase": "module-added",
   "stack": {
     "framework": "next",
+    "nextjs_version": "16",
     "ui": "mui",
+    "ui_alt": "base-ui",
+    "forms": "tanstack-form",
     "auth": "better-auth",
     "auth_providers": [
       "email-password",

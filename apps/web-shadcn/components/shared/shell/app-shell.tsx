@@ -36,7 +36,14 @@ type SessionUser = {
 const SIDEBAR_WIDTH_EXPANDED = 240;
 const SIDEBAR_WIDTH_COLLAPSED = 72;
 const BOTTOM_NAV_HEIGHT = 64;
-const STORAGE_KEY = 'desko:sidebar-collapsed';
+
+/**
+ * Cookie name per persistere lo stato collapsed.
+ * Letto server-side dal layout per evitare FOUC + utilizzo di useEffect
+ * (state-discipline rung 7). Scrittura client-side dopo toggle utente.
+ */
+export const SIDEBAR_COOKIE_NAME = 'desko:sidebar-collapsed';
+const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 anno
 
 type NavItem = {
   label: string;
@@ -245,32 +252,21 @@ function MobileBottomNav() {
 export function AppShell({
   children,
   user,
+  initialCollapsed = false,
 }: {
   children: React.ReactNode;
   user: SessionUser;
+  initialCollapsed?: boolean;
 }) {
-  const [collapsed, setCollapsed] = React.useState(false);
-  const [hydrated, setHydrated] = React.useState(false);
-
-  // Lettura preferenza al mount (evita FOUC: applichiamo dopo l'hydration)
-  React.useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored === '1') setCollapsed(true);
-    } catch {
-      // ignore — localStorage non sempre disponibile (SSR / private mode)
-    }
-    setHydrated(true);
-  }, []);
+  // Stato sincronizzato col cookie letto server-side dal layout — zero FOUC,
+  // zero useEffect post-hydration (state-discipline rung 7 risolto upstream).
+  const [collapsed, setCollapsed] = React.useState(initialCollapsed);
 
   const toggleCollapsed = () => {
     setCollapsed((prev) => {
       const next = !prev;
-      try {
-        window.localStorage.setItem(STORAGE_KEY, next ? '1' : '0');
-      } catch {
-        // ignore
-      }
+      // Persistenza in cookie (path=/ per leggerlo da qualunque route)
+      document.cookie = `${SIDEBAR_COOKIE_NAME}=${next ? '1' : '0'}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}; samesite=lax`;
       return next;
     });
   };
@@ -287,7 +283,7 @@ export function AppShell({
           className="hidden md:block shrink-0 border-r border-border bg-card"
           style={{
             width: sidebarWidth,
-            transition: hydrated ? 'width 200ms cubic-bezier(0.2, 0, 0, 1)' : 'none',
+            transition: 'width 200ms cubic-bezier(0.2, 0, 0, 1)',
           }}
         >
           <div className="sticky top-0 h-dvh">
