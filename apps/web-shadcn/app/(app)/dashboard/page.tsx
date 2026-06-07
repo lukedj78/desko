@@ -373,7 +373,7 @@ export default async function DashboardPage() {
               Sposta il tuo piano in un tap, aggiorna i colleghi che ti seguono.
             </p>
             <div className="flex w-full flex-col gap-3 sm:flex-row sm:w-auto">
-              <Link href="/piani" className="no-underline sm:flex-1">
+              <Link href="/floors" className="no-underline sm:flex-1">
                 <Button
                   size="lg"
                   className="w-full bg-foreground text-background hover:bg-foreground/90 sm:min-w-[200px]"
@@ -381,7 +381,7 @@ export default async function DashboardPage() {
                   Apri vista piani
                 </Button>
               </Link>
-              <Link href="/impostazioni" className="no-underline sm:flex-1">
+              <Link href="/settings" className="no-underline sm:flex-1">
                 <Button
                   variant="outline"
                   size="lg"

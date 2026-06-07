@@ -61,9 +61,9 @@ const TOPBAR_ACTIONS: TopbarAction[] = [
 const NAV_ITEMS: NavItem[] = [
   { label: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className="size-5" /> },
   { label: 'Calendar', href: '/calendar', icon: <CalendarDays className="size-5" /> },
-  { label: 'Piani', href: '/piani', icon: <Layers className="size-5" /> },
+  { label: 'Piani', href: '/floors', icon: <Layers className="size-5" /> },
   { label: 'Pranzo', href: '/lunch', icon: <Utensils className="size-5" /> },
-  { label: 'Profilo', href: '/impostazioni', icon: <UserIcon className="size-5" /> },
+  { label: 'Profilo', href: '/settings', icon: <UserIcon className="size-5" /> },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
