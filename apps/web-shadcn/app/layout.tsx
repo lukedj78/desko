@@ -1,35 +1,35 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import { cookies } from 'next/headers';
+
+import { ALL_FONTS_CLASSNAME } from '@/lib/themes/fonts';
+import { getTheme, DEFAULT_THEME_ID, THEME_COOKIE_NAME } from '@/lib/themes/registry.server';
+import { ThemeInjector } from '@/lib/themes/theme-injector';
 
 import './globals.css';
-
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-  display: 'swap',
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: '--font-jetbrains',
-  subsets: ['latin'],
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: 'Desko · shadcn port',
   description: 'Sai chi sarà in ufficio quando ci sarai tu.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Theme attivo letto dal cookie (admin imposta via /settings)
+  const cookieStore = await cookies();
+  const activeThemeId = cookieStore.get(THEME_COOKIE_NAME)?.value ?? DEFAULT_THEME_ID;
+  const theme = await getTheme(activeThemeId);
+
   return (
     <html
       lang="it"
-      className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${ALL_FONTS_CLASSNAME} h-full antialiased`}
     >
+      <head>
+        {theme ? <ThemeInjector theme={theme} /> : null}
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {children}
       </body>
