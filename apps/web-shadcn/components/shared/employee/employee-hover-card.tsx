@@ -15,6 +15,10 @@ import type { PresenceEntry } from '@desko/queries/presence';
 
 import { FloorBadge } from '@/components/shared/floor/floor-badge';
 
+/**
+ * Brand-identity colors per team — NON theme-aware (vedi nota in
+ * dashboard/page.tsx). Devono restare costanti tra theme switches.
+ */
 const TEAM_COLORS: Record<string, string> = {
   Engineering: '#3D87C9',
   Product: '#2D7A3F',

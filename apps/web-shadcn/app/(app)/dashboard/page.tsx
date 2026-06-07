@@ -33,6 +33,18 @@ function formatTime(iso: string | null): string {
   return d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
 }
 
+/**
+ * Brand-identity colors per team — NON theme-aware di proposito.
+ *
+ * Questi sono "colori di brand del dipartimento" (Engineering = azzurro,
+ * Product = verde, ecc.), analoghi a un logo. Devono restare costanti
+ * indipendentemente dal tema visivo scelto dall'admin (Corporate Blue,
+ * Nordic Minimal, ...) — altrimenti un dipendente "Engineering" cambierebbe
+ * colore al cambio di tema, perdendo l'identificazione visiva.
+ *
+ * Per supportare team palette per-org in futuro: spostare in DESIGN.md
+ * frontmatter come `teams: { engineering: '#...', product: '#...', ... }`.
+ */
 const TEAM_COLORS: Record<string, string> = {
   Engineering: '#3D87C9',
   Product: '#2D7A3F',
@@ -127,8 +139,8 @@ function OccupancyHeroCard({
       className="flex h-full flex-col gap-5 p-5 md:p-6"
       style={{
         background:
-          'linear-gradient(135deg, rgba(232,185,49,0.18) 0%, rgba(232,185,49,0.05) 100%)',
-        borderColor: 'rgba(232,185,49,0.4)',
+          'linear-gradient(135deg, hsl(var(--primary) / 0.18) 0%, hsl(var(--primary) / 0.05) 100%)',
+        borderColor: 'hsl(var(--primary) / 0.4)',
       }}
     >
       {/* Header eyebrow + icon */}
@@ -196,11 +208,20 @@ function ColleagueHorizontalCard({
   isMe?: boolean;
 }) {
   const teamColor = entry.team ? TEAM_COLORS[entry.team] ?? '#868685' : '#868685';
+  // Theme-aware: 7° = success (verde), 2° = primary (theme color)
   const floorChip =
     entry.floor === 'seventh_floor'
-      ? { label: 'AL 7°', bg: 'rgba(45,122,63,0.15)', color: '#1F5630' }
+      ? {
+          label: 'AL 7°',
+          bg: 'hsl(var(--success) / 0.15)',
+          color: 'hsl(var(--success))',
+        }
       : entry.floor === 'second_floor'
-        ? { label: 'AL 2°', bg: 'rgba(232,185,49,0.2)', color: '#5A4500' }
+        ? {
+            label: 'AL 2°',
+            bg: 'hsl(var(--primary) / 0.2)',
+            color: 'hsl(var(--primary))',
+          }
         : { label: 'N/A', bg: 'transparent', color: 'hsl(var(--muted-foreground))' };
 
   const avatar = (
@@ -255,8 +276,8 @@ function ColleagueHorizontalCard({
               <span
                 className="inline-flex h-5 items-center rounded-md px-1.5 text-[10px] font-bold uppercase tracking-[0.04em]"
                 style={{
-                  backgroundColor: 'rgba(232,185,49,0.2)',
-                  color: '#5A4500',
+                  backgroundColor: 'hsl(var(--primary) / 0.2)',
+                  color: 'hsl(var(--primary))',
                 }}
               >
                 LAST-MIN
@@ -353,12 +374,12 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Banner ocra "Apri vista piani" */}
+        {/* Banner CTA piani — theme-aware: gradient da primary chiaro a scuro */}
         <Card
           className="grid overflow-hidden p-0 md:grid-cols-[2fr_1fr]"
           style={{
             background:
-              'linear-gradient(135deg, hsl(var(--primary)) 0%, #F4C84A 60%, #E8B931 100%)',
+              'linear-gradient(135deg, hsl(var(--primary) / 0.85) 0%, hsl(var(--primary)) 60%, hsl(var(--primary)) 100%)',
             borderColor: 'transparent',
             color: 'hsl(var(--primary-foreground))',
           }}

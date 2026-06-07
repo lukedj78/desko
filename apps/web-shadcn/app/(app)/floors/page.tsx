@@ -81,7 +81,7 @@ function FloorCard({
         )}
         style={
           isSecond
-            ? { backgroundColor: 'hsl(42 88% 64%)' /* primary.light ~ */ }
+            ? { backgroundColor: 'hsl(var(--primary))' }
             : { backgroundColor: 'hsl(var(--muted))' }
         }
       >
@@ -304,11 +304,7 @@ export default async function PianiPage() {
           </div>
           <div className="flex-1" />
           <span
-            className="inline-flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-semibold"
-            style={{
-              backgroundColor: 'hsl(42 88% 64%)',
-              color: 'hsl(var(--primary-foreground))',
-            }}
+            className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
           >
             <SplitSquareVertical className="size-3.5" />
             {mine.floor ? `Sei al ${FLOOR_META[mine.floor].label}` : 'Piano non indicato'}
