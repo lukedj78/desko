@@ -3,13 +3,15 @@
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
+import { z } from 'zod';
 
 import { Alert } from '@desko/ui/components/alert';
 import { Button } from '@desko/ui/components/button';
 import { Card, CardContent } from '@desko/ui/components/card';
 import { Eyebrow } from '@desko/ui/components/eyebrow';
 import { Field } from '@desko/ui/components/field';
+import { DeskoBrand } from '@/components/shared/brand/desko-brand';
 import { MicrosoftIcon } from '@/components/shared/auth/microsoft-icon';
 import { PasswordField } from '@/components/shared/auth/password-field';
 import {
@@ -17,59 +19,46 @@ import {
   passwordStrength,
 } from '@/components/shared/auth/password-strength-meter';
 import { signIn, signUp } from '@/lib/auth-client';
+import { useCreateForm } from '@/lib/forms';
+
+const SignupSchema = z
+  .object({
+    name: z.string().trim().min(1, 'Nome richiesto'),
+    email: z.string().trim().email('Email non valida'),
+    password: z.string().min(8, 'Almeno 8 caratteri'),
+    confirmPassword: z.string(),
+  })
+  .refine((d) => passwordStrength(d.password).meetsMinimum, {
+    message: 'La password non rispetta i requisiti minimi',
+    path: ['password'],
+  })
+  .refine((d) => d.password === d.confirmPassword, {
+    message: 'Le password non coincidono',
+    path: ['confirmPassword'],
+  });
+
+type SignupInput = z.infer<typeof SignupSchema>;
 
 export default function SignupPage() {
   const router = useRouter();
-  const [pending, startTransition] = useTransition();
   const [microsoftPending, setMicrosoftPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [microsoftError, setMicrosoftError] = useState<string | null>(null);
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  const strength = passwordStrength(password);
-  const passwordsMatch = password.length > 0 && password === confirmPassword;
-  const showMismatch = confirmPassword.length > 0 && password !== confirmPassword;
-  const canSubmit =
-    name.trim().length > 0 &&
-    email.trim().length > 0 &&
-    strength.meetsMinimum &&
-    passwordsMatch &&
-    !pending &&
-    !microsoftPending;
-
-  const handleSignup = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-
-    if (!strength.meetsMinimum) {
-      setError('La password non rispetta i requisiti minimi.');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError('Le password non coincidono.');
-      return;
-    }
-
-    startTransition(async () => {
-      const { error: err } = await signUp.email({
-        name: name.trim(),
-        email: email.trim(),
-        password,
-      });
-      if (err) {
-        setError(err.message ?? 'Registrazione fallita. Riprova.');
-        return;
-      }
+  const { form, formError } = useCreateForm<SignupInput, void>({
+    schema: SignupSchema,
+    defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
+    submit: async ({ name, email, password }) => {
+      const { error } = await signUp.email({ name, email, password });
+      if (error) throw new Error(error.message ?? 'Registrazione fallita. Riprova.');
+    },
+    onSuccess: () => {
       router.push('/dashboard');
       router.refresh();
-    });
-  };
+    },
+  });
 
   const handleMicrosoftSignup = async () => {
-    setError(null);
+    setMicrosoftError(null);
     setMicrosoftPending(true);
     try {
       const result = await signIn.social({
@@ -77,23 +66,22 @@ export default function SignupPage() {
         callbackURL: '/dashboard',
       });
       if (result.error) {
-        setError(result.error.message ?? 'Microsoft non ancora configurato.');
+        setMicrosoftError(result.error.message ?? 'Microsoft non ancora configurato.');
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Errore Microsoft signup.');
+      setMicrosoftError(e instanceof Error ? e.message : 'Errore Microsoft signup.');
     } finally {
       setMicrosoftPending(false);
     }
   };
 
+  const displayError = microsoftError ?? formError?.message ?? null;
+
   return (
     <main className="min-h-dvh flex flex-col items-center justify-center bg-muted px-6 py-10 md:py-16">
       <div className="w-full max-w-[600px] flex flex-col gap-8">
-        <div className="flex items-center justify-center gap-3">
-          <span className="inline-flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-extrabold text-lg">
-            D
-          </span>
-          <h2 className="text-2xl font-bold tracking-tight">Desko</h2>
+        <div className="flex items-center justify-center">
+          <DeskoBrand size="lg" wordmark />
         </div>
 
         <Card>
@@ -109,11 +97,11 @@ export default function SignupPage() {
                 </p>
               </div>
 
-              {error ? <Alert variant="destructive">{error}</Alert> : null}
+              {displayError ? <Alert variant="destructive">{displayError}</Alert> : null}
 
               <Button
                 onClick={handleMicrosoftSignup}
-                disabled={microsoftPending || pending}
+                disabled={microsoftPending || form.state.isSubmitting}
                 variant="outline"
                 size="lg"
                 className="w-full"
@@ -132,61 +120,115 @@ export default function SignupPage() {
                 <div className="h-px flex-1 bg-border" />
               </div>
 
-              <form onSubmit={handleSignup} className="flex flex-col gap-4">
-                <Field
-                  id="signup-name"
-                  name="name"
-                  label="Nome completo"
-                  placeholder="Marco Bianchi"
-                  autoComplete="name"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <Field
-                  id="signup-email"
-                  name="email"
-                  label="Email aziendale"
-                  type="email"
-                  placeholder="tu@azienda.it"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <div className="flex flex-col gap-3">
-                  <PasswordField
-                    id="signup-password"
-                    name="password"
-                    label="Password"
-                    placeholder="Almeno 8 caratteri"
-                    autoComplete="new-password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  {password.length > 0 ? (
-                    <PasswordStrengthMeter password={password} />
-                  ) : null}
-                </div>
-                <PasswordField
-                  id="signup-confirm-password"
-                  name="confirmPassword"
-                  label="Conferma password"
-                  placeholder="Ripeti la password"
-                  autoComplete="new-password"
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  errorText={showMismatch ? 'Le password non coincidono.' : undefined}
-                  helperText={
-                    passwordsMatch ? '✓ Le password coincidono.' : undefined
-                  }
-                />
-                <Button type="submit" size="lg" className="w-full" disabled={!canSubmit}>
-                  {pending ? <Loader2 className="size-4 animate-spin" /> : null}
-                  Crea account
-                </Button>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void form.handleSubmit();
+                }}
+                className="flex flex-col gap-4"
+              >
+                <form.Field name="name">
+                  {(field) => (
+                    <Field
+                      id="signup-name"
+                      label="Nome completo"
+                      placeholder="Marco Bianchi"
+                      autoComplete="name"
+                      required
+                      value={String(field.state.value ?? '')}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
+                      aria-invalid={
+                        field.state.meta.isTouched && field.state.meta.errors.length > 0
+                      }
+                    />
+                  )}
+                </form.Field>
+
+                <form.Field name="email">
+                  {(field) => (
+                    <Field
+                      id="signup-email"
+                      label="Email aziendale"
+                      type="email"
+                      placeholder="tu@azienda.it"
+                      autoComplete="email"
+                      required
+                      value={String(field.state.value ?? '')}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
+                      aria-invalid={
+                        field.state.meta.isTouched && field.state.meta.errors.length > 0
+                      }
+                    />
+                  )}
+                </form.Field>
+
+                <form.Field name="password">
+                  {(field) => (
+                    <div className="flex flex-col gap-3">
+                      <PasswordField
+                        id="signup-password"
+                        label="Password"
+                        placeholder="Almeno 8 caratteri"
+                        autoComplete="new-password"
+                        required
+                        value={String(field.state.value ?? '')}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        onBlur={field.handleBlur}
+                        aria-invalid={
+                          field.state.meta.isTouched && field.state.meta.errors.length > 0
+                        }
+                      />
+                      {field.state.value ? (
+                        <PasswordStrengthMeter password={String(field.state.value)} />
+                      ) : null}
+                    </div>
+                  )}
+                </form.Field>
+
+                <form.Field name="confirmPassword">
+                  {(field) => {
+                    const password = String(form.state.values.password ?? '');
+                    const confirm = String(field.state.value ?? '');
+                    const showMismatch = confirm.length > 0 && password !== confirm;
+                    const passwordsMatch = confirm.length > 0 && password === confirm;
+                    return (
+                      <PasswordField
+                        id="signup-confirm-password"
+                        label="Conferma password"
+                        placeholder="Ripeti la password"
+                        autoComplete="new-password"
+                        required
+                        value={confirm}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        onBlur={field.handleBlur}
+                        aria-invalid={showMismatch}
+                        errorText={showMismatch ? 'Le password non coincidono.' : undefined}
+                        helperText={passwordsMatch ? '✓ Le password coincidono.' : undefined}
+                      />
+                    );
+                  }}
+                </form.Field>
+
+                <form.Subscribe
+                  selector={(s) => ({
+                    canSubmit: s.canSubmit,
+                    isSubmitting: s.isSubmitting,
+                  })}
+                >
+                  {({ canSubmit, isSubmitting }) => (
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full"
+                      disabled={!canSubmit || microsoftPending}
+                    >
+                      {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
+                      Crea account
+                    </Button>
+                  )}
+                </form.Subscribe>
               </form>
 
               <p className="text-center text-sm text-muted-foreground">

@@ -2,45 +2,45 @@
 
 import { ArrowLeft, Loader2, MailCheck } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
+import { z } from 'zod';
 
 import { Alert } from '@desko/ui/components/alert';
 import { Button } from '@desko/ui/components/button';
 import { Card, CardContent } from '@desko/ui/components/card';
 import { Eyebrow } from '@desko/ui/components/eyebrow';
 import { Field } from '@desko/ui/components/field';
+import { DeskoBrand } from '@/components/shared/brand/desko-brand';
 import { authClient } from '@/lib/auth-client';
+import { useCreateForm } from '@/lib/forms';
+
+const ForgotPasswordSchema = z.object({
+  email: z.string().email('Inserisci una email valida'),
+});
+
+type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>;
 
 export default function ForgotPasswordPage() {
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    const fd = new FormData(e.currentTarget);
-    const email = String(fd.get('email') ?? '').trim();
-
-    if (!email) {
-      setError('Inserisci la tua email aziendale.');
-      return;
-    }
-
-    startTransition(async () => {
+  const { form, formError } = useCreateForm<ForgotPasswordInput, void>({
+    schema: ForgotPasswordSchema,
+    defaultValues: { email: '' },
+    submit: async ({ email }) => {
+      const trimmed = email.trim();
       const result = await authClient.requestPasswordReset({
-        email,
+        email: trimmed,
         redirectTo: '/reset-password',
       });
       if (result.error) {
         if (result.error.status === 429) {
-          setError('Hai già richiesto un reset di recente. Aspetta qualche minuto.');
-          return;
+          throw new Error('Hai già richiesto un reset di recente. Aspetta qualche minuto.');
         }
+        throw new Error(result.error.message ?? 'Errore richiesta reset.');
       }
-      setSubmittedEmail(email);
-    });
-  };
+      setSubmittedEmail(trimmed);
+    },
+  });
 
   if (submittedEmail) {
     return (
@@ -82,11 +82,8 @@ export default function ForgotPasswordPage() {
   return (
     <main className="min-h-dvh flex flex-col items-center justify-center bg-muted px-6 py-10 md:py-16">
       <div className="w-full max-w-[600px] flex flex-col gap-8">
-        <div className="flex items-center justify-center gap-3">
-          <span className="inline-flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-extrabold text-lg">
-            D
-          </span>
-          <h2 className="text-2xl font-bold tracking-tight">Desko</h2>
+        <div className="flex items-center justify-center">
+          <DeskoBrand size="lg" wordmark />
         </div>
 
         <Card>
@@ -103,23 +100,53 @@ export default function ForgotPasswordPage() {
                 </p>
               </div>
 
-              {error ? <Alert variant="destructive">{error}</Alert> : null}
+              {formError ? <Alert variant="destructive">{formError.message}</Alert> : null}
 
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                <Field
-                  id="forgot-email"
-                  name="email"
-                  label="Email aziendale"
-                  type="email"
-                  placeholder="tu@azienda.it"
-                  autoComplete="email"
-                  required
-                  autoFocus
-                />
-                <Button type="submit" size="lg" className="w-full" disabled={pending}>
-                  {pending ? <Loader2 className="size-4 animate-spin" /> : null}
-                  Invia link di reset
-                </Button>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void form.handleSubmit();
+                }}
+                className="flex flex-col gap-4"
+              >
+                <form.Field name="email">
+                  {(field) => (
+                    <Field
+                      id="forgot-email"
+                      label="Email aziendale"
+                      type="email"
+                      placeholder="tu@azienda.it"
+                      autoComplete="email"
+                      autoFocus
+                      required
+                      value={String(field.state.value ?? '')}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
+                      aria-invalid={
+                        field.state.meta.isTouched && field.state.meta.errors.length > 0
+                      }
+                    />
+                  )}
+                </form.Field>
+
+                <form.Subscribe
+                  selector={(s) => ({
+                    canSubmit: s.canSubmit,
+                    isSubmitting: s.isSubmitting,
+                  })}
+                >
+                  {({ canSubmit, isSubmitting }) => (
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full"
+                      disabled={!canSubmit}
+                    >
+                      {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
+                      Invia link di reset
+                    </Button>
+                  )}
+                </form.Subscribe>
               </form>
 
               <div className="flex justify-center">

@@ -3,34 +3,56 @@
 import { CheckCircle2, Loader2, ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Suspense, useState, useTransition } from 'react';
+import { Suspense, useState } from 'react';
+import { z } from 'zod';
 
 import { Alert } from '@desko/ui/components/alert';
 import { Button } from '@desko/ui/components/button';
 import { Card, CardContent } from '@desko/ui/components/card';
 import { Eyebrow } from '@desko/ui/components/eyebrow';
+import { DeskoBrand } from '@/components/shared/brand/desko-brand';
 import { PasswordField } from '@/components/shared/auth/password-field';
 import {
   PasswordStrengthMeter,
   passwordStrength,
 } from '@/components/shared/auth/password-strength-meter';
 import { authClient } from '@/lib/auth-client';
+import { useCreateForm } from '@/lib/forms';
+
+const ResetPasswordSchema = z
+  .object({
+    password: z.string().min(8, 'Almeno 8 caratteri'),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Le password non coincidono',
+    path: ['confirmPassword'],
+  })
+  .refine((data) => passwordStrength(data.password).meetsMinimum, {
+    message: 'La password non rispetta i requisiti minimi',
+    path: ['password'],
+  });
+
+type ResetPasswordInput = z.infer<typeof ResetPasswordSchema>;
 
 function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
 
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  const strength = passwordStrength(password);
-  const passwordsMatch = password.length > 0 && password === confirmPassword;
-  const showMismatch = confirmPassword.length > 0 && password !== confirmPassword;
-  const canSubmit = !!token && strength.meetsMinimum && passwordsMatch && !pending;
+  const { form, formError } = useCreateForm<ResetPasswordInput, void>({
+    schema: ResetPasswordSchema,
+    defaultValues: { password: '', confirmPassword: '' },
+    submit: async ({ password }) => {
+      if (!token) throw new Error('Token mancante.');
+      const { error } = await authClient.resetPassword({ token, newPassword: password });
+      if (error) {
+        throw new Error(error.message ?? 'Reset password fallito. Il link potrebbe essere scaduto.');
+      }
+      setSuccess(true);
+    },
+  });
 
   if (!token) {
     return (
@@ -87,30 +109,6 @@ function ResetPasswordForm() {
     );
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    if (!strength.meetsMinimum) {
-      setError('La password non rispetta i requisiti minimi.');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError('Le password non coincidono.');
-      return;
-    }
-    startTransition(async () => {
-      const { error: err } = await authClient.resetPassword({
-        token,
-        newPassword: password,
-      });
-      if (err) {
-        setError(err.message ?? 'Reset password fallito. Il link potrebbe essere scaduto.');
-        return;
-      }
-      setSuccess(true);
-    });
-  };
-
   return (
     <Card>
       <CardContent className="p-6 md:p-8">
@@ -125,39 +123,77 @@ function ResetPasswordForm() {
             </p>
           </div>
 
-          {error ? <Alert variant="destructive">{error}</Alert> : null}
+          {formError ? <Alert variant="destructive">{formError.message}</Alert> : null}
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div className="flex flex-col gap-3">
-              <PasswordField
-                id="reset-password"
-                name="password"
-                label="Nuova password"
-                placeholder="Almeno 8 caratteri"
-                autoComplete="new-password"
-                required
-                autoFocus
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              {password.length > 0 ? <PasswordStrengthMeter password={password} /> : null}
-            </div>
-            <PasswordField
-              id="reset-confirm-password"
-              name="confirmPassword"
-              label="Conferma nuova password"
-              placeholder="Ripeti la password"
-              autoComplete="new-password"
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              errorText={showMismatch ? 'Le password non coincidono.' : undefined}
-              helperText={passwordsMatch ? '✓ Le password coincidono.' : undefined}
-            />
-            <Button type="submit" size="lg" className="w-full" disabled={!canSubmit}>
-              {pending ? <Loader2 className="size-4 animate-spin" /> : null}
-              Imposta nuova password
-            </Button>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              void form.handleSubmit();
+            }}
+            className="flex flex-col gap-4"
+          >
+            <form.Field name="password">
+              {(field) => (
+                <div className="flex flex-col gap-3">
+                  <PasswordField
+                    id="reset-password"
+                    label="Nuova password"
+                    placeholder="Almeno 8 caratteri"
+                    autoComplete="new-password"
+                    autoFocus
+                    required
+                    value={String(field.state.value ?? '')}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    onBlur={field.handleBlur}
+                    aria-invalid={
+                      field.state.meta.isTouched && field.state.meta.errors.length > 0
+                    }
+                  />
+                  {field.state.value ? (
+                    <PasswordStrengthMeter password={String(field.state.value)} />
+                  ) : null}
+                </div>
+              )}
+            </form.Field>
+
+            <form.Field name="confirmPassword">
+              {(field) => {
+                // Confronta con la password corrente (cross-field via form.state)
+                const password = String(form.state.values.password ?? '');
+                const confirm = String(field.state.value ?? '');
+                const showMismatch = confirm.length > 0 && password !== confirm;
+                const passwordsMatch = confirm.length > 0 && password === confirm;
+                return (
+                  <PasswordField
+                    id="reset-confirm-password"
+                    label="Conferma nuova password"
+                    placeholder="Ripeti la password"
+                    autoComplete="new-password"
+                    required
+                    value={confirm}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    onBlur={field.handleBlur}
+                    aria-invalid={showMismatch}
+                    errorText={showMismatch ? 'Le password non coincidono.' : undefined}
+                    helperText={passwordsMatch ? '✓ Le password coincidono.' : undefined}
+                  />
+                );
+              }}
+            </form.Field>
+
+            <form.Subscribe
+              selector={(s) => ({
+                canSubmit: s.canSubmit,
+                isSubmitting: s.isSubmitting,
+              })}
+            >
+              {({ canSubmit, isSubmitting }) => (
+                <Button type="submit" size="lg" className="w-full" disabled={!canSubmit}>
+                  {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
+                  Imposta nuova password
+                </Button>
+              )}
+            </form.Subscribe>
           </form>
         </div>
       </CardContent>
@@ -169,11 +205,8 @@ export default function ResetPasswordPage() {
   return (
     <main className="min-h-dvh flex flex-col items-center justify-center bg-muted px-6 py-10 md:py-16">
       <div className="w-full max-w-[600px] flex flex-col gap-8">
-        <div className="flex items-center justify-center gap-3">
-          <span className="inline-flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-extrabold text-lg">
-            D
-          </span>
-          <h2 className="text-2xl font-bold tracking-tight">Desko</h2>
+        <div className="flex items-center justify-center">
+          <DeskoBrand size="lg" wordmark />
         </div>
 
         <Suspense
