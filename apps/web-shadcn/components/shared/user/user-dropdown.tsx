@@ -121,7 +121,7 @@ export function UserDropdown({ user, variant = 'compact' }: UserDropdownProps) {
 
         <DropdownMenuItem
           render={
-            <Link href="/impostazioni" className="no-underline w-full">
+            <Link href="/settings" className="no-underline w-full">
               <UserIcon className="size-4" />
               <span>Profilo e preferenze</span>
             </Link>
@@ -129,7 +129,7 @@ export function UserDropdown({ user, variant = 'compact' }: UserDropdownProps) {
         />
         <DropdownMenuItem
           render={
-            <Link href="/impostazioni" className="no-underline w-full">
+            <Link href="/settings" className="no-underline w-full">
               <Settings className="size-4" />
               <span>Impostazioni</span>
             </Link>
