@@ -62,10 +62,24 @@ const FLOOR_LABEL: Record<Floor, string> = {
   second_floor: '2° Piano · co-working',
 };
 
+// Theme-aware via CSS vars: closure → destructive, team_building → success, event → primary.
+// Stessa logica semantica anche dopo switch tema (Corporate Blue, Nordic Minimal, ecc).
 const EVENT_STYLES: Record<EventKind, { bg: string; color: string; dot: string }> = {
-  closure: { bg: 'rgba(199, 62, 68, 0.12)', color: '#8B2229', dot: '#C73E44' },
-  team_building: { bg: 'rgba(45, 122, 63, 0.15)', color: '#1F5630', dot: '#2D7A3F' },
-  event: { bg: 'rgba(232, 185, 49, 0.18)', color: '#5A4500', dot: '#E8B931' },
+  closure: {
+    bg: 'hsl(var(--destructive) / 0.12)',
+    color: 'hsl(var(--destructive))',
+    dot: 'hsl(var(--destructive))',
+  },
+  team_building: {
+    bg: 'hsl(var(--success) / 0.15)',
+    color: 'hsl(var(--success))',
+    dot: 'hsl(var(--success))',
+  },
+  event: {
+    bg: 'hsl(var(--primary) / 0.18)',
+    color: 'hsl(var(--primary))',
+    dot: 'hsl(var(--primary))',
+  },
 };
 
 const isoDate = (d: Date): string =>
@@ -788,11 +802,11 @@ export default async function CalendarPage({
         {/* KPI */}
         <div className="grid grid-cols-3 gap-2 sm:gap-4">
           <KpiCard icon={<HomeIcon className="size-4 sm:size-6" />} label="Pianificati"
-            value={counts.planned} tone="rgba(232, 185, 49, 0.85)" />
+            value={counts.planned} tone="hsl(var(--primary))" />
           <KpiCard icon={<Hourglass className="size-4 sm:size-6" />} label="In sospeso"
-            value={counts.pending} tone="#C73E44" />
+            value={counts.pending} tone="hsl(var(--destructive))" />
           <KpiCard icon={<HomeIcon className="size-4 sm:size-6" />} label="Remoto"
-            value={counts.remote} tone="#3D87C9" />
+            value={counts.remote} tone="hsl(var(--info))" />
         </div>
 
         {/* Body */}

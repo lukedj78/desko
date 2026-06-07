@@ -288,7 +288,7 @@ export default function HomePage() {
         className="border-t border-border"
         style={{
           background:
-            'linear-gradient(135deg, rgba(232,185,49,0.18) 0%, rgba(232,185,49,0.05) 100%)',
+            'linear-gradient(135deg, hsl(var(--primary) / 0.18) 0%, hsl(var(--primary) / 0.05) 100%)',
         }}
       >
         <div className="mx-auto w-full max-w-[900px] px-5 py-16 text-center sm:px-6 md:px-8 md:py-24">

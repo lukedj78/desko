@@ -153,9 +153,7 @@ function SidebarContent({
                     : 'font-medium text-muted-foreground hover:bg-muted hover:text-foreground',
                 )}
                 style={
-                  active
-                    ? { backgroundColor: 'rgba(232, 185, 49, 0.18)' }
-                    : undefined
+                  active ? { backgroundColor: 'hsl(var(--primary) / 0.18)' } : undefined
                 }
               >
                 <span

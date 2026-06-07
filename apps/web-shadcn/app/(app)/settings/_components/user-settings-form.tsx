@@ -36,6 +36,13 @@ const DAYS: Array<{ key: Day; label: string; short: string }> = [
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MilanoSkylineHero — SVG inline (port 1:1 da MUI)
+//
+// NOTA: illustrazione decorativa specifica del brand Desko ("sole su Milano",
+// palette ocra dello skyline al tramonto). I colori sono hardcoded di
+// proposito — è artwork, non token. Quando il tema cambia (Corporate Blue,
+// Nordic Minimal) questo SVG resta ocra perché rappresenta l'identità
+// Milano-Desko. Per orgs custom serve un'illustrazione diversa (override
+// futuro via DESIGN.md `illustrations.heroBackground`).
 // ─────────────────────────────────────────────────────────────────────────────
 function MilanoSkylineHero() {
   return (
@@ -416,14 +423,7 @@ export function UserSettingsForm() {
                 <MapPin className="size-5 text-muted-foreground" />
               </div>
               <div className="flex flex-wrap gap-3">
-                <div
-                  className="inline-flex items-center gap-2 rounded-md border px-3 py-2"
-                  style={{
-                    backgroundColor: 'hsl(42 88% 64%)',
-                    color: 'hsl(var(--primary-foreground))',
-                    borderColor: 'hsl(var(--primary))',
-                  }}
-                >
+                <div className="inline-flex items-center gap-2 rounded-md border border-primary bg-primary px-3 py-2 text-primary-foreground">
                   <span className="text-xs font-bold">7° Piano</span>
                   <span className="text-xs opacity-85">stanza tradizionale</span>
                 </div>
