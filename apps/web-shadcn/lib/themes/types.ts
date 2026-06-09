@@ -63,6 +63,47 @@ export type ThemeRadii = {
   base: string;
 };
 
+/**
+ * Effetto liquid glass iOS-style — multi-layer composition.
+ * Si applica via CSS overrides scoped a [data-theme-effects~="glass"] su
+ * `<html>`. Opt-in puro: temi senza `effects.glass` non emettono nulla.
+ *
+ * Strato per strato (vedi `buildGlassCss` in theme-injector.tsx):
+ *   1. Glass plate (::before)  → backdrop-filter blur+saturate+brightness
+ *                                 con gradient di rifrazione + SVG noise
+ *   2. Edge sheen (::after)    → linear-gradient + mask-composite:exclude
+ *   3. Inner highlights        → inset box-shadow (top edge + ring)
+ *   4. Outer drop shadow       → box-shadow (depth)
+ *   5. Body background pattern → radial gradients per dare "materiale"
+ *                                 al blur (senza pattern dietro il blur
+ *                                 non si vede)
+ */
+export type GlassEffect = {
+  /** Backdrop blur in px — es. "24px" (iOS 26 ~ 20-32px) */
+  blur: string;
+  /** Opacità surface glass — 0..1 (es. 0.45 per iOS-like translucency) */
+  surfaceAlpha: number;
+  /** Saturazione backdrop — es. "180%" (iOS classic) */
+  saturate?: string;
+  /** Brightness boost backdrop — es. "1.1" per il "glow" del vetro */
+  brightness?: string;
+  /** Alpha del bordo bianco luminoso — 0..1 (es. 0.18) */
+  borderAlpha?: number;
+  /** Intensità dello sheen diagonale sul bordo — 0..1 (es. 0.6) */
+  sheenAlpha?: number;
+  /**
+   * SVG noise displacement intensity per simulare la rifrazione del vetro.
+   * 0 = disattivato, 1..100 = scala displacement (es. 60). Usa `filter:
+   * url(#desko-glass-noise)` sul `::before`. Non cross-browser su backdrop,
+   * ma sul foreground elemento sì.
+   */
+  noiseScale?: number;
+};
+
+export type ThemeEffects = {
+  glass?: GlassEffect;
+};
+
 export type Theme = {
   id: string;
   name: string;
@@ -75,6 +116,8 @@ export type Theme = {
     light: ColorPalette;
     dark: ColorPalette;
   };
+  /** Effetti CSS opzionali (liquid glass, future: neumorphic, etc.) */
+  effects?: ThemeEffects;
   /** Body markdown del DESIGN.md (rationale, do/don'ts) — opzionale */
   body?: string;
 };

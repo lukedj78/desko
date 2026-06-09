@@ -53,6 +53,9 @@ export const loadThemes = cache(async (): Promise<Theme[]> => {
         typography: data['typography'] as Theme['typography'],
         radii: data['radii'] as Theme['radii'],
         colors: data['colors'] as Theme['colors'],
+        // effects è opzionale (es. liquid glass per enterprice-liquid-glass).
+        // ThemeInjector lo valida — qui passthrough.
+        effects: data['effects'] as Theme['effects'] | undefined,
         body: parsed.content,
       });
     } catch (e) {
@@ -72,3 +75,17 @@ export async function getTheme(id: string | undefined): Promise<Theme | null> {
 
 export const DEFAULT_THEME_ID = 'desko-ocra';
 export const THEME_COOKIE_NAME = 'desko:theme';
+
+// ─── Theme mode (light/dark) ────────────────────────────────────────────────
+
+export type ThemeMode = 'light' | 'dark';
+export const THEME_MODE_COOKIE_NAME = 'desko:theme-mode';
+export const DEFAULT_THEME_MODE: ThemeMode = 'light';
+
+/**
+ * Parse permissivo del valore cookie — qualunque stringa diversa da 'dark'
+ * fallback a 'light'. Evita crash su cookie corrotti.
+ */
+export function parseThemeMode(value: string | undefined): ThemeMode {
+  return value === 'dark' ? 'dark' : 'light';
+}

@@ -5,7 +5,12 @@ import { revalidatePath } from 'next/cache';
 
 import { getSession } from '@desko/auth/server';
 
-import { loadThemes, THEME_COOKIE_NAME } from './registry.server';
+import {
+  loadThemes,
+  THEME_COOKIE_NAME,
+  THEME_MODE_COOKIE_NAME,
+  type ThemeMode,
+} from './registry.server';
 
 /**
  * setActiveTheme — server action per cambiare tema attivo.
@@ -44,5 +49,38 @@ export async function setActiveTheme(themeId: string): Promise<
   // Invalida cache di tutta l'app → next request re-renderizza con nuovo theme
   revalidatePath('/', 'layout');
 
+  return { ok: true };
+}
+
+/**
+ * setThemeMode — server action per cambiare light/dark mode.
+ *
+ * Auth: solo utente autenticato (preferenza personale, NON admin-only).
+ * Persistenza: cookie HTTP-only, SameSite=Lax, 1 anno.
+ * Su success invalida la cache `'/'` layout → re-render server-side con
+ * il nuovo mode già applicato (no FOUC, no JS flash).
+ */
+export async function setThemeMode(
+  mode: ThemeMode,
+): Promise<{ ok: true } | { ok: false; message: string }> {
+  const session = await getSession();
+  if (!session?.user) {
+    return { ok: false, message: 'Non autenticato.' };
+  }
+  if (mode !== 'light' && mode !== 'dark') {
+    return { ok: false, message: 'Mode non valido.' };
+  }
+
+  const store = await cookies();
+  store.set({
+    name: THEME_MODE_COOKIE_NAME,
+    value: mode,
+    httpOnly: true,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60 * 60 * 24 * 365,
+  });
+
+  revalidatePath('/', 'layout');
   return { ok: true };
 }

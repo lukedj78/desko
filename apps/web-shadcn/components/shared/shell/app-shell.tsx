@@ -24,7 +24,9 @@ import {
 import { cn } from '@desko/ui/lib/utils';
 
 import { DeskoBrand } from '@/components/shared/brand/desko-brand';
+import { ThemeModeToggle } from '@/components/shared/theme/theme-mode-toggle';
 import { UserDropdown } from '@/components/shared/user/user-dropdown';
+import type { ThemeMode } from '@/lib/themes/registry.server';
 
 type SessionUser = {
   name: string;
@@ -251,10 +253,13 @@ export function AppShell({
   children,
   user,
   initialCollapsed = false,
+  mode,
 }: {
   children: React.ReactNode;
   user: SessionUser;
   initialCollapsed?: boolean;
+  /** Preferenza light/dark letta server-side dal cookie — toggle in topbar */
+  mode: ThemeMode;
 }) {
   // Stato sincronizzato col cookie letto server-side dal layout — zero FOUC,
   // zero useEffect post-hydration (state-discipline rung 7 risolto upstream).
@@ -303,6 +308,8 @@ export function AppShell({
               </Link>
 
               <div className="flex-1" />
+
+              <ThemeModeToggle mode={mode} />
 
               {TOPBAR_ACTIONS.map(({ label, icon: Icon }) => (
                 <Tooltip key={label}>
