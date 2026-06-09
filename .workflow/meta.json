@@ -2,14 +2,25 @@
   "project_slug": "desko",
   "project_name": "Desko",
   "created_at": "2026-05-09T10:40:44Z",
-  "updated_at": "2026-06-09T19:26:27Z",
+  "updated_at": "2026-06-09T19:48:04Z",
   "phase": "module_added",
   "stack": {
-    "framework": "next",
-    "nextjs_version": "16",
-    "ui": "base-ui",
-    "ui_alt": "mui",
-    "forms": "tanstack-form",
+    "framework": "monorepo",
+    "monorepo": {
+      "web": {
+        "framework": "next",
+        "nextjs_version": "16",
+        "ui": "base-ui",
+        "ui_alt": "mui",
+        "forms": "tanstack-form",
+        "app_dir": "apps/web-shadcn"
+      },
+      "mobile": {
+        "framework": "expo-rn",
+        "ui": "nativewind",
+        "app_dir": "apps/mobile"
+      }
+    },
     "auth": "better-auth",
     "auth_providers": [
       "email-password",
@@ -22,15 +33,10 @@
     "email": "resend",
     "payments": null,
     "deploy": "tbd",
-    "monorepo": "turborepo-pnpm",
-    "future_apps": [
-      "mobile-react-native"
-    ],
-    "web_app": "apps/web-shadcn",
+    "test": "vitest",
     "frozen_apps": [
       "apps/web"
-    ],
-    "test": "vitest"
+    ]
   },
   "history": [
     {
@@ -362,6 +368,20 @@
       ],
       "phase_before": "module_added",
       "phase_after": "module-added"
+    },
+    {
+      "skill": "rn-bootstrap",
+      "ran_at": "2026-06-09T19:48:04Z",
+      "inputs": {
+        "step": "scaffold apps/mobile, Expo SDK 56 (RN 0.85, React 19.2, TS 6), pnpm monorepo, NativeWind v4 da @desko/design-tokens"
+      },
+      "outputs": [
+        "apps/mobile/{package.json,app.json,tailwind.config.js,metro.config.js,babel.config.js,global.css}",
+        "apps/mobile/app/{_layout,(auth)/sign-in,(app)/(tabs)/{index,calendar,settings}}.tsx",
+        "meta.json#stack (shape monorepo canonica)"
+      ],
+      "phase_before": "module_added",
+      "phase_after": "module-added"
     }
   ],
   "artifacts": {
@@ -396,5 +416,23 @@
         }
       ]
     }
+  },
+  "stack_config": {
+    "monorepo_tool": "turborepo",
+    "workspace_pm": "pnpm",
+    "expo_sdk": "56",
+    "state_lib": "zustand",
+    "data_lib": "tanstack-query",
+    "shared_packages": [
+      "@desko/domain",
+      "@desko/design-tokens",
+      "@desko/db",
+      "@desko/auth",
+      "@desko/queries",
+      "@desko/server-actions",
+      "@desko/email",
+      "@desko/env",
+      "@desko/ui"
+    ]
   }
 }
