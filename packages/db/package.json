@@ -13,6 +13,10 @@
     "./schema": {
       "types": "./src/schema.ts",
       "default": "./src/schema.ts"
+    },
+    "./testing": {
+      "types": "./src/testing.ts",
+      "default": "./src/testing.ts"
     }
   },
   "scripts": {
