@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 
 import { getSession } from '@desko/auth/server';
+import { getMyProfile, getMyWeeklyPattern } from '@desko/queries/presence';
 
 import { loadThemes, DEFAULT_THEME_ID, THEME_COOKIE_NAME } from '@/lib/themes/registry.server';
 
@@ -12,7 +13,8 @@ export const dynamic = 'force-dynamic';
 
 /**
  * /settings — Server Component che monta:
- * - <UserSettingsForm /> (personale, sempre visibile)
+ * - <UserSettingsForm /> (personale, sempre visibile) — riceve profilo +
+ *   pattern settimanale letti server-side, salva via server actions
  * - <ThemePickerCard /> (visibile solo per admin, sceglie tema visivo
  *   per tutta l'applicazione)
  *
@@ -25,7 +27,9 @@ export default async function SettingsPage() {
   const isAdmin = role === 'admin';
 
   // Themes + active id sono nostri solo se admin (eviti dataset inutile lato client)
-  const [themes, cookieStore] = await Promise.all([
+  const [profile, pattern, themes, cookieStore] = await Promise.all([
+    getMyProfile(),
+    getMyWeeklyPattern(),
     isAdmin ? loadThemes() : Promise.resolve([]),
     cookies(),
   ]);
@@ -34,7 +38,7 @@ export default async function SettingsPage() {
   return (
     <div className="mx-auto w-full max-w-screen-2xl px-5 py-8 sm:px-6 md:px-8 md:py-12">
       <div className="flex flex-col gap-10">
-        <UserSettingsForm />
+        <UserSettingsForm profile={profile} pattern={pattern} />
 
         {isAdmin && themes.length > 0 ? (
           <ThemePickerCard themes={themes} activeThemeId={activeThemeId} />
