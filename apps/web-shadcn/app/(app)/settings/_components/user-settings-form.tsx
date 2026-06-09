@@ -3,15 +3,28 @@
 import {
   Bell,
   Eye,
+  Loader2,
   Lock,
   MapPin,
   User,
   CalendarCheck,
 } from 'lucide-react';
 import * as React from 'react';
+import { z } from 'zod';
 
+import { Alert } from '@desko/ui/components/alert';
 import { Button } from '@desko/ui/components/button';
 import { Card } from '@desko/ui/components/card';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@desko/ui/components/dialog';
 import { Eyebrow } from '@desko/ui/components/eyebrow';
 import { Field } from '@desko/ui/components/field';
 import {
@@ -22,16 +35,38 @@ import {
   SelectValue,
 } from '@desko/ui/components/select';
 import { Switch } from '@desko/ui/components/switch';
-import { FLOOR_META, type Floor } from '@desko/domain';
+import { FLOOR_META } from '@desko/domain';
+import type { MyProfile, WeeklyPattern } from '@desko/queries/presence';
+import {
+  archivePastPresences,
+  updateVisibility,
+  updateWeeklyPattern,
+} from '@desko/server-actions/presence';
 import { cn } from '@desko/ui/lib/utils';
 
-type Day = 'M' | 'T' | 'W' | 'TH' | 'F';
-const DAYS: Array<{ key: Day; label: string; short: string }> = [
-  { key: 'M', label: 'Lun', short: 'M' },
-  { key: 'T', label: 'Mar', short: 'T' },
-  { key: 'W', label: 'Mer', short: 'W' },
-  { key: 'TH', label: 'Gio', short: 'G' },
-  { key: 'F', label: 'Ven', short: 'F' },
+import { useEditForm } from '@/lib/forms';
+
+// ─── Schema ──────────────────────────────────────────────────────────────────
+
+const SettingsSchema = z.object({
+  visibility: z.enum(['company', 'team', 'followers', 'hidden']),
+  defaultFloor: z.enum(['seventh_floor', 'second_floor', 'none']),
+  monday: z.boolean(),
+  tuesday: z.boolean(),
+  wednesday: z.boolean(),
+  thursday: z.boolean(),
+  friday: z.boolean(),
+});
+
+type SettingsValues = z.infer<typeof SettingsSchema>;
+
+type DayKey = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday';
+const DAYS: Array<{ key: DayKey; label: string; short: string }> = [
+  { key: 'monday', label: 'Lun', short: 'L' },
+  { key: 'tuesday', label: 'Mar', short: 'M' },
+  { key: 'wednesday', label: 'Mer', short: 'M' },
+  { key: 'thursday', label: 'Gio', short: 'G' },
+  { key: 'friday', label: 'Ven', short: 'V' },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -242,31 +277,131 @@ function RecurringDayToggle({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// UserSettingsForm — sezioni personali della pagina /settings.
-// Wrappata da app/(app)/settings/page.tsx (Server Component) che
-// monta anche <ThemePickerCard /> per admin.
+// ArchiveHistoryDialog — diritto all'oblio (US-5, GDPR).
+// Fuori dal form: azione destructive fire-and-forget con conferma esplicita.
 // ─────────────────────────────────────────────────────────────────────────────
-export function UserSettingsForm() {
-  const [activeDays, setActiveDays] = React.useState<Set<Day>>(new Set(['T', 'TH']));
-  const [defaultFloor, setDefaultFloor] = React.useState<Floor | 'none'>('seventh_floor');
-  const [visibility, setVisibility] = React.useState('company');
-  const [notifications, setNotifications] = React.useState({
-    teamInOffice: true,
-    floorUpdates: false,
-    weeklyReminder: true,
-  });
+function ArchiveHistoryDialog({
+  onDone,
+}: {
+  onDone: (message: string, ok: boolean) => void;
+}) {
+  const [open, setOpen] = React.useState(false);
+  const [pending, startTransition] = React.useTransition();
 
-  const toggleDay = (k: Day) => {
-    setActiveDays((prev) => {
-      const next = new Set(prev);
-      if (next.has(k)) next.delete(k);
-      else next.add(k);
-      return next;
+  function handleConfirm() {
+    startTransition(async () => {
+      const res = await archivePastPresences();
+      if (res.ok) {
+        onDone(
+          res.data.archivedCount > 0
+            ? `Eliminate ${res.data.archivedCount} presenze passate dallo storico.`
+            : 'Nessuna presenza passata da eliminare.',
+          true,
+        );
+        setOpen(false);
+      } else {
+        onDone(res.message ?? 'Errore nella cancellazione dello storico.', false);
+      }
     });
-  };
+  }
 
   return (
-    <div className="flex flex-col gap-10">
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger
+        render={
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
+          >
+            Cancella
+          </Button>
+        }
+      />
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Cancellare lo storico presenze?</DialogTitle>
+          <DialogDescription>
+            Tutte le tue presenze dichiarate nei giorni passati verranno eliminate
+            definitivamente (diritto all&apos;oblio, GDPR). Le dichiarazioni di oggi e
+            future restano invariate. L&apos;operazione non è reversibile.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose render={<Button variant="ghost">Annulla</Button>} />
+          <Button variant="destructive" onClick={handleConfirm} disabled={pending}>
+            {pending ? <Loader2 className="size-4 animate-spin" /> : null}
+            Elimina storico
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UserSettingsForm — sezioni personali della pagina /settings.
+// Wrappata da app/(app)/settings/page.tsx (Server Component) che legge
+// profilo + pattern e monta anche <ThemePickerCard /> per admin.
+//
+// Edit form (skill `forms`): Save esplicito gated su dirty+valid, baseline
+// reset on success. Un solo Save salva pattern settimanale (updateWeeklyPattern)
+// e visibilità (updateVisibility).
+// ─────────────────────────────────────────────────────────────────────────────
+export function UserSettingsForm({
+  profile,
+  pattern,
+}: {
+  profile: MyProfile;
+  pattern: WeeklyPattern;
+}) {
+  // Esito dell'azione GDPR (fuori dal form: nessun impatto su dirty state)
+  const [archiveNotice, setArchiveNotice] = React.useState<{
+    message: string;
+    ok: boolean;
+  } | null>(null);
+
+  const { form, formError, resetToBaseline } = useEditForm<SettingsValues>({
+    schema: SettingsSchema,
+    defaultValues: {
+      visibility: profile.visibility,
+      defaultFloor: pattern.defaultFloor ?? 'none',
+      monday: pattern.monday === 'in_office',
+      tuesday: pattern.tuesday === 'in_office',
+      wednesday: pattern.wednesday === 'in_office',
+      thursday: pattern.thursday === 'in_office',
+      friday: pattern.friday === 'in_office',
+    },
+    save: async (value) => {
+      const [patternRes, visibilityRes] = await Promise.all([
+        updateWeeklyPattern({
+          monday: value.monday ? 'in_office' : 'unspecified',
+          tuesday: value.tuesday ? 'in_office' : 'unspecified',
+          wednesday: value.wednesday ? 'in_office' : 'unspecified',
+          thursday: value.thursday ? 'in_office' : 'unspecified',
+          friday: value.friday ? 'in_office' : 'unspecified',
+          defaultFloor: value.defaultFloor === 'none' ? null : value.defaultFloor,
+        }),
+        updateVisibility({ visibility: value.visibility }),
+      ]);
+      if (!patternRes.ok) {
+        throw new Error(patternRes.message ?? 'Errore nel salvataggio del pattern.');
+      }
+      if (!visibilityRes.ok) {
+        throw new Error(visibilityRes.message ?? 'Errore nel salvataggio della visibilità.');
+      }
+      return value;
+    },
+  });
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        void form.handleSubmit();
+      }}
+      className="flex flex-col gap-10"
+    >
       {/* Header */}
       <div className="flex flex-col gap-2">
         <Eyebrow>Profilo · Privacy · Notifiche</Eyebrow>
@@ -284,46 +419,37 @@ export function UserSettingsForm() {
           <BentoCard
             title="Informazioni personali"
             icon={<User className="size-4" />}
-            description="Sincronizzate da Entra ID, alcune sono modificabili."
+            description="Sincronizzate da Entra ID, in sola lettura."
             spanMd={2}
           >
             <div className="grid gap-5 sm:grid-cols-2">
               <Field
                 id="settings-name"
                 label="Nome completo"
-                defaultValue="Marco Bianchi"
+                defaultValue={profile.name}
                 hint="da Entra ID"
                 disabled
               />
               <Field
                 id="settings-email"
                 label="Email aziendale"
-                defaultValue="marco.bianchi@azienda.it"
+                defaultValue={profile.email}
                 hint="readonly"
                 disabled
               />
-              <div className="flex flex-col gap-1.5">
-                <label htmlFor="settings-team" className="text-sm font-medium">
-                  Dipartimento
-                </label>
-                <Select defaultValue="Engineering">
-                  <SelectTrigger id="settings-team">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Engineering">Engineering</SelectItem>
-                    <SelectItem value="Product">Product</SelectItem>
-                    <SelectItem value="Marketing">Marketing</SelectItem>
-                    <SelectItem value="Sales">Sales</SelectItem>
-                    <SelectItem value="HR">HR</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
               <Field
-                id="settings-role"
-                label="Ruolo"
-                defaultValue="Senior Software Engineer"
-                optional
+                id="settings-team"
+                label="Team"
+                defaultValue={profile.team ?? '—'}
+                hint="assegnato dall'amministratore"
+                disabled
+              />
+              <Field
+                id="settings-department"
+                label="Dipartimento"
+                defaultValue={profile.department ?? '—'}
+                hint="assegnato dall'amministratore"
+                disabled
               />
             </div>
           </BentoCard>
@@ -333,7 +459,7 @@ export function UserSettingsForm() {
             icon={<Lock className="size-4" />}
             description="Sessioni e accesso."
             action={
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" type="button">
                 Esci da tutti
               </Button>
             }
@@ -369,36 +495,45 @@ export function UserSettingsForm() {
             <div className="flex flex-col gap-6">
               <div className="flex flex-wrap gap-2">
                 {DAYS.map((d) => (
-                  <RecurringDayToggle
-                    key={d.key}
-                    active={activeDays.has(d.key)}
-                    onToggle={() => toggleDay(d.key)}
-                    label={d.label}
-                    short={d.short}
-                  />
+                  <form.Field key={d.key} name={d.key}>
+                    {(field) => (
+                      <RecurringDayToggle
+                        active={Boolean(field.state.value)}
+                        onToggle={() => field.handleChange(!field.state.value)}
+                        label={d.label}
+                        short={d.short}
+                      />
+                    )}
+                  </form.Field>
                 ))}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="default-floor" className="text-sm font-medium">
                   Piano preferito
                 </label>
-                <Select
-                  value={defaultFloor}
-                  onValueChange={(v) => setDefaultFloor(v as Floor | 'none')}
-                >
-                  <SelectTrigger id="default-floor">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="seventh_floor">
-                      {FLOOR_META.seventh_floor.label} · stanza
-                    </SelectItem>
-                    <SelectItem value="second_floor">
-                      {FLOOR_META.second_floor.label} · co-working
-                    </SelectItem>
-                    <SelectItem value="none">Nessuno (decido ogni volta)</SelectItem>
-                  </SelectContent>
-                </Select>
+                <form.Field name="defaultFloor">
+                  {(field) => (
+                    <Select
+                      value={String(field.state.value)}
+                      onValueChange={(v) =>
+                        v && field.handleChange(v as SettingsValues['defaultFloor'])
+                      }
+                    >
+                      <SelectTrigger id="default-floor">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="seventh_floor">
+                          {FLOOR_META.seventh_floor.label} · stanza
+                        </SelectItem>
+                        <SelectItem value="second_floor">
+                          {FLOOR_META.second_floor.label} · co-working
+                        </SelectItem>
+                        <SelectItem value="none">Nessuno (decido ogni volta)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                </form.Field>
                 <span className="text-xs text-muted-foreground">
                   Pre-selezionato quando dichiari presenza.
                 </span>
@@ -463,17 +598,26 @@ export function UserSettingsForm() {
                 <label htmlFor="visibility" className="text-sm font-medium">
                   Chi può vedere
                 </label>
-                <Select value={visibility} onValueChange={(v) => v && setVisibility(v)}>
-                  <SelectTrigger id="visibility">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="company">Tutti i colleghi</SelectItem>
-                    <SelectItem value="team">Solo il mio team</SelectItem>
-                    <SelectItem value="followers">Solo chi mi segue</SelectItem>
-                    <SelectItem value="hidden">Modalità incognito</SelectItem>
-                  </SelectContent>
-                </Select>
+                <form.Field name="visibility">
+                  {(field) => (
+                    <Select
+                      value={String(field.state.value)}
+                      onValueChange={(v) =>
+                        v && field.handleChange(v as SettingsValues['visibility'])
+                      }
+                    >
+                      <SelectTrigger id="visibility">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="company">Tutti i colleghi</SelectItem>
+                        <SelectItem value="team">Solo il mio team</SelectItem>
+                        <SelectItem value="followers">Solo chi mi segue</SelectItem>
+                        <SelectItem value="hidden">Modalità incognito</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                </form.Field>
                 <span className="text-xs text-muted-foreground">
                   Si applica anche allo storico.
                 </span>
@@ -485,55 +629,53 @@ export function UserSettingsForm() {
                     Diritto all&apos;oblio (GDPR)
                   </span>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
-                >
-                  Cancella
-                </Button>
+                <ArchiveHistoryDialog
+                  onDone={(message, ok) => setArchiveNotice({ message, ok })}
+                />
               </div>
+              {archiveNotice ? (
+                <Alert variant={archiveNotice.ok ? 'default' : 'destructive'}>
+                  {archiveNotice.message}
+                </Alert>
+              ) : null}
             </div>
           </BentoCard>
 
           <BentoCard
             title="Notifiche"
             icon={<Bell className="size-4" />}
-            description="Cosa ricevi via Teams o email."
+            description="Cosa ricevi via Teams o email. Presto disponibile."
             spanMd={2}
           >
             <div className="flex flex-col gap-2">
               {[
                 {
-                  key: 'teamInOffice' as const,
+                  key: 'teamInOffice',
                   title: 'Quando il mio team è in ufficio',
                   desc: 'Avviso quando 3+ membri del team confermano la stessa giornata.',
                 },
                 {
-                  key: 'floorUpdates' as const,
+                  key: 'floorUpdates',
                   title: 'Cambi di piano dei colleghi seguiti',
                   desc: 'Avviso quando una persona che segui si sposta tra 7° e 2°.',
                 },
                 {
-                  key: 'weeklyReminder' as const,
+                  key: 'weeklyReminder',
                   title: 'Reminder settimanale',
                   desc: 'Domenica sera ti invitiamo a confermare la settimana entrante.',
                 },
               ].map((n) => (
                 <div
                   key={n.key}
-                  className="flex items-center gap-3 rounded-md border border-border bg-muted p-4"
+                  className="flex items-center gap-3 rounded-md border border-border bg-muted p-4 opacity-70"
                 >
                   <div className="flex min-w-0 flex-1 flex-col">
                     <span className="text-sm font-semibold">{n.title}</span>
                     <span className="text-xs text-muted-foreground">{n.desc}</span>
                   </div>
-                  <Switch
-                    checked={notifications[n.key]}
-                    onCheckedChange={() =>
-                      setNotifications((prev) => ({ ...prev, [n.key]: !prev[n.key] }))
-                    }
-                  />
+                  {/* Backend notifiche non ancora implementato (PLAN-NEXT fase 3):
+                      switch disabilitati finché non esiste persistenza reale. */}
+                  <Switch checked={false} disabled aria-label={`${n.title} (presto disponibile)`} />
                 </div>
               ))}
             </div>
@@ -542,19 +684,40 @@ export function UserSettingsForm() {
 
         {/* Save bar */}
         <Card className="p-5">
-          <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
-            <div className="flex flex-col gap-0.5">
-              <span className="text-sm font-semibold">Modifiche non salvate</span>
-              <span className="text-xs text-muted-foreground">
-                Pattern, visibilità e notifiche richiedono salvataggio esplicito.
-              </span>
-            </div>
-            <div className="flex gap-3">
-              <Button variant="ghost">Annulla</Button>
-              <Button>Salva tutte le modifiche</Button>
-            </div>
+          <div className="flex flex-col gap-3">
+            {formError ? <Alert variant="destructive">{formError.message}</Alert> : null}
+            <form.Subscribe
+              selector={(s) => [s.isDirty, s.canSubmit, s.isSubmitting] as const}
+            >
+              {([isDirty, canSubmit, isSubmitting]) => (
+                <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-sm font-semibold">
+                      {isDirty ? 'Modifiche non salvate' : 'Tutto salvato'}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      Pattern, piano preferito e visibilità richiedono salvataggio esplicito.
+                    </span>
+                  </div>
+                  <div className="flex gap-3">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      disabled={!isDirty || isSubmitting}
+                      onClick={resetToBaseline}
+                    >
+                      Annulla
+                    </Button>
+                    <Button type="submit" disabled={!isDirty || !canSubmit}>
+                      {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
+                      {isSubmitting ? 'Salvataggio…' : 'Salva tutte le modifiche'}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </form.Subscribe>
           </div>
         </Card>
-    </div>
+    </form>
   );
 }

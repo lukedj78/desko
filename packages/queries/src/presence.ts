@@ -1,4 +1,4 @@
-import { and, desc, eq, gte, inArray, lte, sql } from 'drizzle-orm';
+import { and, desc, eq, exists, gte, inArray, lte, or, sql, type SQL } from 'drizzle-orm';
 
 import { getCurrentUserId } from '@desko/auth/server';
 import { db } from '@desko/db';
@@ -66,6 +66,65 @@ const initialsFromName = (name: string): string => {
   return ((parts[0][0] ?? '') + (parts[parts.length - 1]?.[0] ?? '')).toUpperCase();
 };
 
+// ─── Privacy presenze (US-5) ─────────────────────────────────────────────────
+
+type Viewer = { id: string; team: string | null };
+
+/**
+ * Utente corrente + il suo team, per valutare la visibilità 'team'.
+ * Null se non autenticato (query pubbliche vedono solo profili 'company').
+ */
+async function getViewer(): Promise<Viewer | null> {
+  try {
+    const id = await getCurrentUserId();
+    const rows = await db
+      .select({ team: userTable.team })
+      .from(userTable)
+      .where(eq(userTable.id, id))
+      .limit(1);
+    return { id, team: rows[0]?.team ?? null };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Condizione SQL che applica `user.presenceVisibility` rispetto al viewer.
+ * Da AND-are in ogni query che espone presenze di altri utenti.
+ *
+ *   - le proprie presenze sono sempre visibili a se stessi
+ *   - 'company'   → visibile a tutti gli utenti
+ *   - 'team'      → visibile solo a chi ha lo stesso `user.team`
+ *   - 'followers' → visibile solo a chi segue l'utente (relazione `follows`)
+ *   - 'hidden'    → mai visibile ad altri
+ *
+ * NB: presuppone che `userTable` sia joinata nella query chiamante.
+ */
+function visibleTo(viewer: Viewer | null): SQL {
+  if (!viewer) {
+    return eq(userTable.presenceVisibility, 'company');
+  }
+
+  const viewerFollowsOwner = exists(
+    db
+      .select({ one: sql`1` })
+      .from(follows)
+      .where(and(eq(follows.followedId, userTable.id), eq(follows.followerId, viewer.id))),
+  );
+
+  const conditions: SQL[] = [
+    eq(userTable.id, viewer.id),
+    eq(userTable.presenceVisibility, 'company'),
+    and(eq(userTable.presenceVisibility, 'followers'), viewerFollowsOwner) as SQL,
+  ];
+  if (viewer.team) {
+    conditions.push(
+      and(eq(userTable.presenceVisibility, 'team'), eq(userTable.team, viewer.team)) as SQL,
+    );
+  }
+  return or(...conditions) as SQL;
+}
+
 /**
  * Tutte le presenze dichiarate per una data specifica (default: oggi).
  * Join con la tabella `user` per recuperare displayName + team.
@@ -74,12 +133,8 @@ const initialsFromName = (name: string): string => {
 export async function getPresencesForDate(date?: string): Promise<PresenceEntry[]> {
   const targetDate = date ?? todayIso();
 
-  let myUserId: string | null = null;
-  try {
-    myUserId = await getCurrentUserId();
-  } catch {
-    // Non loggato: continuiamo senza ordering personalizzato
-  }
+  const viewer = await getViewer();
+  const myUserId = viewer?.id ?? null;
 
   const rows = await db
     .select({
@@ -98,6 +153,7 @@ export async function getPresencesForDate(date?: string): Promise<PresenceEntry[
       and(
         eq(presenceEntries.date, targetDate),
         eq(userTable.banned, false),
+        visibleTo(viewer),
       ),
     );
 
@@ -245,6 +301,48 @@ export async function getMyPresenceToday(): Promise<{
   };
 }
 
+export type MyProfile = {
+  name: string;
+  email: string;
+  team: string | null;
+  department: string | null;
+  defaultFloor: Floor | null;
+  visibility: 'company' | 'team' | 'followers' | 'hidden';
+};
+
+/**
+ * Profilo dell'utente corrente per la pagina /settings:
+ * anagrafica read-only (Entra/DB) + preferenze privacy.
+ */
+export async function getMyProfile(): Promise<MyProfile> {
+  const userId = await getCurrentUserId();
+
+  const rows = await db
+    .select({
+      name: userTable.name,
+      email: userTable.email,
+      team: userTable.team,
+      department: userTable.department,
+      defaultFloor: userTable.defaultFloor,
+      visibility: userTable.presenceVisibility,
+    })
+    .from(userTable)
+    .where(eq(userTable.id, userId))
+    .limit(1);
+
+  const row = rows[0];
+  if (!row) throw new Error('UNAUTHORIZED');
+
+  return {
+    name: row.name,
+    email: row.email,
+    team: row.team ?? null,
+    department: row.department ?? null,
+    defaultFloor: row.defaultFloor as Floor | null,
+    visibility: row.visibility as MyProfile['visibility'],
+  };
+}
+
 /**
  * Pattern ricorrente settimanale dell'utente corrente.
  */
@@ -300,11 +398,15 @@ export async function getFollowedColleaguesWeek(isoWeekStart: string): Promise<{
     days.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`);
   }
 
+  const viewer = await getViewer();
+
   const followedUsers = await db
     .select({ id: userTable.id, name: userTable.name })
     .from(follows)
     .innerJoin(userTable, eq(follows.followedId, userTable.id))
-    .where(and(eq(follows.followerId, userId), eq(userTable.banned, false)));
+    .where(
+      and(eq(follows.followerId, userId), eq(userTable.banned, false), visibleTo(viewer)),
+    );
 
   if (followedUsers.length === 0) {
     return { days, rows: [] };
@@ -449,6 +551,8 @@ export async function getPresencesForRange(
   fromDate: string,
   toDate: string,
 ): Promise<MonthDayPresence[]> {
+  const viewer = await getViewer();
+
   const rows = await db
     .select({
       userId: presenceEntries.userId,
@@ -465,6 +569,7 @@ export async function getPresencesForRange(
         lte(presenceEntries.date, toDate),
         eq(presenceEntries.status, 'in_office'),
         eq(userTable.banned, false),
+        visibleTo(viewer),
       ),
     );
 
