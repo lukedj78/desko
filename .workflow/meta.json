@@ -2,13 +2,13 @@
   "project_slug": "desko",
   "project_name": "Desko",
   "created_at": "2026-05-09T10:40:44Z",
-  "updated_at": "2026-05-09T16:21:31Z",
-  "phase": "module-added",
+  "updated_at": "2026-06-09T18:56:23Z",
+  "phase": "module_added",
   "stack": {
     "framework": "next",
     "nextjs_version": "16",
-    "ui": "mui",
-    "ui_alt": "base-ui",
+    "ui": "base-ui",
+    "ui_alt": "mui",
     "forms": "tanstack-form",
     "auth": "better-auth",
     "auth_providers": [
@@ -25,6 +25,10 @@
     "monorepo": "turborepo-pnpm",
     "future_apps": [
       "mobile-react-native"
+    ],
+    "web_app": "apps/web-shadcn",
+    "frozen_apps": [
+      "apps/web"
     ]
   },
   "history": [
@@ -295,6 +299,35 @@
         "app/(app)/dashboard/page.tsx (session-aware: getCurrentUser firstName + dynamic date)"
       ],
       "phase_before": "module-added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "forms",
+      "ran_at": "2026-06-09T18:26:12Z",
+      "inputs": {
+        "step": "P2 GDPR: settings edit form (useEditForm) + visibility filter nelle query + fix archivePastPresences"
+      },
+      "outputs": [
+        "apps/web-shadcn/app/(app)/settings/_components/user-settings-form.tsx",
+        "apps/web-shadcn/app/(app)/settings/page.tsx",
+        "packages/queries/src/presence.ts (visibleTo + getMyProfile)",
+        "packages/server-actions/src/presence.ts (fix oblio + rotte EN)"
+      ],
+      "phase_before": "module-added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "dev-flow",
+      "ran_at": "2026-06-09T18:56:23Z",
+      "inputs": {
+        "decision": "apps/web (MUI) congelata, web-shadcn canonica"
+      },
+      "outputs": [
+        "package.json (filter !@desko/web)",
+        "apps/web/FROZEN.md",
+        "meta.json#stack (ui=base-ui, web_app, frozen_apps)"
+      ],
+      "phase_before": "module_added",
       "phase_after": "module-added"
     }
   ],
