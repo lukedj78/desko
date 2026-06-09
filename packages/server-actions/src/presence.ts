@@ -2,7 +2,7 @@
 
 import { randomUUID } from 'node:crypto';
 
-import { and, eq } from 'drizzle-orm';
+import { and, eq, lt } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -99,8 +99,8 @@ function isLastMinute(targetDate: string): boolean {
 function revalidateAll() {
   revalidatePath('/dashboard');
   revalidatePath('/calendar');
-  revalidatePath('/piani');
-  revalidatePath('/impostazioni');
+  revalidatePath('/floors');
+  revalidatePath('/settings');
 }
 
 // ─── Actions ─────────────────────────────────────────────────────────────────
@@ -199,7 +199,7 @@ export async function updateFloor(
       });
 
     revalidatePath('/dashboard');
-    revalidatePath('/piani');
+    revalidatePath('/floors');
 
     return { ok: true, data: { floor: parsed.data.floor, updatedAt: now.toISOString() } };
   } catch (e) {
@@ -338,7 +338,7 @@ export async function updateWeeklyPattern(
       });
 
     revalidatePath('/calendar');
-    revalidatePath('/impostazioni');
+    revalidatePath('/settings');
 
     return { ok: true, data: { updated: true } };
   } catch (e) {
@@ -368,9 +368,9 @@ export async function updateVisibility(
       .set({ presenceVisibility: parsed.data.visibility, updatedAt: new Date() })
       .where(eq(userTable.id, userId));
 
-    revalidatePath('/impostazioni');
+    revalidatePath('/settings');
     revalidatePath('/dashboard');
-    revalidatePath('/piani');
+    revalidatePath('/floors');
 
     return { ok: true, data: { visibility: parsed.data.visibility } };
   } catch (e) {
@@ -398,12 +398,13 @@ export async function archivePastPresences(): Promise<ActionResult<{ archivedCou
         and(
           eq(presenceEntries.userId, userId),
           // Solo le date strettamente passate; lasciamo invariate quelle di oggi e future
-          eq(presenceEntries.date, presenceEntries.date), // placeholder per type-check
+          lt(presenceEntries.date, todayIso),
         ),
       )
       .returning({ id: presenceEntries.id });
 
-    revalidatePath('/impostazioni');
+    revalidatePath('/settings');
+    revalidatePath('/calendar');
 
     return { ok: true, data: { archivedCount: deleted.length } };
   } catch (e) {
@@ -446,7 +447,7 @@ export async function followUser(
 
     revalidatePath('/dashboard');
     revalidatePath('/calendar');
-    revalidatePath('/impostazioni');
+    revalidatePath('/settings');
 
     return { ok: true, data: { followed: true } };
   } catch (e) {
@@ -482,7 +483,7 @@ export async function unfollowUser(
 
     revalidatePath('/dashboard');
     revalidatePath('/calendar');
-    revalidatePath('/impostazioni');
+    revalidatePath('/settings');
 
     return { ok: true, data: { unfollowed: true } };
   } catch (e) {
