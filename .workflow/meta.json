@@ -2,7 +2,7 @@
   "project_slug": "desko",
   "project_name": "Desko",
   "created_at": "2026-05-09T10:40:44Z",
-  "updated_at": "2026-06-09T18:56:23Z",
+  "updated_at": "2026-06-09T19:20:10Z",
   "phase": "module_added",
   "stack": {
     "framework": "next",
@@ -29,7 +29,8 @@
     "web_app": "apps/web-shadcn",
     "frozen_apps": [
       "apps/web"
-    ]
+    ],
+    "test": "vitest"
   },
   "history": [
     {
@@ -326,6 +327,38 @@
         "package.json (filter !@desko/web)",
         "apps/web/FROZEN.md",
         "meta.json#stack (ui=base-ui, web_app, frozen_apps)"
+      ],
+      "phase_before": "module_added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "module-add",
+      "ran_at": "2026-06-09T19:20:10Z",
+      "inputs": {
+        "module": "test",
+        "tech": "vitest+pglite"
+      },
+      "outputs": [
+        "vitest.config.ts",
+        "packages/db/src/testing.ts",
+        "package.json (test scripts)"
+      ],
+      "phase_before": "module_added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "write-tests",
+      "ran_at": "2026-06-09T19:20:10Z",
+      "inputs": {
+        "sources": [
+          "packages/queries/src/presence.ts",
+          "packages/server-actions/src/lunch.ts"
+        ],
+        "type": "integration-pglite"
+      },
+      "outputs": [
+        "packages/queries/src/__tests__/presence-visibility.test.ts",
+        "packages/server-actions/src/__tests__/lunch.test.ts"
       ],
       "phase_before": "module_added",
       "phase_after": "module-added"
