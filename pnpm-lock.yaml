@@ -426,6 +426,9 @@ importers:
       '@desko/domain':
         specifier: workspace:*
         version: link:../domain
+      '@desko/services':
+        specifier: workspace:*
+        version: link:../services
       drizzle-orm:
         specifier: ^0.45.2
         version: 0.45.2(@electric-sql/pglite@0.5.1)(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.20.0)
@@ -448,6 +451,9 @@ importers:
       '@desko/domain':
         specifier: workspace:*
         version: link:../domain
+      '@desko/services':
+        specifier: workspace:*
+        version: link:../services
       drizzle-orm:
         specifier: ^0.45.2
         version: 0.45.2(@electric-sql/pglite@0.5.1)(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.20.0)
@@ -464,6 +470,25 @@ importers:
       vitest:
         specifier: ^4.1.8
         version: 4.1.8(@types/node@25.9.2)(vite@8.0.16(@types/node@25.9.2)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
+
+  packages/services:
+    dependencies:
+      '@desko/db':
+        specifier: workspace:*
+        version: link:../db
+      '@desko/domain':
+        specifier: workspace:*
+        version: link:../domain
+      drizzle-orm:
+        specifier: ^0.45.2
+        version: 0.45.2(@electric-sql/pglite@0.5.1)(@neondatabase/serverless@1.1.0)(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.20.0)
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
+    devDependencies:
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
 
   packages/ui:
     dependencies:

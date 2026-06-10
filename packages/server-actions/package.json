@@ -26,6 +26,7 @@
     "@desko/auth": "workspace:*",
     "@desko/db": "workspace:*",
     "@desko/domain": "workspace:*",
+    "@desko/services": "workspace:*",
     "drizzle-orm": "^0.45.2",
     "next": "^16.2.3",
     "zod": "^4.4.3"
