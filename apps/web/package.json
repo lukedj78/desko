@@ -28,7 +28,7 @@
     "@mui/material": "^6.3.0",
     "@mui/material-nextjs": "^9.0.1",
     "@neondatabase/serverless": "^1.1.0",
-    "better-auth": "^1.6.9",
+    "better-auth": "^1.6.16",
     "drizzle-orm": "^0.45.2",
     "next": "^16.2.3",
     "react": "^19.2.6",

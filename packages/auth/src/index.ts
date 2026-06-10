@@ -1,3 +1,4 @@
+import { expo } from '@better-auth/expo';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { admin } from 'better-auth/plugins';
@@ -27,6 +28,9 @@ const isMicrosoftConfigured =
 export const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL,
   secret: env.BETTER_AUTH_SECRET,
+  // App mobile Expo (scheme desko://): senza trust esplicito dell'origin
+  // dello scheme, better-auth rifiuta le richieste del client Expo.
+  trustedOrigins: ['desko://'],
   database: drizzleAdapter(db, {
     provider: 'pg',
     schema: {
@@ -93,6 +97,10 @@ export const auth = betterAuth({
       ac,
       roles: ROLES,
     }),
+    // Client mobile Expo: il cookie di sessione viene persistito su
+    // SecureStore lato app e rimandato come header Cookie — getSession()
+    // lato server funziona invariato.
+    expo(),
   ],
   session: {
     expiresIn: 60 * 60 * 24 * 7,

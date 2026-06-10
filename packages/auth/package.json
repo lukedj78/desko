@@ -23,10 +23,11 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@better-auth/expo": "^1.6.16",
     "@desko/db": "workspace:*",
     "@desko/email": "workspace:*",
     "@desko/env": "workspace:*",
-    "better-auth": "^1.6.9",
+    "better-auth": "^1.6.16",
     "next": "^16.2.3",
     "react": "^19.2.6"
   },

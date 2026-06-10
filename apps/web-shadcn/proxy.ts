@@ -28,6 +28,15 @@ export async function proxy(request: NextRequest) {
   const user = session?.user;
   const isAuthenticated = !!user;
 
+  // API dati (consumate dall'app mobile): mai redirect HTML — 401 JSON.
+  // /api/auth è in FULLY_PUBLIC_PREFIXES e non passa di qui.
+  if (pathname.startsWith('/api/')) {
+    if (!isAuthenticated) {
+      return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
+    }
+    return NextResponse.next();
+  }
+
   if (PUBLIC_AUTH_ROUTES.includes(pathname)) {
     if (isAuthenticated) {
       const url = request.nextUrl.clone();

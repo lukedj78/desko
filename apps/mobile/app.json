@@ -13,7 +13,9 @@
     "plugins": [
       "expo-router",
       "expo-image",
-      "expo-font"
+      "expo-font",
+      "expo-secure-store",
+      "expo-web-browser"
     ],
     "ios": {
       "supportsTablet": true,

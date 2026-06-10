@@ -2,7 +2,7 @@
   "project_slug": "desko",
   "project_name": "Desko",
   "created_at": "2026-05-09T10:40:44Z",
-  "updated_at": "2026-06-09T19:48:04Z",
+  "updated_at": "2026-06-10T11:42:14Z",
   "phase": "module_added",
   "stack": {
     "framework": "monorepo",
@@ -18,7 +18,9 @@
       "mobile": {
         "framework": "expo-rn",
         "ui": "nativewind",
-        "app_dir": "apps/mobile"
+        "app_dir": "apps/mobile",
+        "auth": "better-auth",
+        "data": "tanstack-query+rest"
       }
     },
     "auth": "better-auth",
@@ -379,6 +381,40 @@
         "apps/mobile/{package.json,app.json,tailwind.config.js,metro.config.js,babel.config.js,global.css}",
         "apps/mobile/app/{_layout,(auth)/sign-in,(app)/(tabs)/{index,calendar,settings}}.tsx",
         "meta.json#stack (shape monorepo canonica)"
+      ],
+      "phase_before": "module_added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "rn-module-add",
+      "ran_at": "2026-06-10T11:42:13Z",
+      "inputs": {
+        "module": "auth",
+        "provider": "better-auth",
+        "client": "@better-auth/expo + SecureStore"
+      },
+      "outputs": [
+        "packages/auth/src/index.ts (expo plugin + trustedOrigins)",
+        "apps/mobile/lib/auth-client.ts",
+        "apps/mobile/app/(auth)/sign-in.tsx (reale)",
+        "apps/mobile/app/(app)/_layout.tsx (AuthGuard)",
+        "apps/mobile/app/(app)/(tabs)/settings.tsx (sign-out)"
+      ],
+      "phase_before": "module_added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "rn-data-fetching",
+      "ran_at": "2026-06-10T11:42:14Z",
+      "inputs": {
+        "step": "API HTTP /api/presence/* sul web + TanStack Query hooks + tab Oggi reale"
+      },
+      "outputs": [
+        "apps/web-shadcn/app/api/{_lib/respond.ts,presence/{today,declare,leave,floor}/route.ts}",
+        "apps/web-shadcn/proxy.ts (401 JSON per /api)",
+        "apps/mobile/lib/api.ts",
+        "apps/mobile/app/(app)/(tabs)/_components/{use-presence-today.ts,my-day-card.tsx}",
+        "apps/mobile/app/(app)/(tabs)/index.tsx"
       ],
       "phase_before": "module_added",
       "phase_after": "module-added"
