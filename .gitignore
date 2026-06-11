@@ -43,3 +43,4 @@ coverage/
 # misc
 *.pem
 .vercel
+.playwright-mcp/

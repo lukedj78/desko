@@ -1,4 +1,5 @@
 import { useRouter } from 'expo-router';
+import * as WebBrowser from 'expo-web-browser';
 import { useState } from 'react';
 import {
   ActivityIndicator,
@@ -98,16 +99,33 @@ export default function SignInScreen() {
             </View>
           </View>
 
-          <Pressable
-            disabled={!canSubmit}
-            onPress={handleSignIn}
-            className="w-full flex-row items-center justify-center gap-2 rounded-sm bg-primary px-6 py-4 active:bg-primary-active disabled:opacity-50"
-          >
-            {pending ? <ActivityIndicator size="small" color="#2B1F00" /> : null}
-            <Text className="font-bold text-base text-primary-text">
-              {pending ? 'Accesso…' : 'Accedi'}
-            </Text>
-          </Pressable>
+          <View className="gap-4">
+            <Pressable
+              disabled={!canSubmit}
+              onPress={handleSignIn}
+              className="w-full flex-row items-center justify-center gap-2 rounded-sm bg-primary px-6 py-4 active:bg-primary-active disabled:opacity-50"
+            >
+              {pending ? <ActivityIndicator size="small" color="#2B1F00" /> : null}
+              <Text className="font-bold text-base text-primary-text">
+                {pending ? 'Accesso…' : 'Accedi'}
+              </Text>
+            </Pressable>
+
+            {/* Recovery e signup restano sul web: il flow email→link torna
+                comunque sul browser, duplicarlo in-app non aggiunge nulla. */}
+            <Pressable
+              onPress={() =>
+                void WebBrowser.openBrowserAsync(
+                  `${process.env.EXPO_PUBLIC_API_URL ?? ''}/forgot-password`,
+                )
+              }
+              className="items-center py-1"
+            >
+              <Text className="text-sm font-semibold text-ink-secondary underline">
+                Password dimenticata?
+              </Text>
+            </Pressable>
+          </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

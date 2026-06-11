@@ -33,6 +33,24 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="floors"
+        options={{
+          title: 'Piani',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="business-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="lunch"
+        options={{
+          title: 'Pranzo',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="restaurant-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{
           title: 'Impostazioni',

@@ -31,6 +31,28 @@
 - ✅ Lunch fase 1: actions complete (proposte, join/leave con cap e 1/day,
   ristoranti + rating) + route `/lunch` con UI.
 
+## Mobile (2026-06-10/11) — `apps/mobile`, Expo SDK 56
+
+App completa a parità funzionale con il web per l'utente dipendente:
+
+- ✅ **Auth**: better-auth Expo client (SecureStore), sign-in reale, AuthGuard,
+  sign-out; "Password dimenticata?" apre il flow web (recovery e **signup
+  restano web-only per scelta**: il flow email→link torna comunque sul browser).
+- ✅ **5 tab**: Oggi (presenze + dichiara/sposta/esci) · Calendario (griglia
+  mese + dichiara su data) · Piani (occupazione US-7 + "sono qui") ·
+  Pranzo (proposte, partecipa/lascia/cancella, nuova proposta pubblica) ·
+  Impostazioni (visibilità GDPR, pattern settimanale, oblio, profilo).
+- ✅ **Architettura**: domini `presence`, `lunch` e `push` in
+  `@desko/services` (puri); web actions/queries e route `/api/*` sono
+  adapter sottili. 16 endpoint HTTP in web-shadcn.
+- ✅ **Push notifications (base)**: tabella `push_tokens` (migrata su Neon),
+  registrazione token al login (`/api/push/register`), invio via Expo Push
+  API con pulizia token morti; **primo trigger**: invito a pranzo privato.
+  ⚠️ Token reali richiedono EAS projectId (prima dev build EAS).
+- Restano fuori per scelta: admin (web-only), temi runtime (web-only),
+  rating ristoranti e proposte private da mobile (web ok), filtri US-3
+  (mancano anche sul web).
+
 ## Priorità per la prossima sessione
 
 ### Priorità 1 — Dichiarazione presenze da dashboard (US-1) · **resto del blocker MVP**
