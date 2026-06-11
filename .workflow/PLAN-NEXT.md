@@ -140,6 +140,14 @@ Niente WebSocket per ora. Rispettare la skill data-fetching
 6. **Retention TTL** — 90 giorni come da PRD? Implementare cron archive.
 7. **apps/web (MUI)** — congelata il 2026-06-09; decidere se eliminarla del
    tutto a MVP shippato.
+8. **Estrazione `apps/api` dedicata** — decisione legata al **primo deploy di
+   produzione del mobile**. Oggi le route `/api/*` vivono in web-shadcn
+   (un solo deploy, stessa origin dell'auth): accoppiamento accettato in
+   sviluppo. Quando l'app mobile va in distribuzione (EAS/store), valutare
+   deploy indipendente del backend HTTP per sganciare i ritmi di rilascio
+   web ↔ API. Il refactor `@desko/services` (2026-06-10) rende il trasloco
+   ~mezza giornata: si spostano solo route + `_lib/respond.ts`.
+   Nel frattempo: CI che blocca deploy se test falliscono + API additive-only.
 
 ---
 

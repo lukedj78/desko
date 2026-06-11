@@ -35,12 +35,35 @@ export type TodayPayload = {
   entries: PresenceEntryDto[];
 };
 
+export type MonthAttendeeDto = {
+  userId: string;
+  displayName: string;
+  initials: string;
+  team: string | null;
+  floor: Floor | null;
+};
+
+export type MonthDayPresenceDto = {
+  date: string; // YYYY-MM-DD
+  attendees: MonthAttendeeDto[];
+};
+
 const TODAY_KEY = ['presence', 'today'] as const;
 
 export function usePresenceToday() {
   return useQuery({
     queryKey: TODAY_KEY,
     queryFn: () => api.get<TodayPayload>('/api/presence/today'),
+    staleTime: 60_000,
+  });
+}
+
+/** Presenze in_office per intervallo (griglia mese del calendario). */
+export function usePresenceRange(from: string, to: string) {
+  return useQuery({
+    queryKey: ['presence', 'range', { from, to }] as const,
+    queryFn: () =>
+      api.get<{ days: MonthDayPresenceDto[] }>(`/api/presence/range?from=${from}&to=${to}`),
     staleTime: 60_000,
   });
 }
@@ -53,8 +76,13 @@ function useInvalidatePresence() {
 export function useDeclarePresence() {
   const invalidate = useInvalidatePresence();
   return useMutation({
-    mutationFn: (input: { status: PresenceStatus; floor?: Floor | null; note?: string }) =>
-      api.post('/api/presence/declare', { date: todayIso(), ...input }),
+    mutationFn: (input: {
+      status: PresenceStatus;
+      floor?: Floor | null;
+      note?: string;
+      /** default: oggi — il calendario passa la data selezionata */
+      date?: string;
+    }) => api.post('/api/presence/declare', { ...input, date: input.date ?? todayIso() }),
     onSuccess: invalidate,
   });
 }
