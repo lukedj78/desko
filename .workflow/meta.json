@@ -2,7 +2,7 @@
   "project_slug": "desko",
   "project_name": "Desko",
   "created_at": "2026-05-09T10:40:44Z",
-  "updated_at": "2026-06-11T11:35:39Z",
+  "updated_at": "2026-06-11T11:47:47Z",
   "phase": "module_added",
   "stack": {
     "framework": "monorepo",
@@ -445,6 +445,21 @@
         "apps/mobile/app/(app)/(tabs)/calendar.tsx",
         "apps/mobile/app/(app)/(tabs)/_components/month-grid.tsx",
         "apps/mobile/app/(app)/(tabs)/_components/use-presence-today.ts (usePresenceRange + date param)"
+      ],
+      "phase_before": "module_added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "rn-add-screen",
+      "ran_at": "2026-06-11T11:47:47Z",
+      "inputs": {
+        "screen": "settings (GDPR reale)",
+        "data": "/api/settings/*"
+      },
+      "outputs": [
+        "apps/web-shadcn/app/api/settings/{route,visibility/route,pattern/route,archive/route}.ts",
+        "apps/mobile/app/(app)/(tabs)/settings.tsx",
+        "apps/mobile/app/(app)/(tabs)/_components/use-settings.ts"
       ],
       "phase_before": "module_added",
       "phase_after": "module-added"
