@@ -72,13 +72,19 @@ Nota: ogni nuovo form passa da `lib/forms` (`useCreateForm`/`useEditForm`).
 
 ---
 
-### Priorità 2 — Filtri team/persone seguite (US-3)
+### Priorità 2 — Filtri team/persone seguite (US-3) · **"chi seguo" fatto (2026-06-11)**
 
-Su `/calendar` e `/floors`: filtro "Tutti / Mio team / Chi seguo / persone
-specifiche". Stato filtro in URL `searchParams` (skill data-fetching),
-NON localStorage. Le relazioni `follows` e le query esistono già.
+- ✅ **Chi seguo**: follow/unfollow con cap 50 (servizio), gestione in
+  /settings (web) e Impostazioni (mobile) con ricerca colleghi; filtro
+  Tutti|Chi seguo su /calendar web (stato in URL) e su Oggi+Calendario
+  mobile (segmented, useFollows lazy).
+- ⏳ **Mio team**: bloccato dalla decisione open #2 (sorgente team:
+  Entra ID groups o mapping HR). Il campo `user.team` esiste già.
+- ⏳ **Persistenza cross-session del filtro** (acceptance PRD):
+  da fare via `user.preferences` (oggi: URL su web, stato locale su mobile).
+- ⏳ Filtro su `/floors`.
 
-#### ETA: 1 giorno
+#### ETA residua: ½ giorno (a decisione team presa)
 
 ---
 
