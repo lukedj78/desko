@@ -13,6 +13,14 @@
     "./presence": {
       "types": "./src/presence.ts",
       "default": "./src/presence.ts"
+    },
+    "./lunch": {
+      "types": "./src/lunch.ts",
+      "default": "./src/lunch.ts"
+    },
+    "./push": {
+      "types": "./src/push.ts",
+      "default": "./src/push.ts"
     }
   },
   "scripts": {

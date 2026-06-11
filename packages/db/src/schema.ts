@@ -378,6 +378,28 @@ export const restaurantRatings = pgTable(
   }),
 );
 
+/**
+ * Push token Expo per le notifiche mobile.
+ * Un token per device; un utente può avere più device. Il token Expo è
+ * stabile per install: upsert su (token), ri-associato all'utente corrente
+ * a ogni login (device condiviso → ultimo login vince).
+ */
+export const pushTokens = pgTable(
+  'push_tokens',
+  {
+    token: text('token').primaryKey(), // ExponentPushToken[...]
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    platform: text('platform').notNull(), // 'ios' | 'android'
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  },
+  (t) => ({
+    userIdx: index('push_tokens_user_idx').on(t.userId),
+  }),
+);
+
 // ─── Type exports ────────────────────────────────────────────────────────────
 
 export type User = typeof user.$inferSelect;
@@ -396,3 +418,4 @@ export type NewLunchProposal = typeof lunchProposals.$inferInsert;
 export type LunchProposalParticipant = typeof lunchProposalParticipants.$inferSelect;
 export type LunchProposalInvite = typeof lunchProposalInvites.$inferSelect;
 export type RestaurantRating = typeof restaurantRatings.$inferSelect;
+export type PushToken = typeof pushTokens.$inferSelect;

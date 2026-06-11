@@ -15,6 +15,13 @@
       "when": 1778360757039,
       "tag": "0001_young_mister_sinister",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781187273900,
+      "tag": "0002_sleepy_sentinel",
+      "breakpoints": true
     }
   ]
 }

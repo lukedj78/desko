@@ -2,7 +2,7 @@
   "project_slug": "desko",
   "project_name": "Desko",
   "created_at": "2026-05-09T10:40:44Z",
-  "updated_at": "2026-06-11T11:47:47Z",
+  "updated_at": "2026-06-11T14:51:29Z",
   "phase": "module_added",
   "stack": {
     "framework": "monorepo",
@@ -20,7 +20,8 @@
         "ui": "nativewind",
         "app_dir": "apps/mobile",
         "auth": "better-auth",
-        "data": "tanstack-query+rest"
+        "data": "tanstack-query+rest",
+        "push": "expo-notifications"
       }
     },
     "auth": "better-auth",
@@ -460,6 +461,44 @@
         "apps/web-shadcn/app/api/settings/{route,visibility/route,pattern/route,archive/route}.ts",
         "apps/mobile/app/(app)/(tabs)/settings.tsx",
         "apps/mobile/app/(app)/(tabs)/_components/use-settings.ts"
+      ],
+      "phase_before": "module_added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "rn-add-screen",
+      "ran_at": "2026-06-11T14:51:29Z",
+      "inputs": {
+        "screens": [
+          "floors",
+          "lunch"
+        ],
+        "endpoints": [
+          "/api/presence/floors",
+          "/api/lunch/*"
+        ]
+      },
+      "outputs": [
+        "apps/mobile/app/(app)/(tabs)/{floors,lunch}.tsx",
+        "apps/mobile/app/(app)/(tabs)/_components/use-lunch.ts",
+        "apps/web-shadcn/app/api/{presence/floors,lunch/*}"
+      ],
+      "phase_before": "module_added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "rn-module-add",
+      "ran_at": "2026-06-11T14:51:29Z",
+      "inputs": {
+        "module": "push",
+        "provider": "expo-notifications",
+        "trigger": "invito lunch privato"
+      },
+      "outputs": [
+        "packages/db/src/schema.ts (push_tokens) + migrazione 0002 applicata",
+        "packages/services/src/{push,lunch}.ts",
+        "apps/web-shadcn/app/api/push/register/route.ts",
+        "apps/mobile/lib/push.ts"
       ],
       "phase_before": "module_added",
       "phase_after": "module-added"
