@@ -974,6 +974,9 @@ export async function archivePastPresences(
   }
 }
 
+/** Cap PRD US-3: lista personale di colleghi seguiti, max ~50. */
+const MAX_FOLLOWS = 50;
+
 /** Segui un collega (US-3). */
 export async function followUser(
   userId: string,
@@ -989,6 +992,17 @@ export async function followUser(
       return {
         ok: false,
         message: 'Non puoi seguire te stesso.',
+      };
+    }
+
+    const [current] = await db
+      .select({ n: db.$count(follows) })
+      .from(follows)
+      .where(eq(follows.followerId, userId));
+    if (current && current.n >= MAX_FOLLOWS) {
+      return {
+        ok: false,
+        message: `Puoi seguire al massimo ${MAX_FOLLOWS} colleghi. Rimuovi qualcuno dalla lista.`,
       };
     }
 

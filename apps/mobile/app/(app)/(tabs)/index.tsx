@@ -1,13 +1,16 @@
 import { FLOOR_META } from '@desko/domain';
 import { FlashList } from '@shopify/flash-list';
+import { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { MyDayCard } from './_components/my-day-card';
+import { useFollows } from './_components/use-follows';
 import {
   usePresenceToday,
   type PresenceEntryDto,
 } from './_components/use-presence-today';
+import { WhoFilter, type WhoFilterValue } from './_components/who-filter';
 
 function ColleagueRow({ entry }: { entry: PresenceEntryDto }) {
   return (
@@ -38,6 +41,9 @@ function ColleagueRow({ entry }: { entry: PresenceEntryDto }) {
 /** Tab "Oggi" — dati reali da /api/presence/today (filtro privacy incluso). */
 export default function TodayScreen() {
   const { data, isPending, isError, error, refetch, isRefetching } = usePresenceToday();
+  // Filtro US-3: chi voglio guardare (la privacy è già applicata server-side)
+  const [who, setWho] = useState<WhoFilterValue>('all');
+  const follows = useFollows(who === 'follows');
 
   if (isPending) {
     return (
@@ -65,7 +71,11 @@ export default function TodayScreen() {
     );
   }
 
-  const inOffice = data.entries.filter((e) => e.status === 'in_office');
+  let inOffice = data.entries.filter((e) => e.status === 'in_office');
+  if (who === 'follows' && follows.data) {
+    const allowed = new Set(follows.data.follows.map((f) => f.userId));
+    inOffice = inOffice.filter((e) => allowed.has(e.userId));
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-canvas" edges={['top']}>
@@ -105,8 +115,11 @@ export default function TodayScreen() {
               ))}
             </View>
 
+            <WhoFilter value={who} onChange={setWho} />
+
             <Text className="font-bold text-base text-ink">
-              Colleghi in ufficio ({inOffice.length})
+              {who === 'follows' ? 'Chi segui, in ufficio' : 'Colleghi in ufficio'} (
+              {inOffice.length})
             </Text>
           </View>
         }

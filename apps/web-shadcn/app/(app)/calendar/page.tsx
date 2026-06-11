@@ -22,6 +22,7 @@ import { getCurrentUser } from '@desko/auth/server';
 import { db, schema } from '@desko/db';
 import type { Floor } from '@desko/domain';
 import {
+  getMyFollows,
   getMyMonthCounts,
   getPresencesForDate,
   getPresencesForRange,
@@ -652,7 +653,7 @@ function DayView({
 
 // ─── Page ────────────────────────────────────────────────────────────────────
 
-type SearchParams = { view?: string; month?: string; date?: string };
+type SearchParams = { view?: string; month?: string; date?: string; who?: string };
 
 export default async function CalendarPage({
   searchParams,
@@ -661,6 +662,8 @@ export default async function CalendarPage({
 }) {
   const params = await searchParams;
   const view: 'month' | 'day' = params.view === 'day' ? 'day' : 'month';
+  // Filtro US-3 "chi seguo" — stato in URL, condivisibile e senza client state
+  const who: 'all' | 'follows' = params.who === 'follows' ? 'follows' : 'all';
 
   const today = new Date();
   const todayIsoStr = isoDate(today);
@@ -678,20 +681,30 @@ export default async function CalendarPage({
   const end = new Date(start);
   end.setDate(end.getDate() + 41);
 
-  const [counts, events, me, totalActiveRows] = await Promise.all([
+  const [counts, events, me, totalActiveRows, followRows] = await Promise.all([
     getMyMonthCounts(),
     getUpcomingOfficeEvents(),
     getCurrentUser(),
     db.select({ id: schema.user.id }).from(schema.user).where(eq(schema.user.banned, false)),
+    who === 'follows' ? getMyFollows() : Promise.resolve([]),
   ]);
   const totalActive = totalActiveRows.length;
 
-  const [dayPresences, dayEntries] = await Promise.all([
+  let [dayPresences, dayEntries] = await Promise.all([
     view === 'month'
       ? getPresencesForRange(isoDate(start), isoDate(end))
       : Promise.resolve<MonthDayPresence[]>([]),
     view === 'day' ? getPresencesForDate(selectedDate) : Promise.resolve<PresenceEntry[]>([]),
   ]);
+
+  // US-3: con "chi seguo" mostro solo i seguiti (+ me stesso, per orientarmi)
+  if (who === 'follows') {
+    const allowed = new Set([me.id, ...followRows.map((f) => f.userId)]);
+    dayPresences = dayPresences
+      .map((d) => ({ ...d, attendees: d.attendees.filter((a) => allowed.has(a.userId)) }))
+      .filter((d) => d.attendees.length > 0);
+    dayEntries = dayEntries.filter((e) => allowed.has(e.userId));
+  }
 
   const presencesByDate = new Map<string, MonthAttendee[]>(
     dayPresences.map((p) => [p.date, p.attendees]),
@@ -722,23 +735,32 @@ export default async function CalendarPage({
     totalActive,
   };
 
-  // Navigation hrefs
+  // Navigation hrefs — preservano il filtro `who` attivo
+  const whoSuffix = who === 'follows' ? '&who=follows' : '';
   const prevMonth = new Date(year, month - 1, 1);
   const nextMonth = new Date(year, month + 1, 1);
-  const monthPrevHref = `/calendar?view=month&month=${monthQuery(prevMonth.getFullYear(), prevMonth.getMonth())}`;
-  const monthNextHref = `/calendar?view=month&month=${monthQuery(nextMonth.getFullYear(), nextMonth.getMonth())}`;
-  const monthTodayHref = `/calendar?view=month`;
+  const monthPrevHref = `/calendar?view=month&month=${monthQuery(prevMonth.getFullYear(), prevMonth.getMonth())}${whoSuffix}`;
+  const monthNextHref = `/calendar?view=month&month=${monthQuery(nextMonth.getFullYear(), nextMonth.getMonth())}${whoSuffix}`;
+  const monthTodayHref = `/calendar?view=month${whoSuffix}`;
 
   const dayPrev = new Date(selectedDateObj);
   dayPrev.setDate(dayPrev.getDate() - 1);
   const dayNext = new Date(selectedDateObj);
   dayNext.setDate(dayNext.getDate() + 1);
-  const dayPrevHref = `/calendar?view=day&date=${isoDate(dayPrev)}`;
-  const dayNextHref = `/calendar?view=day&date=${isoDate(dayNext)}`;
-  const dayTodayHref = `/calendar?view=day&date=${todayIsoStr}`;
+  const dayPrevHref = `/calendar?view=day&date=${isoDate(dayPrev)}${whoSuffix}`;
+  const dayNextHref = `/calendar?view=day&date=${isoDate(dayNext)}${whoSuffix}`;
+  const dayTodayHref = `/calendar?view=day&date=${todayIsoStr}${whoSuffix}`;
 
-  const monthSwitcherHref = `/calendar?view=month${params.month ? `&month=${params.month}` : ''}`;
-  const daySwitcherHref = `/calendar?view=day&date=${selectedDate}`;
+  const monthSwitcherHref = `/calendar?view=month${params.month ? `&month=${params.month}` : ''}${whoSuffix}`;
+  const daySwitcherHref = `/calendar?view=day&date=${selectedDate}${whoSuffix}`;
+
+  // Toggle filtro: stessa vista, who diverso
+  const currentViewBase =
+    view === 'month'
+      ? `/calendar?view=month${params.month ? `&month=${params.month}` : ''}`
+      : `/calendar?view=day&date=${selectedDate}`;
+  const filterAllHref = currentViewBase;
+  const filterFollowsHref = `${currentViewBase}&who=follows`;
 
   return (
     <div className="mx-auto w-full max-w-screen-2xl px-5 py-8 sm:px-6 md:px-8 md:py-12">
@@ -784,13 +806,34 @@ export default async function CalendarPage({
                 </button>
               </Link>
             </div>
-            <Button variant="outline" size="default" className="hidden sm:inline-flex">
-              <Filter className="size-4" />
-              Filtra
-            </Button>
-            <Button variant="outline" size="icon" className="sm:hidden" aria-label="Filtra">
-              <Filter className="size-4" />
-            </Button>
+            {/* Filtro US-3: Tutti | Chi seguo (stato in URL) */}
+            <div className="inline-flex border border-border rounded-md overflow-hidden bg-card">
+              <Link href={filterAllHref} className="no-underline">
+                <button
+                  className={cn(
+                    'inline-flex h-9 items-center gap-1.5 px-3 text-sm font-semibold transition-colors',
+                    who === 'all'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:bg-muted',
+                  )}
+                >
+                  Tutti
+                </button>
+              </Link>
+              <Link href={filterFollowsHref} className="no-underline">
+                <button
+                  className={cn(
+                    'inline-flex h-9 items-center gap-1.5 px-3 text-sm font-semibold transition-colors',
+                    who === 'follows'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:bg-muted',
+                  )}
+                >
+                  <Filter className="size-4" />
+                  Chi seguo
+                </button>
+              </Link>
+            </div>
             <Button>
               <Plus className="size-4" />
               <span className="hidden sm:inline">Nuova presenza</span>
