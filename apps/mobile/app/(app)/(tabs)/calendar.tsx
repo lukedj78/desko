@@ -7,11 +7,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSession } from '@/lib/auth-client';
 
 import { MonthGrid, buildMonthWeeks, toIso } from './_components/month-grid';
+import { useFollows } from './_components/use-follows';
 import {
   useDeclarePresence,
   usePresenceRange,
   type MonthAttendeeDto,
 } from './_components/use-presence-today';
+import { WhoFilter, type WhoFilterValue } from './_components/who-filter';
 
 const FLOORS: Floor[] = ['seventh_floor', 'second_floor'];
 
@@ -126,16 +128,30 @@ export default function CalendarScreen() {
   const { from, to } = monthBounds(monthStart);
   const { data, isPending, isError, error, refetch } = usePresenceRange(from, to);
 
+  // Filtro US-3: la griglia conta solo i seguiti (+ me) quando attivo
+  const [who, setWho] = useState<WhoFilterValue>('all');
+  const follows = useFollows(who === 'follows');
+
+  const filteredDays = useMemo(() => {
+    const days = data?.days ?? [];
+    if (who !== 'follows' || !follows.data) return days;
+    const allowed = new Set(follows.data.follows.map((f) => f.userId));
+    if (myId) allowed.add(myId);
+    return days
+      .map((d) => ({ ...d, attendees: d.attendees.filter((a) => allowed.has(a.userId)) }))
+      .filter((d) => d.attendees.length > 0);
+  }, [data, who, follows.data, myId]);
+
   const attendance = useMemo(() => {
     const map = new Map<string, { count: number; me: boolean }>();
-    for (const day of data?.days ?? []) {
+    for (const day of filteredDays) {
       map.set(day.date, {
         count: day.attendees.length,
         me: myId ? day.attendees.some((a) => a.userId === myId) : false,
       });
     }
     return map;
-  }, [data, myId]);
+  }, [filteredDays, myId]);
 
   const weeks = useMemo(() => buildMonthWeeks(monthStart, attendance), [monthStart, attendance]);
 
@@ -151,7 +167,7 @@ export default function CalendarScreen() {
   }
 
   const selectedAttendees =
-    data?.days.find((d) => d.date === selectedDate)?.attendees ?? [];
+    filteredDays.find((d) => d.date === selectedDate)?.attendees ?? [];
   const todayStr = toIso(new Date());
 
   return (
@@ -198,6 +214,7 @@ export default function CalendarScreen() {
           </View>
         ) : (
           <>
+            <WhoFilter value={who} onChange={setWho} />
             <MonthGrid
               weeks={weeks}
               selectedDate={selectedDate}

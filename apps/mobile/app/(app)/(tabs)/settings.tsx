@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { signOut } from '@/lib/auth-client';
 
+import { FollowsSection } from './_components/follows-section';
 import {
   useArchivePresences,
   useSaveSettings,
@@ -282,6 +283,9 @@ function SettingsForm({ initial, profile }: { initial: FormState; profile: Setti
           </Text>
         </Pressable>
       </View>
+
+      {/* US-3 — colleghi seguiti */}
+      <FollowsSection />
 
       {/* GDPR — diritto all'oblio */}
       <SectionCard title="Privacy">

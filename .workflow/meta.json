@@ -2,7 +2,7 @@
   "project_slug": "desko",
   "project_name": "Desko",
   "created_at": "2026-05-09T10:40:44Z",
-  "updated_at": "2026-06-11T14:51:29Z",
+  "updated_at": "2026-06-11T15:57:50Z",
   "phase": "module_added",
   "stack": {
     "framework": "monorepo",
@@ -499,6 +499,23 @@
         "packages/services/src/{push,lunch}.ts",
         "apps/web-shadcn/app/api/push/register/route.ts",
         "apps/mobile/lib/push.ts"
+      ],
+      "phase_before": "module_added",
+      "phase_after": "module-added"
+    },
+    {
+      "skill": "dev-flow",
+      "ran_at": "2026-06-11T15:57:50Z",
+      "inputs": {
+        "feature": "US-3 chi seguo: follow/unfollow + filtro su web e mobile, cap 50"
+      },
+      "outputs": [
+        "packages/services/src/presence.ts (cap 50)",
+        "apps/web-shadcn/app/api/{follows/*,users/search}",
+        "apps/web-shadcn/app/(app)/settings/_components/follows-card.tsx",
+        "apps/web-shadcn/app/(app)/calendar/page.tsx (filtro who in URL)",
+        "apps/mobile/.../_components/{use-follows,who-filter,follows-section}.tsx",
+        "apps/mobile tabs index/calendar/settings"
       ],
       "phase_before": "module_added",
       "phase_after": "module-added"
